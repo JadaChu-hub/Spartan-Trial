@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IELTS (Unit 4)</title>
+    <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/full.js"></script>
+    <style>
+        /* ======= 🌟 IELTS 專屬優雅紫配色 (Elegant Purple) ======= */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #F8F0FA; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; color: #380B61; padding-top: 15px; position: relative;}
+        h1 { color: #4A148C; margin-bottom: 10px; font-size: 22px; text-align: center; font-weight: 800;}
+        
+        .lang-toggle-btn { position: absolute; top: 10px; right: 10px; background-color: #ffffff; color: #4A148C; border: 2px solid #4A148C; padding: 4px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; cursor: pointer; z-index: 100;}
+
+        .tabs { display: flex; gap: 6px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center; width: 95%;}
+        .tab-btn { padding: 8px 10px; font-size: 14px; border: none; border-radius: 8px; background-color: #E1BEE7; color: #4A148C; cursor: pointer; font-weight: bold; transition: 0.3s;}
+        .tab-btn.active { background-color: #4A148C; color: white; }
+        
+        .view-section { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 380px; }
+        .view-section.active { display: flex; }
+        
+        /* 單字卡 */
+        .card-container { width: 90vw; max-width: 350px; height: 340px; perspective: 1000px; margin-bottom: 15px; cursor: pointer; }
+        .card { width: 100%; height: 100%; position: relative; transition: transform 0.6s; transform-style: preserve-3d; box-shadow: 0 10px 20px rgba(74, 20, 140, 0.1); border-radius: 15px; }
+        .card.flipped { transform: rotateY(180deg); }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 15px; padding: 20px; box-sizing: border-box; text-align: center; overflow-y: auto; }
+        
+        .card-front { background-color: #ffffff; color: #4A148C; border: 2px solid #CE93D8; backface-visibility: hidden;}
+        .word-text { font-size: 30px; font-weight: bold; margin-bottom: 10px;}
+        .eng-def { font-size: 15px; color: #7B1FA2; font-style: italic; padding: 0 10px; line-height: 1.3;}
+        
+        .card-back { background-color: #F3E5F5; color: #311B92; transform: rotateY(180deg); align-items: flex-start; text-align: left;backface-visibility: hidden; }
+        .translation { font-size: 17px; font-weight: bold; margin-bottom: 8px; color: #4A148C; border-bottom: 1px solid #CE93D8; padding-bottom: 4px; width: 100%;}
+        .details { font-size: 13px; margin-bottom: 6px; line-height: 1.3; }
+        .details strong { color: #8E24AA; }
+        .example { font-size: 13px; font-style: italic; margin-top: 6px; padding-top: 6px; border-top: 1px dashed #CE93D8; color: #4A148C; }
+        
+        .front-tools { display: flex; gap: 20px; margin-top: 15px; align-items: center;}
+        .tool-btn { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; transition: 0.2s;}
+        .star-btn { color: #DDDDDD; }
+        .star-btn.active { color: #F5A623; transform: scale(1.2); }
+        
+        .controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        button.action-btn { padding: 8px 12px; font-size: 14px; border: none; border-radius: 8px; background-color: #6A1B9A; color: white; cursor: pointer; transition: 0.2s; }
+        button.action-btn:hover { background-color: #4A148C; }
+        button.action-btn.green-btn { background-color: #8E24AA; }
+        .counter { margin-top: 10px; font-size: 13px; color: #7B1FA2; font-weight: bold;}
+        
+        /* 選擇題與拼圖共用 */
+        .mastery-text { font-size: 14px; color: #4A148C; font-weight: bold; margin-bottom: 15px; background: #E1BEE7; padding: 8px 12px; border-radius: 12px; text-align: center; width: 90%;}
+        .quiz-question { font-size: 16px; font-weight: bold; color: #4A148C; text-align: center; margin-bottom: 15px; padding: 0 15px; line-height: 1.4;}
+        .quiz-options { width: 100%; display: flex; flex-direction: column; gap: 8px; padding: 0 20px; box-sizing: border-box;}
+        .quiz-option { padding: 12px; background-color: #ffffff; color: #4A148C; border: 2px solid #6A1B9A; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; text-align: center; transition: 0.2s; }
+        .quiz-option:hover { background-color: #F3E5F5; }
+        .feedback { margin-top: 12px; font-weight: bold; font-size: 16px; min-height: 22px; text-align: center;}
+        
+        /* 拼圖專區 */
+        .progress-container { width: 90%; background-color: #E1BEE7; border-radius: 10px; margin: 5px auto 15px auto; overflow: hidden; height: 12px; }
+        .progress-fill { width: 0%; height: 100%; background-color: #6A1B9A; transition: width 0.5s; }
+        .spell-answer-box { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; min-height: 45px; padding: 10px; border: 2px dashed #6A1B9A; border-radius: 10px; margin-bottom: 15px; width: 90%; background-color: #ffffff; }
+        .letter-pool { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 15px; width: 95%; }
+        .letter-tile { background-color: #6A1B9A; color: white; border: none; border-radius: 6px; padding: 10px 14px; font-size: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 3px 0 #4A148C; user-select: none; }
+        .letter-tile:active { transform: translateY(3px); box-shadow: 0 0 0 #4A148C; }
+        .letter-tile.in-answer { background-color: #8E24AA; box-shadow: 0 3px 0 #6A1B9A; }
+
+        /* 克漏字專區 */
+        .cloze-container { background: white; padding: 15px; border-radius: 12px; border: 2px solid #CE93D8; width: 90%; font-size: 15px; line-height: 1.8; color: #311B92;}
+        .cloze-select { padding: 2px 5px; font-size: 14px; color: #4A148C; border: 1px solid #6A1B9A; border-radius: 4px; font-weight: bold; background-color: #F8F0FA;}
+
+        /* 彈窗 */
+        .grad-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(248, 240, 250, 0.95); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;}
+        .grad-title { color: #4A148C; font-size: 26px; margin-bottom: 10px; }
+        .grad-desc { color: #311B92; font-size: 15px; line-height: 1.5; margin-bottom: 25px;}
+        .grad-btn { width: 100%; max-width: 250px; background-color: #6A1B9A; color: white; font-size: 15px; font-weight: bold; padding: 12px 20px; border: none; border-radius: 30px; cursor: pointer; margin-bottom: 10px;}
+        .grad-btn.stay-btn { background-color: #E1BEE7; color: #4A148C; border: 1px solid #4A148C;}
+    </style>
+</head>
+<body>
+
+    <button class="lang-toggle-btn" onclick="toggleLanguage()">繁 / 简</button>
+    
+    <h1>IELTS (Unit 4)</h1>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('flashcard')">📇 单词卡</button>
+        <button class="tab-btn" onclick="switchTab('quiz')">📝 随机测验</button>
+        <button class="tab-btn" onclick="switchTab('spell')">🧩 字母拼图</button>
+        <button class="tab-btn" onclick="switchTab('cloze')">📖 实力总结</button>
+    </div>
+
+    <div id="flashcard-view" class="view-section active">
+        <div class="card-container" onclick="flipCard()">
+            <div class="card" id="flashcard">
+                <div class="card-front">
+                    <div class="word-text" id="wordText">Word</div>
+                    <div class="eng-def" id="engDefText">Def...</div>
+                    <div class="front-tools">
+                        <button class="tool-btn" onclick="speakText('word', event)">🔊</button>
+                        <button class="tool-btn star-btn" id="starBtn" onclick="toggleStar(event)">★</button>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div class="translation" id="translationText">解释</div>
+                    <div class="details" id="synAntText"><strong>同/反义：</strong><span>...</span></div>
+                    <div class="details" id="usageText"><strong>固定用法：</strong><span>...</span></div>
+                    <div class="example" id="exampleText">例句...</div>
+                    <button class="action-btn" onclick="speakText('example', event)" style="margin-top: 10px; padding: 6px 12px; font-size: 12px; align-self: center;">🔊 朗读例句</button>
+                </div>
+            </div>
+        </div>
+        <div class="controls">
+            <button class="action-btn" onclick="prevCard()">⬅️ 上个</button>
+            <button class="action-btn" onclick="flipCard()">🔄 翻面</button>
+            <button class="action-btn" onclick="nextCard()">下个 ➡️</button>
+            <button class="action-btn green-btn" onclick="shuffleCards()">🔀 洗牌</button>
+        </div>
+        <div class="counter" id="counterText">1 / ?</div>
+    </div>
+
+    <div id="quiz-view" class="view-section">
+        <div class="mastery-text" id="masteryText">🏆 测验熟练度：0% (0/0) <br> 🎖️ 证书进度：0 / 3</div>
+        <div class="quiz-question" id="quizQuestion">
+            <span style="font-size:13px; color:#486581;" id="quizHint">请选出对应答案：</span><br><br>
+            <span id="quizDesc" style="font-size:18px;">...</span>
+        </div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="feedback" id="quizFeedback"></div>
+        <button class="action-btn" style="margin-top: 15px;" onclick="generateQuiz()">下一题</button>
+    </div>
+
+    <div id="spell-view" class="view-section">
+        <div style="width: 100%;">
+            <div class="mastery-text" id="spellProgressText" style="margin-bottom: 5px;">⌨️ 词汇收集：0 / 25 (0%)</div>
+            <div class="progress-container"><div class="progress-fill" id="spellProgressBar"></div></div>
+        </div>
+        <div class="quiz-question" style="font-size:14px; margin-bottom: 10px;" id="spellPrompt">解释与例句</div>
+        <div class="spell-answer-box" id="spellAnswerBox"></div>
+        <div class="letter-pool" id="letterPool"></div>
+        <button class="action-btn" id="submitSpellBtn" onclick="checkSpell()">送出答案</button>
+        <div class="feedback" id="spellFeedback"></div>
+        <button class="action-btn" style="margin-top: 15px; display: none;" id="nextSpellBtn" onclick="generateSpell()">下一题</button>
+    </div>
+
+    <div id="cloze-view" class="view-section">
+        <div class="mastery-text">📖 单元主题实战演练</div>
+        <div class="cloze-container" id="clozeContainer"></div>
+        <div class="feedback" id="clozeFeedback"></div>
+        <button class="action-btn" style="margin-top: 15px;" onclick="checkCloze()">提交验证</button>
+    </div>
+
+    <div class="grad-modal" id="gradModal">
+        <h2 class="grad-title" id="gradTitle">🛡️ 结业！</h2>
+        <p class="grad-desc" id="gradDesc">说明文字</p>
+        <button class="grad-btn" onclick="window.location.href='index.html'">🎓 荣耀结业 (返回大厅)</button>
+        <button class="grad-btn stay-btn" id="stayBtn" onclick="">📚 留下来继续复习</button>
+    </div>
+
+    <script>
+        // ======= 🌟 繁简转换逻辑 =======
+        let currentLang = 'tw'; 
+        function toggleLanguage() {
+            const rootNode = document.body;
+            if (currentLang === 'tw') {
+                const converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
+                OpenCC.HTML.Convert(converter, rootNode);
+                currentLang = 'cn';
+            } else {
+                const converter = OpenCC.Converter({ from: 'cn', to: 'tw' });
+                OpenCC.HTML.Convert(converter, rootNode);
+                currentLang = 'tw';
+            }
+        }
+
+        // ==========================================
+        // ⚠️ 修改区：已幫妳改為 IELTS 的專屬存檔金鑰
+        // ==========================================
+        const STORAGE_KEY = 'spartan_ielts_u4';
+        
+        // ⚠️ 之後用 AI 萃取的 25 個雅思單字貼到這裡
+        let vocabData = [
+            { word: "Fluctuate", engDef: "Rise and fall irregularly in number or amount.", translation: "V. 波动，起伏", synAnt: "同: Vary, Waver; 反: Stabilize", usage: "Prices fluctuate (价格波动) / Fluctuating currency (汇率波动)", example: "The stock market tends to fluctuate wildly during times of political uncertainty." },
+            { word: "Lucrative", engDef: "Producing a great deal of profit.", translation: "Adj. 赚大钱的，利润丰厚的", synAnt: "同: Profitable, Remunerative; 反: Unprofitable", usage: "Lucrative business (赚钱的生意) / Lucrative contract (丰厚的合同)", example: "Software engineering has become one of the most lucrative professions today." },
+            { word: "Monopoly", engDef: "The exclusive possession or control of the supply or trade in a commodity or service.", translation: "N. 垄断，独占", synAnt: "同: Control, Domination", usage: "Corporate monopoly (企业垄断) / Break a monopoly (打破垄断)", example: "The government passed laws to prevent the telecommunications giant from operating a monopoly." },
+            { word: "Subsidy", engDef: "A sum of money granted by the government or a public body to assist an industry or business.", translation: "N. 补贴，津贴", synAnt: "同: Grant, Funding", usage: "Agricultural subsidy (农业补贴) / Government subsidy (政府津贴)", example: "Farmers receive a substantial subsidy to keep the price of wheat low." },
+            { word: "Tariff", engDef: "A tax or duty to be paid on a particular class of imports or exports.", translation: "N. 关税", synAnt: "同: Tax, Duty, Toll", usage: "Impose tariffs (征收关税) / Protective tariff (保护性关税)", example: "The trade war escalated when both countries imposed heavy tariffs on imported goods." },
+            { word: "Commerce", engDef: "The activity of buying and selling, especially on a large scale.", translation: "N. 商业，贸易", synAnt: "同: Trade, Business", usage: "E-commerce (电子商务) / International commerce (国际贸易)", example: "The internet has fundamentally changed the nature of global commerce." },
+            { word: "Deficit", engDef: "The amount by which something, especially a sum of money, is too small.", translation: "N. 赤字，亏损", synAnt: "同: Shortfall, Loss; 反: Surplus", usage: "Budget deficit (预算赤字) / Trade deficit (贸易逆差)", example: "The national economy is struggling to recover from a massive budget deficit." },
+            { word: "Entrepreneur", engDef: "A person who organizes and operates a business or businesses.", translation: "N. 企业家，创业者", synAnt: "同: Businessman, Founder", usage: "Successful entrepreneur (成功的企业家) / Entrepreneurial spirit (创业精神)", example: "The young entrepreneur launched a startup that revolutionized food delivery." },
+            { word: "Inflation", engDef: "A general increase in prices and fall in the purchasing value of money.", translation: "N. 通货膨胀", synAnt: "同: Price rise; 反: Deflation", usage: "High inflation (高通胀) / Curb inflation (抑制通货膨胀)", example: "The central bank raised interest rates in an attempt to curb inflation." },
+            { word: "Merger", engDef: "A combination of two things, especially companies, into one.", translation: "N. 合并，并购", synAnt: "同: Amalgamation, Consolidation", usage: "Corporate merger (企业合并) / Merger and acquisition (并购 M&A)", example: "The merger of the two banks will create the largest financial institution in the country." },
+            { word: "Outsource", engDef: "Obtain (goods or a service) from an outside or foreign supplier.", translation: "V. 外包，委外", synAnt: "同: Subcontract", usage: "Outsource manufacturing (制造外包) / Outsourcing strategy (外包策略)", example: "Many technology companies outsource their customer service to reduce labor costs." },
+            { word: "Revenue", engDef: "Income, especially when of a company or organization.", translation: "N. 收入，收益", synAnt: "同: Income, Earnings; 反: Expenditure", usage: "Generate revenue (创造收入) / Tax revenue (税收)", example: "The company reported a 20% increase in revenue for the third quarter." },
+            { word: "Stagnant", engDef: "Showing no activity; dull and sluggish.", translation: "Adj. 停滞的，不景气的", synAnt: "同: Sluggish, Inactive; 反: Booming", usage: "Stagnant economy (停滞的经济) / Stagnant wages (停滞的工资)", example: "Despite government interventions, the housing market remained stagnant." },
+            { word: "Yield", engDef: "Produce or provide (a natural, agricultural, or industrial product).", translation: "V./N. 产生，产量", synAnt: "同: Produce, Output", usage: "High yield (高产) / Yield results (产生结果)", example: "The new marketing campaign is expected to yield impressive financial returns." },
+            { word: "Accumulate", engDef: "Gather together or acquire an increasing number or quantity of.", translation: "V. 积累，积聚", synAnt: "同: Amass, Gather; 反: Disperse", usage: "Accumulate wealth (积累财富) / Accumulate debt (累积债务)", example: "Over the years, the billionaire has managed to accumulate a vast fortune." },
+            { word: "Allocate", engDef: "Distribute (resources or duties) for a particular purpose.", translation: "V. 分配，拨出", synAnt: "同: Distribute, Assign", usage: "Allocate funds (分配资金) / Allocate resources (分配资源)", example: "The board decided to allocate more funds to research and development." },
+            { word: "Commodity", engDef: "A raw material or primary agricultural product that can be bought and sold.", translation: "N. 商品，货物", synAnt: "同: Product, Goods", usage: "Basic commodity (基本商品) / Commodity market (商品市场)", example: "Oil and gold are two of the most heavily traded commodities in the world." },
+            { word: "Compensate", engDef: "Give (someone) something, typically money, in recognition of loss or injury.", translation: "V. 补偿，赔偿", synAnt: "同: Recompense, Make up for", usage: "Compensate for a loss (弥补损失) / Financial compensation (经济赔偿)", example: "The airline promised to compensate the passengers for the delayed flight." },
+            { word: "Currency", engDef: "A system of money in general use in a particular country.", translation: "N. 货币，流通", synAnt: "同: Money, Exchange", usage: "Foreign currency (外币) / Currency exchange (货币兑换)", example: "The local currency depreciated sharply against the US dollar." },
+            { word: "Liability", engDef: "The state of being responsible for something, especially by law.", translation: "N. 责任，债务", synAnt: "同: Responsibility, Debt; 反: Asset", usage: "Legal liability (法律责任) / Financial liabilities (财务负债)", example: "The company admitted no liability for the damage caused by the defective product." },
+            { word: "Prosperous", engDef: "Successful in material terms; flourishing financially.", translation: "Adj. 繁荣的，富裕的", synAnt: "同: Thriving, Wealthy; 反: Impoverished", usage: "Prosperous nation (繁荣的国家) / Prosperous business (兴旺的生意)", example: "Under her leadership, the organization enjoyed a highly prosperous period." },
+            { word: "Remittance", engDef: "A sum of money sent, especially by mail, in payment for goods or services or as a gift.", translation: "N. 汇款", synAnt: "同: Payment, Transfer", usage: "Send a remittance (寄汇款) / Remittance advice (汇款通知)", example: "Many families in developing countries rely heavily on remittances from relatives working abroad." },
+            { word: "Speculate", engDef: "Invest in stocks, property, or other ventures in the hope of gain but with the risk of loss.", translation: "V. 投机，推测", synAnt: "同: Gamble, Guess", usage: "Speculate in the stock market (在股市投机) / Speculate on the outcome (推测结果)", example: "Investors continue to speculate on the real estate market despite the high risks." },
+            { word: "Viable", engDef: "Capable of working successfully; feasible.", translation: "Adj. 有望成功的，经济上可行的", synAnt: "同: Feasible, Workable", usage: "Commercially viable (商业上可行的) / Viable option (可行的选择)", example: "The startup struggled to prove that its business model was financially viable." },
+            { word: "Incentive", engDef: "A payment or concession to stimulate greater output or investment.", translation: "N. 奖励，刺激", synAnt: "同: Inducement, Motivation", usage: "Tax incentive (税收优惠) / Financial incentive (经济奖励)", example: "The government offers tax incentives to companies that hire local workers." }
+        ];
+
+        let clozeData = {
+            passage: "If the global market continues to [1], small businesses will suffer. To survive a [2] economy, governments often provide a [3] to local entrepreneurs. This helps curb [4] and makes new projects financially [5].",
+            blanks: ["Fluctuate", "Stagnant", "Subsidy", "Inflation", "Lucrative"], 
+            options: ["Subsidy", "Stagnant", "Lucrative", "Inflation", "Fluctuate", "Monopoly"] 
+        };
+
+        // ==========================================
+        // V6.0 核心引擎
+        // ==========================================
+        let currentIndex = 0; let currentQuizAnswer = null; let isEngToChnQuiz = true;
+        let currentSpellAnswer = null; let spellScrambledLetters = []; let spellCurrentAnswer = [];
+        
+        let localData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { 
+            starred: [], attempts: 0, correct: 0, certs: { c1: false, c2: false, c3: false },
+            spelledWords: [], spellCerts: { c1: false, c2: false, c3: false }
+        };
+        if (!localData.certs) localData.certs = { c1: false, c2: false, c3: false };
+        if (!localData.spelledWords) localData.spelledWords = [];
+        if (!localData.spellCerts) localData.spellCerts = { c1: false, c2: false, c3: false };
+
+        function speakText(type, event) {
+            event.stopPropagation(); 
+            let text = type === 'word' ? vocabData[currentIndex].word : vocabData[currentIndex].example;
+            const u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; u.rate = 0.9; window.speechSynthesis.speak(u);
+        }
+
+        function toggleStar(e) {
+            e.stopPropagation(); let w = vocabData[currentIndex].word;
+            if(localData.starred.includes(w)) localData.starred = localData.starred.filter(x => x !== w); else localData.starred.push(w);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateStarUI();
+        }
+        function updateStarUI() { document.getElementById('starBtn').classList.toggle('active', localData.starred.includes(vocabData[currentIndex].word)); }
+
+        function switchTab(t) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            event.target.classList.add('active'); document.getElementById(t + '-view').classList.add('active');
+            if(t==='quiz') generateQuiz(); if(t==='spell') generateSpell(); if(t==='cloze') renderCloze();
+        }
+
+        // 单词卡
+        function renderCard() {
+            if(!vocabData.length) return; document.getElementById('flashcard').classList.remove('flipped');
+            setTimeout(() => {
+                let d = vocabData[currentIndex];
+                document.getElementById('wordText').innerHTML = d.word; document.getElementById('engDefText').innerHTML = d.engDef || '';
+                document.getElementById('translationText').innerHTML = d.translation; document.getElementById('synAntText').innerHTML = `<strong>同/反义：</strong> ${d.synAnt}`;
+                document.getElementById('usageText').innerHTML = `<strong>用法：</strong> ${d.usage || ''}`; document.getElementById('exampleText').innerHTML = d.example;
+                document.getElementById('counterText').innerHTML = `${currentIndex + 1} / ${vocabData.length}`; updateStarUI(); 
+            }, 150);
+        }
+        function flipCard() { document.getElementById('flashcard').classList.toggle('flipped'); }
+        function nextCard() { if(currentIndex < vocabData.length-1){ currentIndex++; renderCard(); } }
+        function prevCard() { if(currentIndex > 0){ currentIndex--; renderCard(); } }
+        function shuffleCards() { vocabData.sort(()=>Math.random()-0.5); currentIndex=0; renderCard(); }
+
+        // 随机测验 (修改为 10 / 20 / 25 门槛)
+        function updateMasteryUI() {
+            let rate = localData.attempts===0 ? 0 : Math.round((localData.correct/localData.attempts)*100);
+            let certs = (localData.certs.c1?1:0) + (localData.certs.c2?1:0) + (localData.certs.c3?1:0);
+            document.getElementById('masteryText').innerHTML = `🏆 熟练度：${rate}% (${localData.correct}/${localData.attempts}) <br> 🎖️ 证书进度：${certs} / 3`;
+            if(localData.attempts>=10 && rate>=90 && !localData.certs.c1) showModal('quiz', 1);
+            else if(localData.attempts>=20 && rate>=90 && !localData.certs.c2) showModal('quiz', 2);
+            else if(localData.attempts>=25 && rate>=95 && !localData.certs.c3) showModal('quiz', 3);
+        }
+        function generateQuiz() {
+            if(vocabData.length<4) return; document.getElementById('quizFeedback').innerHTML = ""; 
+            isEngToChnQuiz = Math.random() > 0.5;
+            currentQuizAnswer = vocabData[Math.floor(Math.random() * vocabData.length)];
+            document.getElementById('quizHint').innerHTML = isEngToChnQuiz ? "👀 请选出中文：" : "🧠 请选出英文：";
+            document.getElementById('quizDesc').innerHTML = isEngToChnQuiz ? currentQuizAnswer.word : currentQuizAnswer.translation;
+            let ops = [currentQuizAnswer], others = vocabData.filter(v=>v.word!==currentQuizAnswer.word).sort(()=>Math.random()-0.5);
+            ops.push(others[0], others[1], others[2]); ops.sort(()=>Math.random()-0.5);
+            document.getElementById('quizOptions').innerHTML = ops.map(opt => `<button class="quiz-option" onclick="checkQuiz('${opt.word}')">${isEngToChnQuiz ? opt.translation : opt.word}</button>`).join('');
+            updateMasteryUI();
+        }
+        function checkQuiz(w) {
+            let fb = document.getElementById('quizFeedback'); localData.attempts++;
+            if(w === currentQuizAnswer.word){ fb.innerHTML = "✅ 正确！"; fb.style.color = "green"; localData.correct++; }
+            else{ fb.innerHTML = `❌ 错误！正解是：${isEngToChnQuiz ? currentQuizAnswer.translation : currentQuizAnswer.word}`; fb.style.color = "red"; }
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateMasteryUI();
+        }
+
+        // 拼图 (修改为 10 / 20 / 25 门槛)
+        function updateSpellUI() {
+            let uc = localData.spelledWords.length, total = vocabData.length;
+            document.getElementById('spellProgressText').innerHTML = `⌨️ 词汇收集：${uc} / ${total}`;
+            document.getElementById('spellProgressBar').style.width = Math.round((uc/total)*100) + '%';
+            if(uc>=10 && !localData.spellCerts.c1) showModal('spell', 1);
+            else if(uc>=20 && !localData.spellCerts.c2) showModal('spell', 2);
+            else if(uc>=25 && !localData.spellCerts.c3) showModal('spell', 3);
+        }
+        function generateSpell() {
+            document.getElementById('spellFeedback').innerHTML = ""; document.getElementById('nextSpellBtn').style.display = "none";
+            document.getElementById('submitSpellBtn').style.display = "inline-block"; document.getElementById('spellAnswerBox').style.display = "flex";
+            document.getElementById('letterPool').style.display = "flex"; updateSpellUI();
+            if(localData.spelledWords.length >= vocabData.length){
+                document.getElementById('spellPrompt').innerHTML = "🎉 挑战成功！全部生字收集完毕！";
+                document.getElementById('spellAnswerBox').style.display = "none"; document.getElementById('letterPool').style.display = "none"; document.getElementById('submitSpellBtn').style.display = "none"; return;
+            }
+            currentSpellAnswer = vocabData[Math.floor(Math.random() * vocabData.length)];
+            let chars = currentSpellAnswer.word.toLowerCase().split('').sort(()=>Math.random()-0.5);
+            spellScrambledLetters = chars.map((c, i) => ({ id: i, char: c, used: false })); spellCurrentAnswer = [];
+            let blanks = currentSpellAnswer.word.replace(/[a-zA-Z]/g, "_ ");
+            document.getElementById('spellPrompt').innerHTML = `<strong>${currentSpellAnswer.translation}</strong><br><em>${currentSpellAnswer.example.replace(new RegExp(currentSpellAnswer.word,"gi"), blanks.trim())}</em>`;
+            renderSpellGame();
+        }
+        function renderSpellGame() {
+            let ab = document.getElementById('spellAnswerBox'), lp = document.getElementById('letterPool'); ab.innerHTML = ''; lp.innerHTML = '';
+            spellCurrentAnswer.forEach((item, i) => {
+                let btn = document.createElement('button'); btn.className = 'letter-tile in-answer'; btn.innerText = item.char;
+                btn.onclick = () => { spellCurrentAnswer.splice(i, 1); item.used = false; renderSpellGame(); }; ab.appendChild(btn);
+            });
+            spellScrambledLetters.forEach(item => {
+                if(!item.used){
+                    let btn = document.createElement('button'); btn.className = 'letter-tile'; btn.innerText = item.char;
+                    btn.onclick = () => { item.used = true; spellCurrentAnswer.push(item); renderSpellGame(); }; lp.appendChild(btn);
+                }
+            });
+        }
+        function checkSpell() {
+            let ans = spellCurrentAnswer.map(i=>i.char).join(''), corr = currentSpellAnswer.word.toLowerCase(), fb = document.getElementById('spellFeedback');
+            if(ans === corr){
+                fb.innerHTML = "✅ 拼字正确！"; fb.style.color = "green"; 
+                if(!localData.spelledWords.includes(currentSpellAnswer.word)){ localData.spelledWords.push(currentSpellAnswer.word); localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateSpellUI(); }
+            } else { fb.innerHTML = `❌ 错误！正解：${currentSpellAnswer.word}`; fb.style.color = "red"; }
+            document.getElementById('nextSpellBtn').style.display = "inline-block"; document.getElementById('submitSpellBtn').style.display = "none";
+        }
+
+        // 克漏字
+        function renderCloze() {
+            let c = document.getElementById('clozeContainer'), h = clozeData.passage; document.getElementById('clozeFeedback').innerHTML = "";
+            let opts = `<option value="">-- 选择 --</option>` + clozeData.options.map(o=>`<option value="${o}">${o}</option>`).join('');
+            for(let i=0; i<clozeData.blanks.length; i++) h = h.replace(`[${i+1}]`, `<select id="clz${i}" class="cloze-select">${opts}</select>`);
+            c.innerHTML = h;
+        }
+        function checkCloze() {
+            let cor = 0;
+            for(let i=0; i<clozeData.blanks.length; i++){
+                let sel = document.getElementById(`clz${i}`);
+                if(sel.value === clozeData.blanks[i]){ cor++; sel.style.borderColor="green"; sel.style.backgroundColor="#e8f5e9"; }
+                else{ sel.style.borderColor="red"; sel.style.backgroundColor="#ffebee"; }
+            }
+            let fb = document.getElementById('clozeFeedback');
+            if(cor === clozeData.blanks.length){ fb.innerHTML="🎉 太棒了！段落完全正确！"; fb.style.color="green"; }
+            else{ fb.innerHTML=`💪 答对了 ${cor}/${clozeData.blanks.length} 个！`; fb.style.color="red"; }
+        }
+
+        // 弹窗
+        function showModal(type, level) {
+            let t = document.getElementById('gradTitle'), d = document.getElementById('gradDesc');
+            if(type==='quiz'){
+                if(level===1) { t.innerHTML="🥉 青铜证书"; d.innerHTML="选择题完成 10 题且维持高正确率！"; }
+                if(level===2) { t.innerHTML="🥈 白银证书"; d.innerHTML="选择题完成 20 题，太神了！"; }
+                if(level===3) { t.innerHTML="🏆 黄金结业！"; d.innerHTML="选择题刷满 25 题且正确率 95%！"; }
+            } else {
+                if(level===1) { t.innerHTML="🧩 初级拼图学者"; d.innerHTML="成功拼出 10 个生字！"; }
+                if(level===2) { t.innerHTML="🧩 进阶拼图达人"; d.innerHTML="征服 20 个生字，只差一点了！"; }
+                if(level===3) { t.innerHTML="👑 拼图大师！"; d.innerHTML="满分全制霸！肌肉记忆完美！"; }
+            }
+            document.getElementById('stayBtn').onclick = () => { closeModal(type, level); };
+            document.getElementById('gradModal').style.display = 'flex';
+        }
+        function closeModal(type, level) {
+            if(type==='quiz') localData.certs[`c${level}`] = true; else localData.spellCerts[`c${level}`] = true;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); document.getElementById('gradModal').style.display = 'none';
+            if(type==='quiz') updateMasteryUI(); else updateSpellUI();
+        }
+
+        window.onload = () => { renderCard(); updateMasteryUI(); updateSpellUI(); };
+    </script>
+</body>
+</html>
