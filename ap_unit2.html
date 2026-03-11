@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AP (Unit 2)</title>
+    <script src="https://unpkg.com/opencc-js@1.0.5/dist/umd/full.js"></script>
+    <style>
+       /* ======= 📘 AP 專屬亮彩深藍 (Sapphire Blue) ======= */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #E3F2FD; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; color: #0D47A1; padding-top: 15px; position: relative;}
+        h1 { color: #1565C0; margin-bottom: 10px; font-size: 22px; text-align: center; font-weight: 800;}
+        
+        .lang-toggle-btn { position: absolute; top: 10px; right: 10px; background-color: #ffffff; color: #1565C0; border: 2px solid #1565C0; padding: 4px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; cursor: pointer; z-index: 100;}
+
+        .tabs { display: flex; gap: 6px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center; width: 95%;}
+        .tab-btn { padding: 8px 10px; font-size: 14px; border: none; border-radius: 8px; background-color: #BBDEFB; color: #1565C0; cursor: pointer; font-weight: bold; transition: 0.3s;}
+        .tab-btn.active { background-color: #1565C0; color: white; }
+        
+        .view-section { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 380px; }
+        .view-section.active { display: flex; }
+        
+        .card-container { width: 90vw; max-width: 350px; height: 340px; perspective: 1000px; margin-bottom: 15px; cursor: pointer; }
+        .card { width: 100%; height: 100%; position: relative; transition: transform 0.6s; transform-style: preserve-3d; box-shadow: 0 10px 20px rgba(21, 101, 192, 0.15); border-radius: 15px; }
+        .card.flipped { transform: rotateY(180deg); }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 15px; padding: 20px; box-sizing: border-box; text-align: center; overflow-y: auto; }
+        
+        .card-front { background-color: #ffffff; color: #1565C0; border: 2px solid #90CAF9; backface-visibility: hidden;}
+        .word-text { font-size: 30px; font-weight: bold; margin-bottom: 10px;}
+        .eng-def { font-size: 15px; color: #1976D2; font-style: italic; padding: 0 10px; line-height: 1.3;}
+        
+        .card-back { background-color: #E3F2FD; color: #0D47A1; transform: rotateY(180deg); align-items: flex-start; text-align: left; backface-visibility: hidden;}
+        .translation { font-size: 17px; font-weight: bold; margin-bottom: 8px; color: #1565C0; border-bottom: 1px solid #90CAF9; padding-bottom: 4px; width: 100%;}
+        .details { font-size: 13px; margin-bottom: 6px; line-height: 1.3; }
+        .details strong { color: #0D47A1; }
+        .example { font-size: 13px; font-style: italic; margin-top: 6px; padding-top: 6px; border-top: 1px dashed #90CAF9; color: #1565C0; }
+        
+        .front-tools { display: flex; gap: 20px; margin-top: 15px; align-items: center;}
+        .tool-btn { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; transition: 0.2s;}
+        .star-btn { color: #DDDDDD; }
+        .star-btn.active { color: #F5A623; transform: scale(1.2); }
+        
+        .controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+        button.action-btn { padding: 8px 12px; font-size: 14px; border: none; border-radius: 8px; background-color: #1565C0; color: white; cursor: pointer; transition: 0.2s; }
+        button.action-btn:hover { background-color: #0D47A1; }
+        button.action-btn.green-btn { background-color: #1E88E5; }
+        .counter { margin-top: 10px; font-size: 13px; color: #1976D2; font-weight: bold;}
+        
+        .mastery-text { font-size: 14px; color: #1565C0; font-weight: bold; margin-bottom: 15px; background: #BBDEFB; padding: 8px 12px; border-radius: 12px; text-align: center; width: 90%;}
+        .quiz-question { font-size: 16px; font-weight: bold; color: #1565C0; text-align: center; margin-bottom: 15px; padding: 0 15px; line-height: 1.4;}
+        .quiz-options { width: 100%; display: flex; flex-direction: column; gap: 8px; padding: 0 20px; box-sizing: border-box;}
+        .quiz-option { padding: 12px; background-color: #ffffff; color: #1565C0; border: 2px solid #1565C0; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; text-align: center; transition: 0.2s; }
+        .quiz-option:hover { background-color: #E3F2FD; }
+        .feedback { margin-top: 12px; font-weight: bold; font-size: 16px; min-height: 22px; text-align: center;}
+        
+        .progress-container { width: 90%; background-color: #BBDEFB; border-radius: 10px; margin: 5px auto 15px auto; overflow: hidden; height: 12px; }
+        .progress-fill { width: 0%; height: 100%; background-color: #1565C0; transition: width 0.5s; }
+        .spell-answer-box { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; min-height: 45px; padding: 10px; border: 2px dashed #1565C0; border-radius: 10px; margin-bottom: 15px; width: 90%; background-color: #ffffff; }
+        .letter-pool { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 15px; width: 95%; }
+        .letter-tile { background-color: #1565C0; color: white; border: none; border-radius: 6px; padding: 10px 14px; font-size: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 3px 0 #0D47A1; user-select: none; }
+        .letter-tile:active { transform: translateY(3px); box-shadow: 0 0 0 #0D47A1; }
+        .letter-tile.in-answer { background-color: #1E88E5; box-shadow: 0 3px 0 #1565C0; }
+
+        .cloze-container { background: white; padding: 15px; border-radius: 12px; border: 2px solid #90CAF9; width: 90%; font-size: 15px; line-height: 1.8; color: #0D47A1;}
+        .cloze-select { padding: 2px 5px; font-size: 14px; color: #1565C0; border: 1px solid #1565C0; border-radius: 4px; font-weight: bold; background-color: #E3F2FD;}
+
+        .grad-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(227, 242, 253, 0.95); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;}
+        .grad-title { color: #1565C0; font-size: 26px; margin-bottom: 10px; }
+        .grad-desc { color: #0D47A1; font-size: 15px; line-height: 1.5; margin-bottom: 25px;}
+        .grad-btn { width: 100%; max-width: 250px; background-color: #1565C0; color: white; font-size: 15px; font-weight: bold; padding: 12px 20px; border: none; border-radius: 30px; cursor: pointer; margin-bottom: 10px;}
+        .grad-btn.stay-btn { background-color: #BBDEFB; color: #1565C0; border: 1px solid #1565C0;}
+    </style>
+</head>
+<body>
+
+    <button class="lang-toggle-btn" onclick="toggleLanguage()">繁 / 简</button>
+    
+    <h1>📘 AP (Unit 2)</h1>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('flashcard')">📇 单词卡</button>
+        <button class="tab-btn" onclick="switchTab('quiz')">📝 随机测验</button>
+        <button class="tab-btn" onclick="switchTab('spell')">🧩 字母拼图</button>
+        <button class="tab-btn" onclick="switchTab('cloze')">📖 实力总结</button>
+    </div>
+
+    <div id="flashcard-view" class="view-section active">
+        <div class="card-container" onclick="flipCard()">
+            <div class="card" id="flashcard">
+                <div class="card-front">
+                    <div class="word-text" id="wordText">Word</div>
+                    <div class="eng-def" id="engDefText">Def...</div>
+                    <div class="front-tools">
+                        <button class="tool-btn" onclick="speakText('word', event)">🔊</button>
+                        <button class="tool-btn star-btn" id="starBtn" onclick="toggleStar(event)">★</button>
+                    </div>
+                </div>
+                <div class="card-back">
+                    <div class="translation" id="translationText">解释</div>
+                    <div class="details" id="synAntText"><strong>同/反义：</strong><span>...</span></div>
+                    <div class="details" id="usageText"><strong>固定用法：</strong><span>...</span></div>
+                    <div class="example" id="exampleText">例句...</div>
+                    <button class="action-btn" onclick="speakText('example', event)" style="margin-top: 10px; padding: 6px 12px; font-size: 12px; align-self: center;">🔊 朗读例句</button>
+                </div>
+            </div>
+        </div>
+        <div class="controls">
+            <button class="action-btn" onclick="prevCard()">⬅️ 上个</button>
+            <button class="action-btn" onclick="flipCard()">🔄 翻面</button>
+            <button class="action-btn" onclick="nextCard()">下个 ➡️</button>
+            <button class="action-btn green-btn" onclick="shuffleCards()">🔀 洗牌</button>
+        </div>
+        <div class="counter" id="counterText">1 / ?</div>
+    </div>
+
+    <div id="quiz-view" class="view-section">
+        <div class="mastery-text" id="masteryText">🏆 测验熟练度：0% (0/0) <br> 🎖️ 证书进度：0 / 3</div>
+        <div class="quiz-question" id="quizQuestion">
+            <span style="font-size:13px; color:#486581;" id="quizHint">请选出对应答案：</span><br><br>
+            <span id="quizDesc" style="font-size:18px;">...</span>
+        </div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="feedback" id="quizFeedback"></div>
+        <button class="action-btn" style="margin-top: 15px;" onclick="generateQuiz()">下一题</button>
+    </div>
+
+    <div id="spell-view" class="view-section">
+        <div style="width: 100%;">
+            <div class="mastery-text" id="spellProgressText" style="margin-bottom: 5px;">⌨️ 词汇收集：0 / 25 (0%)</div>
+            <div class="progress-container"><div class="progress-fill" id="spellProgressBar"></div></div>
+        </div>
+        <div class="quiz-question" style="font-size:14px; margin-bottom: 10px;" id="spellPrompt">解释与例句</div>
+        <div class="spell-answer-box" id="spellAnswerBox"></div>
+        <div class="letter-pool" id="letterPool"></div>
+        <button class="action-btn" id="submitSpellBtn" onclick="checkSpell()">送出答案</button>
+        <div class="feedback" id="spellFeedback"></div>
+        <button class="action-btn" style="margin-top: 15px; display: none;" id="nextSpellBtn" onclick="generateSpell()">下一题</button>
+    </div>
+
+    <div id="cloze-view" class="view-section">
+        <div class="mastery-text">📖 单元主题实战演练</div>
+        <div class="cloze-container" id="clozeContainer"></div>
+        <div class="feedback" id="clozeFeedback"></div>
+        <button class="action-btn" style="margin-top: 15px;" onclick="checkCloze()">提交验证</button>
+    </div>
+
+    <div class="grad-modal" id="gradModal">
+        <h2 class="grad-title" id="gradTitle">🛡️ 结业！</h2>
+        <p class="grad-desc" id="gradDesc">说明文字</p>
+        <button class="grad-btn" onclick="window.location.href='index.html'">🎓 荣耀结业 (返回大厅)</button>
+        <button class="grad-btn stay-btn" id="stayBtn" onclick="">📚 留下来继续复习</button>
+    </div>
+
+    <script>
+        // ======= 🌟 繁简转换逻辑 =======
+       let currentLang = 'tw'; 
+        let converterToCn = null;
+        let converterToTw = null;
+
+        function toggleLanguage() {
+            try {
+                // 如果還沒初始化，就建立轉換器
+                if (!converterToCn) {
+                    converterToCn = OpenCC.Converter({ from: 'tw', to: 'cn' });
+                    converterToTw = OpenCC.Converter({ from: 'cn', to: 'tw' });
+                }
+                
+                const rootNode = document.body;
+                if (currentLang === 'tw') {
+                    OpenCC.HTML.Convert(converterToCn, rootNode);
+                    currentLang = 'cn';
+                } else {
+                    OpenCC.HTML.Convert(converterToTw, rootNode);
+                    currentLang = 'tw';
+                }
+            } catch (error) {
+                alert("轉換引擎載入中或網路受阻，請稍後再試！\n" + error);
+                console.error(error);
+            }
+        }
+
+        // ==========================================
+        // ⚠️ 修改区：存档键名、生字数据、克漏字数据
+        // ==========================================
+        const STORAGE_KEY = 'spartan_ap_u2';
+        
+       let vocabData = [
+            { word: "Aberration", engDef: "A departure from what is normal, usual, or expected.", translation: "N. 异常，失常", synAnt: "同: Anomaly, Deviation", usage: "Statistical aberration (统计异常)", example: "The sudden drop in temperature in July was an environmental aberration." },
+            { word: "Benevolent", engDef: "Well meaning and kindly.", translation: "Adj. 仁慈的，慈善的", synAnt: "同: Kind, Generous; 反: Malevolent", usage: "Benevolent dictator (仁慈的独裁者)", example: "The benevolent donor anonymously gave millions to the children's hospital." },
+            { word: "Capricious", engDef: "Given to sudden and unaccountable changes of mood or behavior.", translation: "Adj. 反复无常的，任性的", synAnt: "同: Fickle, Unpredictable; 反: Stable", usage: "Capricious weather (多变的天气)", example: "The king was known for his capricious rulings that confused his subjects." },
+            { word: "Dearth", engDef: "A scarcity or lack of something.", translation: "N. 缺乏，不足", synAnt: "同: Scarcity, Shortage; 反: Abundance", usage: "Dearth of evidence (证据不足)", example: "There is a severe dearth of clean water in the drought-stricken region." },
+            { word: "Enigma", engDef: "A person or thing that is mysterious, puzzling, or difficult to understand.", translation: "N. 谜，不可思议的事物", synAnt: "同: Mystery, Puzzle", usage: "Remain an enigma (依然是个谜)", example: "The motives of the serial killer remained an enigma to the detectives." },
+            { word: "Fervent", engDef: "Having or displaying a passionate intensity.", translation: "Adj. 热烈的，狂热的", synAnt: "同: Passionate, Intense; 反: Apathetic", usage: "Fervent supporter (狂热的支持者)", example: "She gave a fervent speech that moved the entire audience to tears." },
+            { word: "Gregarious", engDef: "Fond of company; sociable.", translation: "Adj. 爱交际的，合群的", synAnt: "同: Sociable, Outgoing; 反: Introverted", usage: "Gregarious personality (开朗交际的性格)", example: "His gregarious nature made him the most popular student on campus." },
+            { word: "Haughty", engDef: "Arrogantly superior and disdainful.", translation: "Adj. 傲慢的，自大的", synAnt: "同: Arrogant, Proud; 反: Humble", usage: "Haughty demeanor (傲慢的态度)", example: "The aristocrat shot a haughty glance at the servants working below." },
+            { word: "Inevitable", engDef: "Certain to happen; unavoidable.", translation: "Adj. 必然的，不可避免的", synAnt: "同: Unavoidable, Inescapable; 反: Preventable", usage: "Inevitable consequence (必然的后果)", example: "With the continuous printing of money, inflation became an inevitable outcome." },
+            { word: "Juxtapose", engDef: "Place or deal with close together for contrasting effect.", translation: "V. 并列，并置", synAnt: "同: Place side by side, Compare", usage: "Juxtapose the old and new (新旧并列)", example: "The exhibition aimed to juxtapose modern art with classical sculptures." },
+            { word: "Lethargic", engDef: "Affected by lethargy; sluggish and apathetic.", translation: "Adj. 昏睡的，无精打采的", synAnt: "同: Sluggish, Lazy; 反: Energetic", usage: "Feel lethargic (感到无力)", example: "The extreme heat made everyone in the village feel lethargic and slow." },
+            { word: "Mitigate", engDef: "Make less severe, serious, or painful.", translation: "V. 减轻，缓和", synAnt: "同: Alleviate, Reduce; 反: Aggravate", usage: "Mitigate the impact (减轻影响)", example: "The government took immediate steps to mitigate the economic crisis." },
+            { word: "Nostalgia", engDef: "A sentimental longing or wistful affection for the past.", translation: "N. 怀旧，思乡", synAnt: "同: Homesickness, Remembrance", usage: "Sense of nostalgia (怀旧感)", example: "Hearing that old song filled her with a deep sense of nostalgia." },
+            { word: "Ostentatious", engDef: "Characterized by vulgar or pretentious display.", translation: "Adj. 炫耀的，卖弄的", synAnt: "同: Showy, Pretentious; 反: Modest", usage: "Ostentatious lifestyle (奢华炫耀的生活)", example: "He drove an ostentatious sports car to show off his sudden wealth." },
+            { word: "Pragmatic", engDef: "Dealing with things sensibly and realistically.", translation: "Adj. 务实的，实用的", synAnt: "同: Practical, Realistic; 反: Idealistic", usage: "Pragmatic approach (务实的方法)", example: "The manager took a pragmatic approach to solving the supply chain issues." },
+            { word: "Quixotic", engDef: "Exceedingly idealistic; unrealistic and impractical.", translation: "Adj. 唐吉诃德式的，不切实际的", synAnt: "同: Idealistic, Romantic; 反: Pragmatic", usage: "Quixotic scheme (不切实际的计划)", example: "His quixotic quest to eliminate all world hunger ended in financial ruin." },
+            { word: "Resilient", engDef: "Able to withstand or recover quickly from difficult conditions.", translation: "Adj. 适应力强的，有弹性的", synAnt: "同: Tough, Flexible; 反: Fragile", usage: "Resilient economy (复苏力强的经济)", example: "Children are often incredibly resilient when faced with major life changes." },
+            { word: "Scrutinize", engDef: "Examine or inspect closely and thoroughly.", translation: "V. 仔细审查", synAnt: "同: Examine, Inspect", usage: "Scrutinize the document (仔细审查文件)", example: "The legal team will scrutinize every clause in the contract before signing." },
+            { word: "Trepidation", engDef: "A feeling of fear or agitation about something that may happen.", translation: "N. 恐惧，惊恐", synAnt: "同: Fear, Apprehension; 反: Confidence", usage: "With trepidation (忐忑不安地)", example: "She entered the boss's office with deep trepidation regarding her job security." },
+            { word: "Ubiquitous", engDef: "Present, appearing, or found everywhere.", translation: "Adj. 无所不在的", synAnt: "同: Omnipresent, Universal; 反: Rare", usage: "Ubiquitous presence (无处不在)", example: "Smartphones have become a ubiquitous tool in modern society." },
+            { word: "Venerate", engDef: "Regard with great respect; revere.", translation: "V. 崇敬，敬仰", synAnt: "同: Revere, Respect; 反: Despise", usage: "Venerate the ancestors (敬重祖先)", example: "The old professor is highly venerated by his colleagues and students alike." },
+            { word: "Wane", engDef: "Decrease in vigor, power, or extent; become weaker.", translation: "V. 衰退，减弱", synAnt: "同: Decline, Diminish; 反: Grow", usage: "Waning interest (兴趣减退)", example: "Public support for the war began to wane as the casualties increased." },
+            { word: "Xenophobia", engDef: "Dislike of or prejudice against people from other countries.", translation: "N. 排外，仇外心理", synAnt: "同: Racism, Bigotry", usage: "Rise in xenophobia (仇外心理抬头)", example: "Economic hardships often trigger an unfortunate rise in xenophobia." },
+            { word: "Yearning", engDef: "A feeling of intense longing for something.", translation: "N. 渴望，向往", synAnt: "同: Longing, Craving", usage: "A yearning for freedom (对自由的渴望)", example: "He felt a deep yearning to return to his peaceful hometown." },
+            { word: "Zealous", engDef: "Having or showing zeal; passionate.", translation: "Adj. 热心的，狂热的", synAnt: "同: Fervent, Enthusiastic; 反: Apathetic", usage: "Zealous supporter (狂热的支持者)", example: "The zealous detective worked day and night to solve the cold case." }
+        ];
+
+        let clozeData = {
+            passage: "The sudden collapse of the market was a complete [1]. To [2] the damage, the government took a highly [3] approach. Despite the public's [4], the resilient economy eventually proved that recovery was [5].",
+            blanks: ["Aberration", "Mitigate", "Pragmatic", "Trepidation", "Inevitable"], 
+            options: ["Pragmatic", "Trepidation", "Aberration", "Inevitable", "Mitigate", "Quixotic"] 
+        };
+
+
+        // ==========================================
+        // V6.0 核心引擎
+        // ==========================================
+        let currentIndex = 0; let currentQuizAnswer = null; let isEngToChnQuiz = true;
+        let currentSpellAnswer = null; let spellScrambledLetters = []; let spellCurrentAnswer = [];
+        
+        let localData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { 
+            starred: [], attempts: 0, correct: 0, certs: { c1: false, c2: false, c3: false },
+            spelledWords: [], spellCerts: { c1: false, c2: false, c3: false }
+        };
+        if (!localData.certs) localData.certs = { c1: false, c2: false, c3: false };
+        if (!localData.spelledWords) localData.spelledWords = [];
+        if (!localData.spellCerts) localData.spellCerts = { c1: false, c2: false, c3: false };
+
+        function speakText(type, event) {
+            event.stopPropagation(); 
+            let text = type === 'word' ? vocabData[currentIndex].word : vocabData[currentIndex].example;
+            const u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; u.rate = 0.9; window.speechSynthesis.speak(u);
+        }
+
+        function toggleStar(e) {
+            e.stopPropagation(); let w = vocabData[currentIndex].word;
+            if(localData.starred.includes(w)) localData.starred = localData.starred.filter(x => x !== w); else localData.starred.push(w);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateStarUI();
+        }
+        function updateStarUI() { document.getElementById('starBtn').classList.toggle('active', localData.starred.includes(vocabData[currentIndex].word)); }
+
+        function switchTab(t) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            event.target.classList.add('active'); document.getElementById(t + '-view').classList.add('active');
+            if(t==='quiz') generateQuiz(); if(t==='spell') generateSpell(); if(t==='cloze') renderCloze();
+        }
+
+        // 单词卡
+        function renderCard() {
+            if(!vocabData.length) return; document.getElementById('flashcard').classList.remove('flipped');
+            setTimeout(() => {
+                let d = vocabData[currentIndex];
+                document.getElementById('wordText').innerHTML = d.word; document.getElementById('engDefText').innerHTML = d.engDef || '';
+                document.getElementById('translationText').innerHTML = d.translation; document.getElementById('synAntText').innerHTML = `<strong>同/反义：</strong> ${d.synAnt}`;
+                document.getElementById('usageText').innerHTML = `<strong>用法：</strong> ${d.usage || ''}`; document.getElementById('exampleText').innerHTML = d.example;
+                document.getElementById('counterText').innerHTML = `${currentIndex + 1} / ${vocabData.length}`; updateStarUI(); 
+            }, 150);
+        }
+        function flipCard() { document.getElementById('flashcard').classList.toggle('flipped'); }
+        function nextCard() { if(currentIndex < vocabData.length-1){ currentIndex++; renderCard(); } }
+        function prevCard() { if(currentIndex > 0){ currentIndex--; renderCard(); } }
+        function shuffleCards() { vocabData.sort(()=>Math.random()-0.5); currentIndex=0; renderCard(); }
+
+        // 随机测验 (修改为 10 / 20 / 25 门槛)
+        function updateMasteryUI() {
+            let rate = localData.attempts===0 ? 0 : Math.round((localData.correct/localData.attempts)*100);
+            let certs = (localData.certs.c1?1:0) + (localData.certs.c2?1:0) + (localData.certs.c3?1:0);
+            document.getElementById('masteryText').innerHTML = `🏆 熟练度：${rate}% (${localData.correct}/${localData.attempts}) <br> 🎖️ 证书进度：${certs} / 3`;
+            if(localData.attempts>=10 && rate>=90 && !localData.certs.c1) showModal('quiz', 1);
+            else if(localData.attempts>=20 && rate>=90 && !localData.certs.c2) showModal('quiz', 2);
+            else if(localData.attempts>=25 && rate>=95 && !localData.certs.c3) showModal('quiz', 3);
+        }
+        function generateQuiz() {
+            if(vocabData.length<4) return; document.getElementById('quizFeedback').innerHTML = ""; 
+            isEngToChnQuiz = Math.random() > 0.5;
+            currentQuizAnswer = vocabData[Math.floor(Math.random() * vocabData.length)];
+            document.getElementById('quizHint').innerHTML = isEngToChnQuiz ? "👀 请选出中文：" : "🧠 请选出英文：";
+            document.getElementById('quizDesc').innerHTML = isEngToChnQuiz ? currentQuizAnswer.word : currentQuizAnswer.translation;
+            let ops = [currentQuizAnswer], others = vocabData.filter(v=>v.word!==currentQuizAnswer.word).sort(()=>Math.random()-0.5);
+            ops.push(others[0], others[1], others[2]); ops.sort(()=>Math.random()-0.5);
+            document.getElementById('quizOptions').innerHTML = ops.map(opt => `<button class="quiz-option" onclick="checkQuiz('${opt.word}')">${isEngToChnQuiz ? opt.translation : opt.word}</button>`).join('');
+            updateMasteryUI();
+        }
+        function checkQuiz(w) {
+            let fb = document.getElementById('quizFeedback'); localData.attempts++;
+            if(w === currentQuizAnswer.word){ fb.innerHTML = "✅ 正确！"; fb.style.color = "green"; localData.correct++; }
+            else{ fb.innerHTML = `❌ 错误！正解是：${isEngToChnQuiz ? currentQuizAnswer.translation : currentQuizAnswer.word}`; fb.style.color = "red"; }
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateMasteryUI();
+        }
+
+        // 拼图 (修改为 10 / 20 / 25 门槛)
+        function updateSpellUI() {
+            let uc = localData.spelledWords.length, total = vocabData.length;
+            document.getElementById('spellProgressText').innerHTML = `⌨️ 词汇收集：${uc} / ${total}`;
+            document.getElementById('spellProgressBar').style.width = Math.round((uc/total)*100) + '%';
+            if(uc>=10 && !localData.spellCerts.c1) showModal('spell', 1);
+            else if(uc>=20 && !localData.spellCerts.c2) showModal('spell', 2);
+            else if(uc>=25 && !localData.spellCerts.c3) showModal('spell', 3);
+        }
+        function generateSpell() {
+            document.getElementById('spellFeedback').innerHTML = ""; document.getElementById('nextSpellBtn').style.display = "none";
+            document.getElementById('submitSpellBtn').style.display = "inline-block"; document.getElementById('spellAnswerBox').style.display = "flex";
+            document.getElementById('letterPool').style.display = "flex"; updateSpellUI();
+            if(localData.spelledWords.length >= vocabData.length){
+                document.getElementById('spellPrompt').innerHTML = "🎉 挑战成功！全部生字收集完毕！";
+                document.getElementById('spellAnswerBox').style.display = "none"; document.getElementById('letterPool').style.display = "none"; document.getElementById('submitSpellBtn').style.display = "none"; return;
+            }
+            currentSpellAnswer = vocabData[Math.floor(Math.random() * vocabData.length)];
+            let chars = currentSpellAnswer.word.toLowerCase().split('').sort(()=>Math.random()-0.5);
+            spellScrambledLetters = chars.map((c, i) => ({ id: i, char: c, used: false })); spellCurrentAnswer = [];
+            let blanks = currentSpellAnswer.word.replace(/[a-zA-Z]/g, "_ ");
+            document.getElementById('spellPrompt').innerHTML = `<strong>${currentSpellAnswer.translation}</strong><br><em>${currentSpellAnswer.example.replace(new RegExp(currentSpellAnswer.word,"gi"), blanks.trim())}</em>`;
+            renderSpellGame();
+        }
+        function renderSpellGame() {
+            let ab = document.getElementById('spellAnswerBox'), lp = document.getElementById('letterPool'); ab.innerHTML = ''; lp.innerHTML = '';
+            spellCurrentAnswer.forEach((item, i) => {
+                let btn = document.createElement('button'); btn.className = 'letter-tile in-answer'; btn.innerText = item.char;
+                btn.onclick = () => { spellCurrentAnswer.splice(i, 1); item.used = false; renderSpellGame(); }; ab.appendChild(btn);
+            });
+            spellScrambledLetters.forEach(item => {
+                if(!item.used){
+                    let btn = document.createElement('button'); btn.className = 'letter-tile'; btn.innerText = item.char;
+                    btn.onclick = () => { item.used = true; spellCurrentAnswer.push(item); renderSpellGame(); }; lp.appendChild(btn);
+                }
+            });
+        }
+        function checkSpell() {
+            let ans = spellCurrentAnswer.map(i=>i.char).join(''), corr = currentSpellAnswer.word.toLowerCase(), fb = document.getElementById('spellFeedback');
+            if(ans === corr){
+                fb.innerHTML = "✅ 拼字正确！"; fb.style.color = "green"; 
+                if(!localData.spelledWords.includes(currentSpellAnswer.word)){ localData.spelledWords.push(currentSpellAnswer.word); localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateSpellUI(); }
+            } else { fb.innerHTML = `❌ 错误！正解：${currentSpellAnswer.word}`; fb.style.color = "red"; }
+            document.getElementById('nextSpellBtn').style.display = "inline-block"; document.getElementById('submitSpellBtn').style.display = "none";
+        }
+
+        // 克漏字
+        function renderCloze() {
+            let c = document.getElementById('clozeContainer'), h = clozeData.passage; document.getElementById('clozeFeedback').innerHTML = "";
+            let opts = `<option value="">-- 选择 --</option>` + clozeData.options.map(o=>`<option value="${o}">${o}</option>`).join('');
+            for(let i=0; i<clozeData.blanks.length; i++) h = h.replace(`[${i+1}]`, `<select id="clz${i}" class="cloze-select">${opts}</select>`);
+            c.innerHTML = h;
+        }
+        function checkCloze() {
+            let cor = 0;
+            for(let i=0; i<clozeData.blanks.length; i++){
+                let sel = document.getElementById(`clz${i}`);
+                if(sel.value === clozeData.blanks[i]){ cor++; sel.style.borderColor="green"; sel.style.backgroundColor="#e8f5e9"; }
+                else{ sel.style.borderColor="red"; sel.style.backgroundColor="#ffebee"; }
+            }
+            let fb = document.getElementById('clozeFeedback');
+            if(cor === clozeData.blanks.length){ fb.innerHTML="🎉 太棒了！段落完全正确！"; fb.style.color="green"; }
+            else{ fb.innerHTML=`💪 答对了 ${cor}/${clozeData.blanks.length} 个！`; fb.style.color="red"; }
+        }
+
+        // 弹窗
+        function showModal(type, level) {
+            let t = document.getElementById('gradTitle'), d = document.getElementById('gradDesc');
+            if(type==='quiz'){
+                if(level===1) { t.innerHTML="🥉 青铜证书"; d.innerHTML="选择题完成 10 题且维持高正确率！"; }
+                if(level===2) { t.innerHTML="🥈 白银证书"; d.innerHTML="选择题完成 20 题，太神了！"; }
+                if(level===3) { t.innerHTML="🏆 黄金结业！"; d.innerHTML="选择题刷满 25 题且正确率 95%！"; }
+            } else {
+                if(level===1) { t.innerHTML="🧩 初级拼图学者"; d.innerHTML="成功拼出 10 个生字！"; }
+                if(level===2) { t.innerHTML="🧩 进阶拼图达人"; d.innerHTML="征服 20 个生字，只差一点了！"; }
+                if(level===3) { t.innerHTML="👑 拼图大师！"; d.innerHTML="满分全制霸！肌肉记忆完美！"; }
+            }
+            document.getElementById('stayBtn').onclick = () => { closeModal(type, level); };
+            document.getElementById('gradModal').style.display = 'flex';
+        }
+        function closeModal(type, level) {
+            if(type==='quiz') localData.certs[`c${level}`] = true; else localData.spellCerts[`c${level}`] = true;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); document.getElementById('gradModal').style.display = 'none';
+            if(type==='quiz') updateMasteryUI(); else updateSpellUI();
+        }
+
+        window.onload = () => { renderCard(); updateMasteryUI(); updateSpellUI(); };
+    </script>
+</body>
+</html>
