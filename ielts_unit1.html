@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IELTS (Unit 2)</title>
+    <title>IELTS 雅思 (Unit 1)</title>
     <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/full.js"></script>
     <style>
         /* ======= 🌟 IELTS 專屬優雅紫配色 (Elegant Purple) ======= */
@@ -79,7 +79,7 @@
 
     <button class="lang-toggle-btn" onclick="toggleLanguage()">繁 / 简</button>
     
-    <h1>IELTS (Unit 2)</h1>
+    <h1>IELTS (Unit 1)</h1>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('flashcard')">📇 单词卡</button>
@@ -174,41 +174,41 @@
         // ==========================================
         // ⚠️ 修改区：已幫妳改為 IELTS 的專屬存檔金鑰
         // ==========================================
-        const STORAGE_KEY = 'spartan_ielts_u2';
+        const STORAGE_KEY = 'spartan_ielts_u1';
         
         // ⚠️ 之後用 AI 萃取的 25 個雅思單字貼到這裡
-        let vocabData = [
-            { word: "Automate", engDef: "Convert to largely automatic operation.", translation: "V. 自动化", synAnt: "同: Mechanize, Computerize", usage: "Automate a process (自动化流程) / Highly automated (高度自动化的)", example: "The factory plans to automate its production line to increase efficiency." },
-            { word: "Paradigm", engDef: "A typical example or pattern of something; a model.", translation: "N. 范例，典范", synAnt: "同: Model, Prototype", usage: "Paradigm shift (范式转变) / New paradigm (新模式)", example: "The discovery of DNA created a new paradigm in biological science." },
-            { word: "Obsolete", engDef: "No longer produced or used; out of date.", translation: "Adj. 废弃的，淘汰的", synAnt: "同: Outdated, Antiquated; 反: Modern", usage: "Become obsolete (变得过时) / Obsolete technology (淘汰的技术)", example: "Typewriters have become obsolete since the invention of computers." },
-            { word: "Unprecedented", engDef: "Never done or known before.", translation: "Adj. 空前的，史无前例的", synAnt: "同: Unparalleled, Extraordinary; 反: Normal", usage: "Unprecedented level (空前的水平) / Unprecedented scale (前所未有的规模)", example: "The internet has provided unprecedented access to information." },
-            { word: "Implication", engDef: "The conclusion that can be drawn from something.", translation: "N. 暗示，可能引发的后果", synAnt: "同: Consequence, Significance", usage: "Profound implication (深远的影响) / Practical implications (实际意义)", example: "The new policy has significant implications for the economy." },
-            { word: "Innovation", engDef: "A new method, idea, product, etc.", translation: "N. 创新，革新", synAnt: "同: Invention, Advancement", usage: "Technological innovation (技术创新) / Drive innovation (推动创新)", example: "Innovation is key to the company's long-term success." },
-            { word: "Disruptive", engDef: "Causing or tending to cause disruption.", translation: "Adj. 破坏性的，颠覆性的", synAnt: "同: Disturbing, Groundbreaking", usage: "Disruptive technology (颠覆性技术) / Disruptive behavior (破坏性行为)", example: "Artificial intelligence is a disruptive technology that will change many industries." },
-            { word: "Algorithm", engDef: "A process or set of rules to be followed in calculations.", translation: "N. 算法", synAnt: "同: Formula, Procedure", usage: "Complex algorithm (复杂的算法) / Search algorithm (搜索算法)", example: "Social media platforms use algorithms to determine what content to show users." },
-            { word: "Convergence", engDef: "The process or state of converging.", translation: "N. 趋同，汇聚", synAnt: "同: Meeting, Intersection; 反: Divergence", usage: "Convergence of technologies (技术的融合) / Cultural convergence (文化趋同)", example: "The convergence of computing and telecommunications created the internet." },
-            { word: "Synthesize", engDef: "Make something by synthesis, especially chemically.", translation: "V. 合成，综合", synAnt: "同: Combine, Integrate; 反: Analyze", usage: "Synthesize information (综合信息) / Synthesize a protein (合成蛋白质)", example: "Students must learn to synthesize information from various sources." },
-            { word: "Feasible", engDef: "Possible to do easily or conveniently.", translation: "Adj. 可行的，行得通的", synAnt: "同: Practicable, Viable; 反: Impossible", usage: "Feasible plan (可行的计划) / Economically feasible (经济上可行的)", example: "It is not currently feasible to build a colony on Mars." },
-            { word: "Intricate", engDef: "Very complicated or detailed.", translation: "Adj. 错综复杂的", synAnt: "同: Complex, Elaborate; 反: Simple", usage: "Intricate design (复杂的设计) / Intricate network (错综复杂的网络)", example: "The clock mechanism is extremely intricate." },
-            { word: "Empirical", engDef: "Based on, concerned with, or verifiable by observation or experience.", translation: "Adj. 经验主义的，以实验为依据的", synAnt: "同: Observational, Practical; 反: Theoretical", usage: "Empirical evidence (经验证据) / Empirical research (实证研究)", example: "The theory needs to be supported by empirical data." },
-            { word: "Simulate", engDef: "Imitate the appearance or character of.", translation: "V. 模拟，模仿", synAnt: "同: Imitate, Replicate", usage: "Simulate conditions (模拟条件) / Computer simulation (计算机模拟)", example: "The software is used to simulate the flow of traffic." },
-            { word: "Cybernetic", engDef: "Relating to communications and automatic control systems.", translation: "Adj. 控制论的，电脑的", synAnt: "同: Automated, Electronic", usage: "Cybernetic organism (赛博格/半机械人) / Cybernetic system (控制系统)", example: "Cybernetic enhancements might one day allow humans to exceed natural physical limits." },
-            { word: "Proliferation", engDef: "Rapid increase in numbers.", translation: "N. 激增，扩散", synAnt: "同: Multiplication, Spread; 反: Decrease", usage: "Nuclear proliferation (核扩散) / Proliferation of smartphones (智能手机的普及)", example: "The past decade has seen a proliferation of social media platforms." },
-            { word: "Vulnerability", engDef: "The quality or state of being exposed to the possibility of being attacked.", translation: "N. 脆弱性，易受攻击", synAnt: "同: Weakness, Susceptibility; 反: Resilience", usage: "Security vulnerability (安全漏洞) / Economic vulnerability (经济脆弱性)", example: "The report highlighted the city's vulnerability to flooding." },
-            { word: "Optimize", engDef: "Make the best or most effective use of.", translation: "V. 优化，使完善", synAnt: "同: Maximize, Improve", usage: "Optimize performance (优化性能) / Optimize resources (优化资源)", example: "The new routing system will optimize delivery times." },
-            { word: "Autonomous", engDef: "Having the freedom to govern itself or control its own affairs.", translation: "Adj. 自治的，自主的", synAnt: "同: Independent, Self-governing", usage: "Autonomous vehicle (自动驾驶汽车) / Autonomous robot (自主机器人)", example: "The development of autonomous vehicles will revolutionize transportation." },
-            { word: "Replicate", engDef: "Make an exact copy of; reproduce.", translation: "V. 复制，重做", synAnt: "同: Copy, Duplicate", usage: "Replicate a study (重复一项研究) / Replicate DNA (复制DNA)", example: "Scientists have been unable to replicate the results of the initial experiment." },
-            { word: "Breakthrough", engDef: "A sudden, dramatic, and important discovery or development.", translation: "N. 突破，重大进展", synAnt: "同: Advance, Discovery", usage: "Major breakthrough (重大突破) / Scientific breakthrough (科学突破)", example: "The new vaccine represents a major breakthrough in medicine." },
-            { word: "Ubiquitous", engDef: "Present, appearing, or found everywhere.", translation: "Adj. 无所不在的", synAnt: "同: Omnipresent, Universal; 反: Rare", usage: "Ubiquitous computing (普适计算) / Ubiquitous presence (无处不在的出现)", example: "Mobile phones have become ubiquitous in modern society." },
-            { word: "Surveillance", engDef: "Close observation, especially of a suspected spy or criminal.", translation: "N. 监视，监控", synAnt: "同: Observation, Monitoring", usage: "Surveillance camera (监控摄像头) / Under surveillance (在监视下)", example: "The bank is under constant video surveillance." },
-            { word: "Catalyst", engDef: "A substance that increases the rate of a chemical reaction; a person or thing that precipitates an event.", translation: "N. 催化剂，促使变化的人/事物", synAnt: "同: Stimulus, Impetus", usage: "Act as a catalyst (充当催化剂) / Catalyst for change (变革的催化剂)", example: "The protests served as a catalyst for political reform." },
-            { word: "Dilemma", engDef: "A situation in which a difficult choice has to be made.", translation: "N. 困境，进退两难", synAnt: "同: Quandary, Predicament", usage: "Moral dilemma (道德困境) / Face a dilemma (面临两难)", example: "The doctor faced a moral dilemma regarding the patient's treatment." }
+       let vocabData = [
+            { word: "Pedagogy", engDef: "The method and practice of teaching.", translation: "N. 教育学，教学法", synAnt: "同: Education, Didactics", usage: "Modern pedagogy (现代教学法) / Pedagogy of science (科学教育学)", example: "The university's new curriculum reflects a shift in modern pedagogy." },
+            { word: "Eradicate", engDef: "Destroy completely; put an end to.", translation: "V. 根除，消灭", synAnt: "同: Eliminate, Annihilate; 反: Establish", usage: "Eradicate poverty (消除贫困) / Eradicate disease (根除疾病)", example: "Global efforts are required to eradicate infectious diseases." },
+            { word: "Holistic", engDef: "Characterized by comprehension of the parts of something as intimately interconnected.", translation: "Adj. 整体的，全面的", synAnt: "同: Comprehensive, Integrated; 反: Partial", usage: "Holistic approach (整体方法) / Holistic education (全人教育)", example: "A holistic approach is necessary to address complex environmental issues." },
+            { word: "Disparity", engDef: "A great difference.", translation: "N. 差异，不平等", synAnt: "同: Inequality, Discrepancy; 反: Equality", usage: "Economic disparity (经济差距) / Growing disparity (日益扩大的差距)", example: "The disparity in wealth between the two regions is growing rapidly." },
+            { word: "Mitigate", engDef: "Make less severe, serious, or painful.", translation: "V. 减轻，缓和", synAnt: "同: Alleviate, Lessen; 反: Aggravate", usage: "Mitigate the impact (减轻影响) / Mitigate risks (降低风险)", example: "The government implemented measures to mitigate the effects of the drought." },
+            { word: "Innate", engDef: "Inborn; natural.", translation: "Adj. 先天的，固有的", synAnt: "同: Inherent, Intrinsic; 反: Acquired", usage: "Innate talent (天赋) / Innate immunity (先天免疫)", example: "Some researchers believe that language capacity is an innate human trait." },
+            { word: "Marginalize", engDef: "Treat as insignificant or peripheral.", translation: "V. 使边缘化", synAnt: "同: Sideline, Isolate; 反: Integrate", usage: "Marginalized groups (边缘群体) / Socially marginalized (社会边缘化)", example: "We must ensure that minorities are not marginalized in the political process." },
+            { word: "Pragmatic", engDef: "Dealing with things sensibly and realistically.", translation: "Adj. 务实的，实用的", synAnt: "同: Practical, Realistic; 反: Idealistic", usage: "Pragmatic approach (务实的方法) / Pragmatic solution (切合实际的解决方案)", example: "The council took a pragmatic approach to solving the traffic problem." },
+            { word: "Obligation", engDef: "An act or course of action to which a person is morally or legally bound.", translation: "N. 义务，责任", synAnt: "同: Duty, Responsibility", usage: "Moral obligation (道德义务) / Legal obligation (法律责任)", example: "Citizens have an obligation to obey the laws of their country." },
+            { word: "Consensus", engDef: "A general agreement.", translation: "N. 共识，一致同意", synAnt: "同: Agreement, Harmony; 反: Disagreement", usage: "Reach a consensus (达成共识) / General consensus (普遍共识)", example: "It took hours of debate for the committee to reach a consensus." },
+            { word: "Implement", engDef: "Put a decision, plan, or agreement into effect.", translation: "V. 实施，执行", synAnt: "同: Execute, Apply; 反: Cancel", usage: "Implement a policy (实施政策) / Implement changes (执行变更)", example: "The new regulations will be implemented starting next month." },
+            { word: "Elicit", engDef: "Evoke or draw out a response, answer, or fact.", translation: "V. 引出，探出", synAnt: "同: Evoke, Extract", usage: "Elicit a response (引出回应) / Elicit information (探取信息)", example: "The questionnaire was designed to elicit honest feedback from the participants." },
+            { word: "Detrimental", engDef: "Tending to cause harm.", translation: "Adj. 有害的，不利的", synAnt: "同: Harmful, Damaging; 反: Beneficial", usage: "Detrimental effect (不利影响) / Detrimental to health (对健康有害)", example: "Prolonged exposure to the sun can be detrimental to your skin." },
+            { word: "Foster", engDef: "Encourage or promote the development of something.", translation: "V. 培养，促进", synAnt: "同: Encourage, Cultivate; 反: Hinder", usage: "Foster economic growth (促进经济增长) / Foster creativity (培养创造力)", example: "The program aims to foster a sense of community among students." },
+            { word: "Alleviate", engDef: "Make suffering, deficiency, or a problem less severe.", translation: "V. 减轻，缓解", synAnt: "同: Relieve, Ease; 反: Exacerbate", usage: "Alleviate poverty (缓解贫困) / Alleviate symptoms (减轻症状)", example: "The new medication helps to alleviate the symptoms of the disease." },
+            { word: "Cohesion", engDef: "The action or fact of forming a united whole.", translation: "N. 凝聚力，团结", synAnt: "同: Unity, Solidarity; 反: Division", usage: "Social cohesion (社会凝聚力) / Group cohesion (团队凝聚力)", example: "Strong leadership is essential for maintaining group cohesion." },
+            { word: "Conformity", engDef: "Compliance with standards, rules, or laws.", translation: "N. 遵守，一致", synAnt: "同: Compliance, Obedience; 反: Rebellion", usage: "Conformity to rules (遵守规则) / Social conformity (社会从众)", example: "There is often pressure on teenagers to demonstrate conformity to peer norms." },
+            { word: "Scrutinize", engDef: "Examine or inspect closely and thoroughly.", translation: "V. 仔细审查", synAnt: "同: Examine, Inspect", usage: "Scrutinize the data (仔细审查数据) / Closely scrutinize (密切监视)", example: "The auditors will scrutinize the company's financial records." },
+            { word: "Pervasive", engDef: "Spreading widely throughout an area or a group of people.", translation: "Adj. 普遍的，弥漫的", synAnt: "同: Ubiquitous, Widespread", usage: "Pervasive influence (普遍的影响) / Pervasive problem (普遍存在的问题)", example: "Corruption is a pervasive issue in many developing nations." },
+            { word: "Viable", engDef: "Capable of working successfully; feasible.", translation: "Adj. 可行的，能存活的", synAnt: "同: Feasible, Practical; 反: Impossible", usage: "Viable alternative (可行的替代方案) / Economically viable (经济上可行的)", example: "Wind power is increasingly seen as a viable alternative to fossil fuels." },
+            { word: "Autonomous", engDef: "Having the freedom to govern itself or control its own affairs.", translation: "Adj. 自治的，自主的", synAnt: "同: Independent, Self-governing; 反: Dependent", usage: "Autonomous region (自治区) / Autonomous learning (自主学习)", example: "The province was granted an autonomous status after the treaty." },
+            { word: "Paradox", engDef: "A seemingly absurd or self-contradictory statement.", translation: "N. 悖论，矛盾", synAnt: "同: Contradiction, Anomaly", usage: "Apparent paradox (明显的悖论) / Resolve the paradox (解决矛盾)", example: "It is a paradox that in a world of plenty, millions still go hungry." },
+            { word: "Incentive", engDef: "A thing that motivates or encourages one to do something.", translation: "N. 动机，刺激", synAnt: "同: Motivation, Encouragement; 反: Deterrent", usage: "Financial incentive (经济刺激) / Provide an incentive (提供诱因)", example: "The company offered a bonus as an incentive to improve sales." },
+            { word: "Compulsory", engDef: "Required by law or a rule; obligatory.", translation: "Adj. 强制的，必修的", synAnt: "同: Mandatory, Obligatory; 反: Optional", usage: "Compulsory education (义务教育) / Compulsory subject (必修科目)", example: "English is a compulsory subject in most schools." },
+            { word: "Hierarchy", engDef: "A system in which people or groups are ranked one above the other.", translation: "N. 等级制度", synAnt: "同: Ranking, Pecking order", usage: "Social hierarchy (社会阶层) / Corporate hierarchy (企业层级)", example: "The military has a strict hierarchy of command." }
         ];
 
         let clozeData = {
-            passage: "The shift towards renewable energy represents a new [1] in engineering. If we [2] manufacturing processes, traditional jobs may become [3]. However, this [4] change also brings profound [5] for global economic growth.",
-            blanks: ["Paradigm", "Automate", "Obsolete", "Unprecedented", "Implication"], 
-            options: ["Obsolete", "Automate", "Paradigm", "Implication", "Unprecedented", "Eradicate"] 
+            passage: "To [1] poverty, the government must invest in early childhood [2]. Implementing a [3] curriculum that addresses both academic and emotional needs is crucial. This will reduce the social [4] between different communities and [5] the negative effects of economic instability.",
+            blanks: ["Eradicate", "Pedagogy", "Holistic", "Disparity", "Mitigate"], 
+            options: ["Holistic", "Eradicate", "Disparity", "Pedagogy", "Mitigate", "Innate"] 
         };
 
         // ==========================================
