@@ -3,89 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spartan Prep Vocab - 英文字庫中心</title>
+    <title>Spartan Prep Vocab - 斯巴達字庫大廳</title>
+    <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/full.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; margin: 0; color: #333; }
-        h1 { color: #2c3e50; font-size: 28px; margin-bottom: 10px; }
-        p.subtitle { color: #7f8c8d; margin-bottom: 30px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #F8F9FA; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; margin: 0; color: #333; position: relative;}
+        h1 { color: #212529; font-size: 28px; margin-bottom: 5px; font-weight: 800;}
+        p.subtitle { color: #6C757D; margin-bottom: 30px; font-size: 15px;}
         
-        .menu-container { display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 400px; }
+        .lang-toggle-btn { position: absolute; top: 15px; right: 15px; background-color: #E8EEF2; color: #003E6B; border: 2px solid #003E6B; padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: bold; cursor: pointer; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+        .lang-toggle-btn:hover { background-color: #003E6B; color: white; }
+
+        .menu-container { display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 400px; }
         
-        /* 托福 區塊 (暗紅) */
-        .section-toefl { background-color: #FFF5F5; border-left: 6px solid #800000; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .section-toefl h2 { color: #800000; margin-top: 0; font-size: 20px; }
+        .category-btn { width: 100%; padding: 20px; border: none; border-radius: 12px; font-size: 18px; font-weight: bold; text-align: left; cursor: pointer; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.08);}
+        .category-btn:active { transform: scale(0.98); }
+        .category-btn::after { content: '▼'; font-size: 14px; opacity: 0.7;}
+        .category-btn.active::after { content: '▲'; }
 
-        /* GRE 區塊 (鵝黃) */
-        .section-gre { background-color: #FFFDE7; border-left: 6px solid #F57F17; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .section-gre h2 { color: #E65100; margin-top: 0; font-size: 20px; }
+        .btn-toefl { background-color: #800000; color: white; } 
+        .btn-gre { background-color: #F57F17; color: white; }   
+        .btn-ap { background-color: #003E6B; color: white; }    
+        .btn-tcm { background-color: #2E7D32; color: white; }   
 
-        /* 中醫針灸 區塊 (護眼綠) */
-        .section-tcm { background-color: #E8F5E9; border-left: 6px solid #2E7D32; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .section-tcm h2 { color: #2E7D32; margin-top: 0; font-size: 20px; }
+        .unit-list { display: none; flex-direction: column; gap: 8px; padding: 15px 10px; background: white; border-radius: 10px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); margin-top: -5px; margin-bottom: 10px;}
+        .unit-list.active { display: flex; }
 
-        /* 按鈕共用樣式 */
-        .unit-btn { display: block; width: 100%; padding: 12px 15px; margin-bottom: 10px; background-color: white; border: 1px solid #ddd; border-radius: 8px; text-decoration: none; color: #333; font-weight: bold; transition: 0.2s; box-sizing: border-box; text-align: left; font-size: 15px; cursor: pointer; }
+        .unit-btn { width: 100%; padding: 12px 15px; background-color: white; border: 1px solid #E9ECEF; border-radius: 8px; text-decoration: none; color: #495057; font-size: 15px; font-weight: 600; cursor: pointer; text-align: left; transition: 0.2s;}
         
-        /* 開放試用按鈕 Hover 變色效果 */
-        .section-toefl a.unit-btn:hover { background-color: #FADBD8; border-color: #800000; }
-        .section-gre a.unit-btn:hover { background-color: #FFF59D; border-color: #F57F17; }
-        .section-tcm a.unit-btn:hover { background-color: #C8E6C9; border-color: #2E7D32; }
+        .list-toefl .unit-btn:hover { border-color: #800000; background-color: #FFF5F5; color: #800000;}
+        .list-gre .unit-btn:hover { border-color: #F57F17; background-color: #FFFDE7; color: #E65100;}
+        .list-ap .unit-btn:hover { border-color: #003E6B; background-color: #E8EEF2; color: #003E6B;}
+        .list-tcm .unit-btn:hover { border-color: #2E7D32; background-color: #E8F5E9; color: #2E7D32;}
 
-        /* 🔒 上鎖按鈕樣式 */
-        button.locked-btn { background-color: #f0f0f0; color: #888; border: 1px dashed #ccc; }
-        button.locked-btn:hover { background-color: #e8e8e8; }
+        button.locked-btn { background-color: #F8F9FA; color: #ADB5BD; border: 1px dashed #DEE2E6; }
+        button.locked-btn:hover { background-color: #E9ECEF; color: #6C757D; border-color: #CED4DA; }
 
-        /* ======= 付費解鎖彈窗 (Paywall) ======= */
         .paywall-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(3px);}
         .paywall-box { background: white; padding: 30px 20px; border-radius: 20px; max-width: 320px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.3);}
         .paywall-icon { font-size: 50px; margin-bottom: 10px; }
         .paywall-title { color: #333; font-size: 22px; margin-bottom: 15px; font-weight: bold;}
         .paywall-desc { color: #666; font-size: 15px; line-height: 1.6; margin-bottom: 25px;}
-        
-        .buy-btn { width: 100%; background-color: #E65100; color: white; font-size: 16px; font-weight: bold; padding: 15px; border: none; border-radius: 12px; cursor: pointer; margin-bottom: 10px; transition: 0.2s;}
-        .buy-btn:hover { background-color: #BF360C; }
+        .buy-btn { width: 100%; background-color: #003E6B; color: white; font-size: 16px; font-weight: bold; padding: 15px; border: none; border-radius: 12px; cursor: pointer; margin-bottom: 10px; transition: 0.2s;}
         .cancel-btn { width: 100%; background-color: transparent; color: #888; font-size: 15px; padding: 10px; border: none; cursor: pointer; text-decoration: underline;}
     </style>
 </head>
 <body>
 
-    <h1>📚 Spartan Prep Vocab</h1>
-    <p class="subtitle">選擇你要挑戰的專業領域：</p>
+    <button class="lang-toggle-btn" onclick="toggleLanguage()">繁 / 简</button>
+
+    <h1>🏛️ Spartan Vocab</h1>
+    <p class="subtitle">選擇你要挑戰的專業領域</p>
 
     <div class="menu-container">
-        
-        <div class="section-toefl">
-            <h2>📕 TOEFL 全方位詞彙（2016-2025）</h2>
+        <button class="category-btn btn-toefl" onclick="toggleMenu('toefl')">📕 TOEFL 托福 (2000词)</button>
+        <div class="unit-list list-toefl" id="menu-toefl">
             <a href="toefl_unit1.html" class="unit-btn">▶ 單元 1：学术研究与逻辑推理 (開放)</a>
             <a href="toefl_unit2.html" class="unit-btn">▶ 單元 2：自然环境与地球科学 (開放)</a>
-            <button class="unit-btn locked-btn" onclick="showPaywall('TOEFL')">🔒 單元 3：人类社会，文化与歴史</button>
-            <button class="unit-btn locked-btn" onclick="showPaywall('TOEFL')">🔒 單元 4：建筑，艺术与审美</button>
-            <button class="unit-btn locked-btn" onclick="showPaywall('TOEFL')">🔒 單元 5：自然科学，物理与天文学</button>
-            <button class="unit-btn locked-btn" onclick="showPaywall('TOEFL')">🔒 單元 6：经济学，商业与组织管理</button>
-            <button class="unit-btn locked-btn" onclick="showPaywall('TOEFL')">🔒 單元 7：动态变化与演化逻辑</button>
-            <button class="unit-btn locked-btn" onclick="showPaywall('TOEFL')">🔒 單元 8：人类行为，心理与社会互动</button>
-            <button class="unit-btn locked-btn" onclick="showPaywall('TOEFL')">🔒 單元 9：信息传达，媒体与技术</button>
-            <button class="unit-btn locked-btn" onclick="showPaywall('TOEFL')">🔒 單元 10：逻辑衔接，论证与过渡</button>
+            <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 3：人类社会，文化与歴史</button>
+            <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 4 ~ 20 (完整版解鎖)</button>
         </div>
 
-        <div class="section-gre">
-            <h2>📒 GRE 全方位詞彙（2016-2025）</h2>
+        <button class="category-btn btn-gre" onclick="toggleMenu('gre')">📒 GRE 斯巴達 (2000词)</button>
+        <div class="unit-list list-gre" id="menu-gre">
             <a href="gre_unit1.html" class="unit-btn">▶ 單元 1：知识论与学术话语 (開放)</a>
             <a href="gre_unit2.html" class="unit-btn">▶ 單元 2：修辞，传播与语言密度 (開放)</a>
-            <button class="unit-btn locked-btn" onclick="showPaywall('GRE')">🔒 單元 3：性格特质，社会倾向与人际动态</button>
-            <button class="unit-btn locked-btn" onclick="showPaywall('GRE')">🔒 單元 4：伦理考量，物质追求与个人诚信</button>
-            <button class="unit-btn locked-btn" onclick="showPaywall('GRE')">🔒 單元 5：动态变化，稳定性与时空律动</button>
-            <button class="unit-btn locked-btn" onclick="showPaywall('GRE')">🔒 單元 6：冲突论，修辞性攻击与调和策略</button>
-            <button class="unit-btn locked-btn" onclick="showPaywall('GRE')">🔒 單元 7：逻辑严密性，证明责任与认知误差</button>
-            <button class="unit-btn locked-btn" onclick="showPaywall('GRE')">🔒 單元 8：认知深度，智力范畴与理解误差</button>
-            <button class="unit-btn locked-btn" onclick="showPaywall('GRE')">🔒 單元 9：毅力，顽固与灵活性之间的界限</button>
-            <button class="unit-btn locked-btn" onclick="showPaywall('GRE')">🔒 單元 10：学术话语中的抽象逻辑与跨学科</button>
+            <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 3：性格特质与社会倾向</button>
+            <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 4 ~ 20 (完整版解鎖)</button>
         </div>
 
-        <div class="section-tcm">
-            <h2>🌿 學士後中醫詞彙</h2>
-            <button class="unit-btn locked-btn" onclick="showPaywall('TCM')">🔒 單元 1：經絡與基礎理論 (即將推出)</button>
-            <button class="unit-btn locked-btn" onclick="showPaywall('TCM')">🔒 單元 2：(建構中...)</button>
+        <button class="category-btn btn-ap" onclick="toggleMenu('ap')">📘 AP 学术进阶 (1500词)</button>
+        <div class="unit-list list-ap" id="menu-ap">
+            <a href="ap_unit1.html" class="unit-btn">▶ 單元 1：谴责剥夺与哲理思辨 (開放)</a>
+            <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 2：(建構中...)</button>
+            <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 3 ~ 20 (完整版解鎖)</button>
+        </div>
+
+        <button class="category-btn btn-tcm" onclick="toggleMenu('tcm')">🌿 TCM 学士后中医 (核心词汇)</button>
+        <div class="unit-list list-tcm" id="menu-tcm">
+            <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 1：經絡與基礎理論 (即將推出)</button>
+            <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 2：(建構中...)</button>
         </div>   
     </div>
 
@@ -94,9 +90,8 @@
             <div class="paywall-icon">💎</div>
             <div class="paywall-title">進階學術特訓已上鎖</div>
             <div class="paywall-desc">
-                恭喜妳完成基礎特訓！<br><br>
-                想要解鎖完整 <strong>1000+ 高頻硬核單字</strong>，享受無盡的字母拼圖心流與發音引擎嗎？<br><br>
-                獲取完整版離線檔案，打造妳的私人終極字庫！
+                獲取完整版離線檔案，打造妳的私人終極字庫！<br>
+                解鎖完整 <strong>高頻硬核單字庫</strong>、無盡的字母拼圖心流與實力總結測驗！
             </div>
             <button class="buy-btn" onclick="alert('請截圖此畫面並私訊作者，獲取完整版離線解鎖包！')">🛒 獲取完整版解鎖碼</button>
             <button class="cancel-btn" onclick="hidePaywall()">先刷免費版</button>
@@ -104,12 +99,35 @@
     </div>
 
     <script>
-        function showPaywall(courseName) {
-            document.getElementById('paywallModal').style.display = 'flex';
+        let currentLang = 'tw'; 
+        function toggleLanguage() {
+            const rootNode = document.body;
+            if (currentLang === 'tw') {
+                const converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
+                OpenCC.HTML.Convert(converter, rootNode);
+                currentLang = 'cn';
+            } else {
+                const converter = OpenCC.Converter({ from: 'cn', to: 'tw' });
+                OpenCC.HTML.Convert(converter, rootNode);
+                currentLang = 'tw';
+            }
         }
-        function hidePaywall() {
-            document.getElementById('paywallModal').style.display = 'none';
+
+        function toggleMenu(menuId) {
+            document.querySelectorAll('.unit-list').forEach(list => list.classList.remove('active'));
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            const targetList = document.getElementById('menu-' + menuId);
+            const targetBtn = document.querySelector('.btn-' + menuId);
+            if (targetList.style.display !== 'flex') {
+                document.querySelectorAll('.unit-list').forEach(list => list.style.display = 'none'); 
+                targetList.style.display = 'flex';
+                targetBtn.classList.add('active');
+            } else {
+                targetList.style.display = 'none';
+            }
         }
+        function showPaywall() { document.getElementById('paywallModal').style.display = 'flex'; }
+        function hidePaywall() { document.getElementById('paywallModal').style.display = 'none'; }
     </script>
 </body>
 </html>
