@@ -20,7 +20,7 @@
         .category-btn::after { content: '▼'; font-size: 14px; opacity: 0.7;}
         .category-btn.active::after { content: '▲'; }
 
-        /* 五大色系 */
+        /* 五大色系 (AP 已更新為亮彩深藍) */
         .btn-toefl { background-color: #800000; color: white; } 
         .btn-gre { background-color: #F57F17; color: white; }   
         .btn-ielts { background-color: #6A1B9A; color: white; } 
@@ -35,7 +35,7 @@
         .list-toefl .unit-btn:hover { border-color: #800000; background-color: #FFF5F5; color: #800000;}
         .list-gre .unit-btn:hover { border-color: #F57F17; background-color: #FFFDE7; color: #E65100;}
         .list-ielts .unit-btn:hover { border-color: #6A1B9A; background-color: #F3E5F5; color: #6A1B9A;} 
-        .list-ap .unit-btn:hover { border-color: #003E6B; background-color: #E8EEF2; color: #003E6B;}
+        .list-ap .unit-btn:hover { border-color: #1565C0; background-color: #E3F2FD; color: #1565C0;}
         .list-tcm .unit-btn:hover { border-color: #2E7D32; background-color: #E8F5E9; color: #2E7D32;}
 
         button.locked-btn { background-color: #F8F9FA; color: #ADB5BD; border: 1px dashed #DEE2E6; }
@@ -46,7 +46,7 @@
         .paywall-icon { font-size: 50px; margin-bottom: 10px; }
         .paywall-title { color: #333; font-size: 22px; margin-bottom: 15px; font-weight: bold;}
         .paywall-desc { color: #666; font-size: 15px; line-height: 1.6; margin-bottom: 25px;}
-        .buy-btn { width: 100%; background-color: #003E6B; color: white; font-size: 16px; font-weight: bold; padding: 15px; border: none; border-radius: 12px; cursor: pointer; margin-bottom: 10px; transition: 0.2s;}
+        .buy-btn { width: 100%; background-color: #1565C0; color: white; font-size: 16px; font-weight: bold; padding: 15px; border: none; border-radius: 12px; cursor: pointer; margin-bottom: 10px; transition: 0.2s;}
         .cancel-btn { width: 100%; background-color: transparent; color: #888; font-size: 15px; padding: 10px; border: none; cursor: pointer; text-decoration: underline;}
     </style>
 </head>
@@ -59,14 +59,14 @@
 
     <div class="menu-container">
         
-        <button class="category-btn btn-ap" onclick="toggleMenu('ap')">📘 AP</button>
+        <button class="category-btn btn-ap" onclick="toggleMenu('ap')">📘 AP </button>
         <div class="unit-list list-ap" id="menu-ap">
-            <a href="ap_unit1.html" class="unit-btn">▶ 單元 1：谴责剥夺与哲理思辨 (開放)</a>
-            <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 2：(建構中...)</button>
+            <a href="ap_unit1.html" class="unit-btn">▶ 單元 1：修辞情境与写作契机 (開放)</a>
+            <a href="ap_unit2.html" class="unit-btn">▶ 單元 2：亚里士多德诉求与说服策略 (開放)</a>
             <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 3 ~ 20 (完整版解鎖)</button>
         </div>
 
-        <button class="category-btn btn-toefl" onclick="toggleMenu('toefl')">📕 TOEFL</button>
+        <button class="category-btn btn-toefl" onclick="toggleMenu('toefl')">📕 TOEFL </button>
         <div class="unit-list list-toefl" id="menu-toefl">
             <a href="toefl_unit1.html" class="unit-btn">▶ 單元 1：学术研究与逻辑推理 (開放)</a>
             <a href="toefl_unit2.html" class="unit-btn">▶ 單元 2：自然环境与地球科学 (開放)</a>
@@ -74,7 +74,7 @@
             <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 4 ~ 20 (完整版解鎖)</button>
         </div>
 
-        <button class="category-btn btn-ielts" onclick="toggleMenu('ielts')">📓 IELTS </button>
+        <button class="category-btn btn-ielts" onclick="toggleMenu('ielts')">📓 IELTS</button>
         <div class="unit-list list-ielts" id="menu-ielts">
             <a href="ielts_unit1.html" class="unit-btn">▶ 單元 1：教育与社会议题 (開放)</a>
             <a href="ielts_unit2.html" class="unit-btn">▶ 單元 2：科技与未来发展 (開放)</a>
@@ -82,7 +82,7 @@
             <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 4 ~ 20 (完整版解鎖)</button>
         </div>
 
-        <button class="category-btn btn-gre" onclick="toggleMenu('gre')">📒 GRE</button>
+        <button class="category-btn btn-gre" onclick="toggleMenu('gre')">📒 GRE 斯巴達 (2000词)</button>
         <div class="unit-list list-gre" id="menu-gre">
             <a href="gre_unit1.html" class="unit-btn">▶ 單元 1：知识论与学术话语 (開放)</a>
             <a href="gre_unit2.html" class="unit-btn">▶ 單元 2：修辞，传播与语言密度 (開放)</a>
@@ -90,7 +90,7 @@
             <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 4 ~ 20 (完整版解鎖)</button>
         </div>
 
-        <button class="category-btn btn-tcm" onclick="toggleMenu('tcm')">🌿 TCM</button>
+        <button class="category-btn btn-tcm" onclick="toggleMenu('tcm')">🌿 TCM 学士后中医 (核心词汇)</button>
         <div class="unit-list list-tcm" id="menu-tcm">
             <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 1：經絡與基礎理論 (即將推出)</button>
             <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 2：(建構中...)</button>
@@ -112,20 +112,17 @@
     </div>
 
     <script>
+        // 🌟 1. 繁簡轉換引擎 (加入防彈與報錯機制)
         let currentLang = 'tw'; 
-        function toggleLanguage() {
-            let currentLang = 'tw'; 
         let converterToCn = null;
         let converterToTw = null;
 
         function toggleLanguage() {
             try {
-                // 如果還沒初始化，就建立轉換器
                 if (!converterToCn) {
                     converterToCn = OpenCC.Converter({ from: 'tw', to: 'cn' });
                     converterToTw = OpenCC.Converter({ from: 'cn', to: 'tw' });
                 }
-                
                 const rootNode = document.body;
                 if (currentLang === 'tw') {
                     OpenCC.HTML.Convert(converterToCn, rootNode);
@@ -139,11 +136,15 @@
                 console.error(error);
             }
         }
+
+        // 🌟 2. 手風琴選單展開引擎 (之前不小心消失的關鍵代碼)
         function toggleMenu(menuId) {
             document.querySelectorAll('.unit-list').forEach(list => list.classList.remove('active'));
             document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            
             const targetList = document.getElementById('menu-' + menuId);
             const targetBtn = document.querySelector('.btn-' + menuId);
+            
             if (targetList.style.display !== 'flex') {
                 document.querySelectorAll('.unit-list').forEach(list => list.style.display = 'none'); 
                 targetList.style.display = 'flex';
@@ -152,9 +153,10 @@
                 targetList.style.display = 'none';
             }
         }
+
+        // 🌟 3. 付費牆彈窗引擎
         function showPaywall() { document.getElementById('paywallModal').style.display = 'flex'; }
         function hidePaywall() { document.getElementById('paywallModal').style.display = 'none'; }
     </script>
 </body>
-
 </html>
