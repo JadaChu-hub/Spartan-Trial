@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AP (Unit 1)</title>
+    <title> 📘 AP (Unit 1)</title>
     <style>
-        /* ======= 📘 AP 專屬亮彩深藍 (Sapphire Blue) ======= */
+       /* ======= 📘 AP 專屬亮彩深藍 (Sapphire Blue) ======= */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #E3F2FD; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; color: #0D47A1; padding-top: 15px; position: relative;}
         h1 { color: #1565C0; margin-bottom: 10px; font-size: 22px; text-align: center; font-weight: 800;}
         
@@ -18,7 +18,6 @@
         .view-section { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 380px; }
         .view-section.active { display: flex; }
         
-        /* 單字卡 */
         .card-container { width: 90vw; max-width: 350px; height: 340px; perspective: 1000px; margin-bottom: 15px; cursor: pointer; }
         .card { width: 100%; height: 100%; position: relative; transition: transform 0.6s; transform-style: preserve-3d; box-shadow: 0 10px 20px rgba(21, 101, 192, 0.15); border-radius: 15px; }
         .card.flipped { transform: rotateY(180deg); }
@@ -45,7 +44,6 @@
         button.action-btn.green-btn { background-color: #1E88E5; }
         .counter { margin-top: 10px; font-size: 13px; color: #1976D2; font-weight: bold;}
         
-        /* 選擇題與拼圖共用 */
         .mastery-text { font-size: 14px; color: #1565C0; font-weight: bold; margin-bottom: 15px; background: #BBDEFB; padding: 8px 12px; border-radius: 12px; text-align: center; width: 90%;}
         .quiz-question { font-size: 16px; font-weight: bold; color: #1565C0; text-align: center; margin-bottom: 15px; padding: 0 15px; line-height: 1.4;}
         .quiz-options { width: 100%; display: flex; flex-direction: column; gap: 8px; padding: 0 20px; box-sizing: border-box;}
@@ -53,7 +51,6 @@
         .quiz-option:hover { background-color: #E3F2FD; }
         .feedback { margin-top: 12px; font-weight: bold; font-size: 16px; min-height: 22px; text-align: center;}
         
-        /* 拼圖專區 */
         .progress-container { width: 90%; background-color: #BBDEFB; border-radius: 10px; margin: 5px auto 15px auto; overflow: hidden; height: 12px; }
         .progress-fill { width: 0%; height: 100%; background-color: #1565C0; transition: width 0.5s; }
         .spell-answer-box { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; min-height: 45px; padding: 10px; border: 2px dashed #1565C0; border-radius: 10px; margin-bottom: 15px; width: 90%; background-color: #ffffff; }
@@ -62,11 +59,9 @@
         .letter-tile:active { transform: translateY(3px); box-shadow: 0 0 0 #0D47A1; }
         .letter-tile.in-answer { background-color: #1E88E5; box-shadow: 0 3px 0 #1565C0; }
 
-        /* 克漏字專區 */
         .cloze-container { background: white; padding: 15px; border-radius: 12px; border: 2px solid #90CAF9; width: 90%; font-size: 15px; line-height: 1.8; color: #0D47A1;}
         .cloze-select { padding: 2px 5px; font-size: 14px; color: #1565C0; border: 1px solid #1565C0; border-radius: 4px; font-weight: bold; background-color: #E3F2FD;}
 
-        /* 彈窗 */
         .grad-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(227, 242, 253, 0.95); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;}
         .grad-title { color: #1565C0; font-size: 26px; margin-bottom: 10px; }
         .grad-desc { color: #0D47A1; font-size: 15px; line-height: 1.5; margin-bottom: 25px;}
@@ -75,14 +70,14 @@
     </style>
 </head>
 <body>
-        
+       
     <h1>📘 AP (Unit 1)</h1>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('flashcard')">📇 单词卡</button>
-        <button class="tab-btn" onclick="switchTab('quiz')">📝 随机测验</button>
-        <button class="tab-btn" onclick="switchTab('spell')">🧩 字母拼图</button>
-        <button class="tab-btn" onclick="switchTab('cloze')">📖 实力总结</button>
+        <button class="tab-btn active" onclick="switchTab('flashcard')">📇 單詞卡</button>
+        <button class="tab-btn" onclick="switchTab('quiz')">📝 隨機測驗</button>
+        <button class="tab-btn" onclick="switchTab('spell')">🧩 字母拼圖</button>
+        <button class="tab-btn" onclick="switchTab('cloze')">📖 實力總結</button>
     </div>
 
     <div id="flashcard-view" class="view-section active">
@@ -97,101 +92,102 @@
                     </div>
                 </div>
                 <div class="card-back">
-                    <div class="translation" id="translationText">解释</div>
-                    <div class="details" id="synAntText"><strong>同/反义：</strong><span>...</span></div>
+                    <div class="translation" id="translationText">解釋</div>
+                    <div class="details" id="synAntText"><strong>同/反義：</strong><span>...</span></div>
                     <div class="details" id="usageText"><strong>固定用法：</strong><span>...</span></div>
                     <div class="example" id="exampleText">例句...</div>
-                    <button class="action-btn" onclick="speakText('example', event)" style="margin-top: 10px; padding: 6px 12px; font-size: 12px; align-self: center;">🔊 朗读例句</button>
+                    <button class="action-btn" onclick="speakText('example', event)" style="margin-top: 10px; padding: 6px 12px; font-size: 12px; align-self: center;">🔊 朗讀例句</button>
                 </div>
             </div>
         </div>
         <div class="controls">
-            <button class="action-btn" onclick="prevCard()">⬅️ 上个</button>
+            <button class="action-btn" onclick="prevCard()">⬅️ 上個</button>
             <button class="action-btn" onclick="flipCard()">🔄 翻面</button>
-            <button class="action-btn" onclick="nextCard()">下个 ➡️</button>
+            <button class="action-btn" onclick="nextCard()">下個 ➡️</button>
             <button class="action-btn green-btn" onclick="shuffleCards()">🔀 洗牌</button>
         </div>
         <div class="counter" id="counterText">1 / ?</div>
     </div>
 
     <div id="quiz-view" class="view-section">
-        <div class="mastery-text" id="masteryText">🏆 测验熟练度：0% (0/0) <br> 🎖️ 证书进度：0 / 3</div>
+        <div class="mastery-text" id="masteryText">🏆 測驗熟練度：0% (0/0) <br> 🎖️ 證書進度：0 / 3</div>
         <div class="quiz-question" id="quizQuestion">
-            <span style="font-size:13px; color:#1976D2;" id="quizHint">请选出对应答案：</span><br><br>
+            <span style="font-size:13px; color:#486581;" id="quizHint">請選出對應答案：</span><br><br>
             <span id="quizDesc" style="font-size:18px;">...</span>
         </div>
         <div class="quiz-options" id="quizOptions"></div>
         <div class="feedback" id="quizFeedback"></div>
-        <button class="action-btn" style="margin-top: 15px;" onclick="generateQuiz()">下一题</button>
+        <button class="action-btn" style="margin-top: 15px;" onclick="generateQuiz()">下一題</button>
     </div>
 
     <div id="spell-view" class="view-section">
         <div style="width: 100%;">
-            <div class="mastery-text" id="spellProgressText" style="margin-bottom: 5px;">⌨️ 词汇收集：0 / 25 (0%)</div>
+            <div class="mastery-text" id="spellProgressText" style="margin-bottom: 5px;">⌨️ 詞彙收集：0 / 25 (0%)</div>
             <div class="progress-container"><div class="progress-fill" id="spellProgressBar"></div></div>
         </div>
-        <div class="quiz-question" style="font-size:14px; margin-bottom: 10px;" id="spellPrompt">解释与例句</div>
+        <div class="quiz-question" style="font-size:14px; margin-bottom: 10px;" id="spellPrompt">解釋與例句</div>
         <div class="spell-answer-box" id="spellAnswerBox"></div>
         <div class="letter-pool" id="letterPool"></div>
         <button class="action-btn" id="submitSpellBtn" onclick="checkSpell()">送出答案</button>
         <div class="feedback" id="spellFeedback"></div>
-        <button class="action-btn" style="margin-top: 15px; display: none;" id="nextSpellBtn" onclick="generateSpell()">下一题</button>
+        <button class="action-btn" style="margin-top: 15px; display: none;" id="nextSpellBtn" onclick="generateSpell()">下一題</button>
     </div>
 
     <div id="cloze-view" class="view-section">
-        <div class="mastery-text">📖 单元主题实战演练</div>
+        <div class="mastery-text">📖 單元主題實戰演練</div>
         <div class="cloze-container" id="clozeContainer"></div>
         <div class="feedback" id="clozeFeedback"></div>
-        <button class="action-btn" style="margin-top: 15px;" onclick="checkCloze()">提交验证</button>
+        <button class="action-btn" style="margin-top: 15px;" onclick="checkCloze()">提交驗證</button>
     </div>
 
     <div class="grad-modal" id="gradModal">
-        <h2 class="grad-title" id="gradTitle">🛡️ 结业！</h2>
-        <p class="grad-desc" id="gradDesc">说明文字</p>
-        <button class="grad-btn" onclick="window.location.href='index.html'">🎓 荣耀结业 (返回大厅)</button>
-        <button class="grad-btn stay-btn" id="stayBtn" onclick="">📚 留下来继续复习</button>
+        <h2 class="grad-title" id="gradTitle">🛡️ 結業！</h2>
+        <p class="grad-desc" id="gradDesc">說明文字</p>
+        <button class="grad-btn" onclick="window.location.href='index.html'">🎓 榮耀結業 (返回大廳)</button>
+        <button class="grad-btn stay-btn" id="stayBtn" onclick="">📚 留下來繼續複習</button>
     </div>
 
     <script>
-        
+       
         // ==========================================
-        // ⚠️ 存檔金鑰 (AP Unit 1)
+        // ⚠️ 修改區：存檔鍵名、生字資料、克漏字資料
         // ==========================================
         const STORAGE_KEY = 'spartan_ap_u1';
         
-       let vocabData = [
-            { word: "Censure", engDef: "Express severe disapproval of someone or something.", translation: "V./N. 嚴厲斥責，公開譴責", synAnt: "同: Condemn, Reprimand; 反: Praise", usage: "Face severe censure (面臨嚴厲譴責)", example: "The politician faced severe censure for his inappropriate comments during the debate." },
-            { word: "Bereave", engDef: "Be deprived of a loved one through a profound absence.", translation: "V. 剝奪，使喪失", synAnt: "同: Deprive, Dispossess", usage: "Be bereaved of (被剝奪...) / Bereaved family (喪親的家庭)", example: "The sudden accident bereaved them of their only child." },
-            { word: "Furrow", engDef: "Make a rut, groove, or trail in.", translation: "N. 犁溝，皺紋；V. 皺眉", synAnt: "同: Crease, Groove", usage: "Furrow one's brow (緊皺眉頭)", example: "He deeply furrowed his brow as he tried to solve the complex math problem." },
-            { word: "Corrugation", engDef: "A ridge or groove on a surface.", translation: "N. 起皺，瓦楞", synAnt: "同: Fold, Ridge", usage: "Cardboard corrugation (紙板瓦楞)", example: "The roof was made of metal with deep corrugations to drain the rain." },
-            { word: "Obsolete", engDef: "No longer produced or used; out of date.", translation: "Adj. 廢棄的，過時的", synAnt: "同: Outdated, Antiquated; 反: Modern", usage: "Render obsolete (使之過時)", example: "The invention of the smartphone rendered many traditional cameras obsolete." },
-            { word: "Rove", engDef: "Travel constantly without a fixed destination.", translation: "V. 漫遊，流浪", synAnt: "同: Wander, Roam", usage: "Roving eye (遊移的目光)", example: "The wolves rove around the vast forest looking for their next meal." },
-            { word: "Indict", engDef: "Formally accuse of or charge with a serious crime.", translation: "V. 控告，起訴", synAnt: "同: Accuse, Charge", usage: "Grand jury indictment (大陪審團起訴)", example: "The grand jury voted to indict the CEO for financial fraud." },
-            { word: "Impeach", engDef: "Call into question the integrity or validity of.", translation: "V. 彈劾，懷疑", synAnt: "同: Challenge, Question", usage: "Impeach a president (彈劾總統)", example: "The parliament attempted to impeach the president over the corruption scandal." },
-            { word: "Brigand", engDef: "A member of a gang that ambushes and robs people.", translation: "N. 強盜，土匪", synAnt: "同: Bandit, Outlaw", usage: "Band of brigands (一夥強盜)", example: "The traveling merchants were attacked by a ruthless band of brigands." },
-            { word: "Infect", engDef: "Affect with a disease-causing organism.", translation: "V. 傳染，感染", synAnt: "同: Contaminate, Taint", usage: "Highly infectious (高傳染性的)", example: "His enthusiasm for the project was so strong that it quickly infected the whole team." },
-            { word: "Sully", engDef: "Damage the purity or integrity of.", translation: "V. 玷污，破壞", synAnt: "同: Tarnish, Stain", usage: "Sully one's reputation (玷污名聲)", example: "She refused to let the false accusations sully her family's good name." },
-            { word: "Delegate", engDef: "Entrust a task or responsibility to another person.", translation: "N. 代表；V. 委派", synAnt: "同: Representative, Assign", usage: "Delegate authority (下放權力)", example: "A good manager knows how to delegate tasks effectively to their team." },
-            { word: "Epigraph", engDef: "A short quotation at the beginning of a book or chapter.", translation: "N. 題詞，引言", synAnt: "同: Inscription, Quote", usage: "Opening epigraph (開篇題詞)", example: "The author used a line from Shakespeare as the epigraph for her new novel." },
-            { word: "Bisect", engDef: "Divide into two parts.", translation: "V. 平分，二等分", synAnt: "同: Halve, Split", usage: "Bisect an angle (平分一個角)", example: "The new highway will bisect the national park, causing environmental concerns." },
-            { word: "Wistful", engDef: "Having or showing a feeling of vague or regretful longing.", translation: "Adj. 渴望的，惆悵的", synAnt: "同: Nostalgic, Yearning", usage: "Wistful smile (惆悵的微笑)", example: "She gave a wistful look at the old photographs from her childhood." },
-            { word: "Amicable", engDef: "Characterized by friendliness and absence of discord.", translation: "Adj. 友好的，和睦的", synAnt: "同: Friendly, Harmonious; 反: Hostile", usage: "Amicable agreement (和平協議)", example: "Despite their differences, they managed to reach an amicable agreement." },
-            { word: "Extirpate", engDef: "Root out and destroy completely.", translation: "V. 根除，滅絕", synAnt: "同: Eradicate, Eliminate", usage: "Extirpate a disease (根除疾病)", example: "The government initiated a program to extirpate the invasive species from the lake." },
-            { word: "Annihilate", engDef: "Destroy utterly; obliterate.", translation: "V. 徹底消滅", synAnt: "同: Decimate, Destroy", usage: "Total annihilation (絕對殲滅)", example: "The powerful hurricane threatened to annihilate the small coastal town." },
-            { word: "Bulwark", engDef: "A defensive wall or a person acting as a defense.", translation: "N. 壁壘，防禦者", synAnt: "同: Bastion, Rampart", usage: "Bulwark of democracy (民主的堡壘)", example: "A strong constitution is a nation's bulwark against tyranny." },
-            { word: "Heed", engDef: "Pay attention to; take notice of.", translation: "V. 注意，留心", synAnt: "同: Mind, Observe", usage: "Pay heed to (留意)", example: "They failed to heed the weather warnings and got caught in the storm." },
-            { word: "Relic", engDef: "An object surviving from an earlier time.", translation: "N. 遺物，遺跡", synAnt: "同: Artifact, Remnant", usage: "Ancient relic (古代遺物)", example: "The sword in the museum is a fascinating relic of the medieval period." },
-            { word: "Wont", engDef: "One's customary behavior in a particular situation.", translation: "N. 習慣，慣常做法", synAnt: "同: Custom, Habit", usage: "As is one's wont (正如某人的習慣)", example: "He went for a long walk before breakfast, as was his daily wont." },
-            { word: "Absolve", engDef: "Set or declare someone free from blame or guilt.", translation: "V. 赦免，免除", synAnt: "同: Exonerate, Forgive; 反: Blame", usage: "Absolve from blame (免除責備)", example: "The priest was asked to absolve the dying man of his earthly sins." },
-            { word: "Exonerate", engDef: "Officially absolve from blame.", translation: "V. 使免罪", synAnt: "同: Clear, Vindicate; 反: Convict", usage: "Totally exonerated (徹底洗清嫌疑)", example: "The newly discovered video footage finally exonerated the wrongly accused suspect." },
-            { word: "Relish", engDef: "Enjoy greatly.", translation: "V./N. 享受，期盼", synAnt: "同: Enjoy, Savor", usage: "Relish the challenge (樂於迎接挑戰)", example: "The ambitious young lawyer relished the opportunity to argue the difficult case." }
-        ];
+        let vocabData = [
+    { word: "Exigence", engDef: "An issue or situation that prompts someone to write or speak.", translation: "N. 緊急需求 ; 寫作契機", synAnt: "同: Urgency, impetus", usage: "The exigence of the situation", example: "The sudden ecological disaster provided the exigence for the senator’s speech." },
+    { word: "Context", engDef: "The circumstances surrounding a specific text or historical event.", translation: "N. 語境 ; 背景", synAnt: "同: Framework, milieu", usage: "In the context of", example: "One must analyze the speech in the context of the Civil Rights Movement." },
+    { word: "Audience", engDef: "The specific group of readers or listeners targeted by a text.", translation: "N. 聽眾 ; 受眾", synAnt: "同: Spectators", usage: "Target audience", example: "The writer adjusted her tone to suit a highly academic audience." },
+    { word: "Purpose", engDef: "The specific goal the writer intends to achieve with a text.", translation: "N. 目的 ; 意圖", synAnt: "同: Objective, intent", usage: "The primary purpose is to", example: "Her purpose was to persuade the committee to fund the new library." },
+    { word: "Persona", engDef: "The character or face that a writer shows to the audience.", translation: "N. 人格面具 ; 形象", synAnt: "同: Mask, image", usage: "Adopt a persona", example: "The speaker adopts a grandfatherly persona to deliver difficult moral truths." },
+    { word: "Message", engDef: "The central point or core idea a writer communicates.", translation: "N. 信息 ; 核心思想", synAnt: "同: Core idea", usage: "The underlying message", example: "The central message of the essay emphasizes the importance of community." },
+    { word: "Occasion", engDef: "The specific time, place, and event of a rhetorical act.", translation: "N. 場合 ; 時機", synAnt: "同: Incident", usage: "The occasion for the speech", example: "The commencement ceremony was the occasion for her call to service." },
+    { word: "Rhetoric", engDef: "The art of effective or persuasive speaking or writing.", translation: "N. 修辭學 ; 雄辯術", synAnt: "同: Eloquence", usage: "Employ rhetoric", example: "The politician used powerful rhetoric to unify the fragmented nation." },
+    { word: "Claim", engDef: "An assertion that requires support and is open to challenge.", translation: "N. 主張 ; 斷言", synAnt: "同: Assertion, thesis", usage: "Make a claim", example: "The author makes a bold claim about the decline of digital literacy." },
+    { word: "Evidence", engDef: "Facts or details used to support a claim or thesis.", translation: "N. 證據 ; 證明", synAnt: "同: Data, proof", usage: "Empirical evidence", example: "The writer provides statistical evidence to substantiate her claim." },
+    { word: "Reasoning", engDef: "The logical process of connecting evidence to a specific claim.", translation: "N. 推理 ; 論證", synAnt: "同: Logic", usage: "Line of reasoning", example: "Her inductive reasoning moves from specific data points to a general theory." },
+    { word: "Bias", engDef: "A prejudice in favor of or against one thing or person.", translation: "N. 偏見 ; 偏向", synAnt: "同: Partiality", usage: "Inherent bias", example: "The journalist’s personal bias is revealed through his choice of loaded words." },
+    { word: "Constraint", engDef: "A limitation or restriction that affects a writer’s choices.", translation: "N. 約束 ; 限制", synAnt: "同: Limitation", usage: "Rhetorical constraints", example: "The author faced political constraints that limited the directness of his critique." },
+    { word: "Discourse", engDef: "Written or spoken communication or debate on a subject.", translation: "N. 話語 ; 論述", synAnt: "同: Dialogue", usage: "Academic discourse", example: "The essay contributes to the broader discourse on environmental ethics." },
+    { word: "Expository", engDef: "Intended to explain or describe something in detail.", translation: "Adj. 說明的 ; 解釋性的", synAnt: "同: Explanatory", usage: "Expository writing", example: "The book provides an expository account of the history of linguistics." },
+    { word: "Pervasive", engDef: "Spreading widely throughout an area or a group of people.", translation: "Adj. 普遍的 ; 滲透的", synAnt: "同: Ubiquitous", usage: "Pervasive influence", example: "The fear of economic instability is pervasive in the speaker’s community." },
+    { word: "Subtle", engDef: "So delicate or precise as to be difficult to analyze.", translation: "Adj. 微妙的 ; 精巧的", synAnt: "同: Nuanced", usage: "Subtle shift", example: "A subtle shift in tone occurs as the author moves to the conclusion." },
+    { word: "Manifest", engDef: "To show plainly; to make something clear by evidence.", translation: "V. 顯現 ; 表明", synAnt: "同: Demonstrate", usage: "Manifest as", example: "The character’s frustration began to manifest through his erratic behavior." },
+    { word: "Implicit", engDef: "Implied though not plainly expressed in the text.", translation: "Adj. 含蓄的 ; 暗示的", synAnt: "同: Inherent; 反: Explicit", usage: "Implicit critique", example: "The author’s critique of capitalism is implicit rather than stated directly." },
+    { word: "Explicit", engDef: "Stated clearly and in detail, leaving no room for doubt.", translation: "Adj. 明確的 ; 直言的", synAnt: "同: Overt; 反: Implicit", usage: "Explicit demand", example: "The speaker was explicit in her demand for immediate policy reform." },
+    { word: "Background", engDef: "The history or events leading up to a specific moment.", translation: "N. 背景 ; 經歷", synAnt: "同: Context", usage: "Audience background", example: "Without a historical background, the reader might miss the satire." },
+    { word: "Value", engDef: "A principle or standard that a person or group considers important.", translation: "N. 價值觀 ; 準則", synAnt: "同: Ethic", usage: "Shared values", example: "The argument appeals to the American value of individual liberty." },
+    { word: "Belief", engDef: "An acceptance that a statement is true or that something exists.", translation: "N. 信仰 ; 觀念", synAnt: "同: Conviction", usage: "Core beliefs", example: "The writer’s core beliefs are rooted in traditional humanism." },
+    { word: "Situation", engDef: "A set of circumstances in which one finds oneself.", translation: "N. 情況 ; 局面", synAnt: "同: State", usage: "Rhetorical situation", example: "To understand the text, we must first define the rhetorical situation." },
+    { word: "Prompt", engDef: "To cause or bring about an action or feeling.", translation: "V. 促使 ; 激起", synAnt: "同: Trigger", usage: "Prompted by", example: "The student was prompted to research the topic after reading the article." }
+];
 
-        let clozeData = {
-            passage: "When the mayor was exposed, he faced severe [1] from the public. Desperate to [2] his reputation, he tried to [3] himself of any wrongdoing. However, the press continued to [4] him, leaving his political career completely [5].",
-            blanks: ["Censure", "Preserve", "Absolve", "Indict", "Obsolete"], 
-            options: ["Indict", "Censure", "Absolve", "Obsolete", "Preserve", "Sully"] 
-        };
+let clozeData = {
+    passage: "In any sophisticated analysis, the scholar must first identify the [1] that motivated the author to produce the text. By examining the rhetorical [2], one can understand how the [3] of the writing aligns with the expectations of the [4]. Furthermore, the historical [5] often dictates the specific stylistic choices that the writer employs.",
+    blanks: ["exigence", "situation", "purpose", "audience", "context"], 
+    options: ["exigence", "situation", "purpose", "audience", "context", "manifest", "implicit"]
+};
+
 
         // ==========================================
         // V6.0 核心引擎
@@ -227,13 +223,13 @@
             if(t==='quiz') generateQuiz(); if(t==='spell') generateSpell(); if(t==='cloze') renderCloze();
         }
 
-        // 单词卡
+        // 單詞卡
         function renderCard() {
             if(!vocabData.length) return; document.getElementById('flashcard').classList.remove('flipped');
             setTimeout(() => {
                 let d = vocabData[currentIndex];
                 document.getElementById('wordText').innerHTML = d.word; document.getElementById('engDefText').innerHTML = d.engDef || '';
-                document.getElementById('translationText').innerHTML = d.translation; document.getElementById('synAntText').innerHTML = `<strong>同/反义：</strong> ${d.synAnt}`;
+                document.getElementById('translationText').innerHTML = d.translation; document.getElementById('synAntText').innerHTML = `<strong>同/反義：</strong> ${d.synAnt}`;
                 document.getElementById('usageText').innerHTML = `<strong>用法：</strong> ${d.usage || ''}`; document.getElementById('exampleText').innerHTML = d.example;
                 document.getElementById('counterText').innerHTML = `${currentIndex + 1} / ${vocabData.length}`; updateStarUI(); 
             }, 150);
@@ -243,11 +239,11 @@
         function prevCard() { if(currentIndex > 0){ currentIndex--; renderCard(); } }
         function shuffleCards() { vocabData.sort(()=>Math.random()-0.5); currentIndex=0; renderCard(); }
 
-        // 随机测验
+        // 隨機測驗 (修改為 10 / 20 / 25 門檻)
         function updateMasteryUI() {
             let rate = localData.attempts===0 ? 0 : Math.round((localData.correct/localData.attempts)*100);
             let certs = (localData.certs.c1?1:0) + (localData.certs.c2?1:0) + (localData.certs.c3?1:0);
-            document.getElementById('masteryText').innerHTML = `🏆 熟练度：${rate}% (${localData.correct}/${localData.attempts}) <br> 🎖️ 证书进度：${certs} / 3`;
+            document.getElementById('masteryText').innerHTML = `🏆 熟練度：${rate}% (${localData.correct}/${localData.attempts}) <br> 🎖️ 證書進度：${certs} / 3`;
             if(localData.attempts>=10 && rate>=90 && !localData.certs.c1) showModal('quiz', 1);
             else if(localData.attempts>=20 && rate>=90 && !localData.certs.c2) showModal('quiz', 2);
             else if(localData.attempts>=25 && rate>=95 && !localData.certs.c3) showModal('quiz', 3);
@@ -256,7 +252,7 @@
             if(vocabData.length<4) return; document.getElementById('quizFeedback').innerHTML = ""; 
             isEngToChnQuiz = Math.random() > 0.5;
             currentQuizAnswer = vocabData[Math.floor(Math.random() * vocabData.length)];
-            document.getElementById('quizHint').innerHTML = isEngToChnQuiz ? "👀 请选出中文：" : "🧠 请选出英文：";
+            document.getElementById('quizHint').innerHTML = isEngToChnQuiz ? "👀 請選出中文：" : "🧠 請選出英文：";
             document.getElementById('quizDesc').innerHTML = isEngToChnQuiz ? currentQuizAnswer.word : currentQuizAnswer.translation;
             let ops = [currentQuizAnswer], others = vocabData.filter(v=>v.word!==currentQuizAnswer.word).sort(()=>Math.random()-0.5);
             ops.push(others[0], others[1], others[2]); ops.sort(()=>Math.random()-0.5);
@@ -265,15 +261,15 @@
         }
         function checkQuiz(w) {
             let fb = document.getElementById('quizFeedback'); localData.attempts++;
-            if(w === currentQuizAnswer.word){ fb.innerHTML = "✅ 正确！"; fb.style.color = "green"; localData.correct++; }
-            else{ fb.innerHTML = `❌ 错误！正解是：${isEngToChnQuiz ? currentQuizAnswer.translation : currentQuizAnswer.word}`; fb.style.color = "red"; }
+            if(w === currentQuizAnswer.word){ fb.innerHTML = "✅ 正確！"; fb.style.color = "green"; localData.correct++; }
+            else{ fb.innerHTML = `❌ 錯誤！正解是：${isEngToChnQuiz ? currentQuizAnswer.translation : currentQuizAnswer.word}`; fb.style.color = "red"; }
             localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateMasteryUI();
         }
 
-        // 拼图
+        // 拼圖 (修改為 10 / 20 / 25 門檻)
         function updateSpellUI() {
             let uc = localData.spelledWords.length, total = vocabData.length;
-            document.getElementById('spellProgressText').innerHTML = `⌨️ 词汇收集：${uc} / ${total}`;
+            document.getElementById('spellProgressText').innerHTML = `⌨️ 詞彙收集：${uc} / ${total}`;
             document.getElementById('spellProgressBar').style.width = Math.round((uc/total)*100) + '%';
             if(uc>=10 && !localData.spellCerts.c1) showModal('spell', 1);
             else if(uc>=20 && !localData.spellCerts.c2) showModal('spell', 2);
@@ -284,7 +280,7 @@
             document.getElementById('submitSpellBtn').style.display = "inline-block"; document.getElementById('spellAnswerBox').style.display = "flex";
             document.getElementById('letterPool').style.display = "flex"; updateSpellUI();
             if(localData.spelledWords.length >= vocabData.length){
-                document.getElementById('spellPrompt').innerHTML = "🎉 挑战成功！全部生字收集完毕！";
+                document.getElementById('spellPrompt').innerHTML = "🎉 挑戰成功！全部生字收集完畢！";
                 document.getElementById('spellAnswerBox').style.display = "none"; document.getElementById('letterPool').style.display = "none"; document.getElementById('submitSpellBtn').style.display = "none"; return;
             }
             currentSpellAnswer = vocabData[Math.floor(Math.random() * vocabData.length)];
@@ -310,16 +306,16 @@
         function checkSpell() {
             let ans = spellCurrentAnswer.map(i=>i.char).join(''), corr = currentSpellAnswer.word.toLowerCase(), fb = document.getElementById('spellFeedback');
             if(ans === corr){
-                fb.innerHTML = "✅ 拼字正确！"; fb.style.color = "green"; 
+                fb.innerHTML = "✅ 拼字正確！"; fb.style.color = "green"; 
                 if(!localData.spelledWords.includes(currentSpellAnswer.word)){ localData.spelledWords.push(currentSpellAnswer.word); localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateSpellUI(); }
-            } else { fb.innerHTML = `❌ 错误！正解：${currentSpellAnswer.word}`; fb.style.color = "red"; }
+            } else { fb.innerHTML = `❌ 錯誤！正解：${currentSpellAnswer.word}`; fb.style.color = "red"; }
             document.getElementById('nextSpellBtn').style.display = "inline-block"; document.getElementById('submitSpellBtn').style.display = "none";
         }
 
         // 克漏字
         function renderCloze() {
             let c = document.getElementById('clozeContainer'), h = clozeData.passage; document.getElementById('clozeFeedback').innerHTML = "";
-            let opts = `<option value="">-- 选择 --</option>` + clozeData.options.map(o=>`<option value="${o}">${o}</option>`).join('');
+            let opts = `<option value="">-- 選擇 --</option>` + clozeData.options.map(o=>`<option value="${o}">${o}</option>`).join('');
             for(let i=0; i<clozeData.blanks.length; i++) h = h.replace(`[${i+1}]`, `<select id="clz${i}" class="cloze-select">${opts}</select>`);
             c.innerHTML = h;
         }
@@ -331,21 +327,21 @@
                 else{ sel.style.borderColor="red"; sel.style.backgroundColor="#ffebee"; }
             }
             let fb = document.getElementById('clozeFeedback');
-            if(cor === clozeData.blanks.length){ fb.innerHTML="🎉 太棒了！段落完全正确！"; fb.style.color="green"; }
-            else{ fb.innerHTML=`💪 答对了 ${cor}/${clozeData.blanks.length} 个！`; fb.style.color="red"; }
+            if(cor === clozeData.blanks.length){ fb.innerHTML="🎉 太棒了！段落完全正確！"; fb.style.color="green"; }
+            else{ fb.innerHTML=`💪 答對了 ${cor}/${clozeData.blanks.length} 個！`; fb.style.color="red"; }
         }
 
-        // 弹窗
+        // 彈窗
         function showModal(type, level) {
             let t = document.getElementById('gradTitle'), d = document.getElementById('gradDesc');
             if(type==='quiz'){
-                if(level===1) { t.innerHTML="🥉 青铜证书"; d.innerHTML="选择题完成 10 题且维持高正确率！"; }
-                if(level===2) { t.innerHTML="🥈 白银证书"; d.innerHTML="选择题完成 20 题，太神了！"; }
-                if(level===3) { t.innerHTML="🏆 黄金结业！"; d.innerHTML="选择题刷满 25 题且正确率 95%！"; }
+                if(level===1) { t.innerHTML="🥉 青銅證書"; d.innerHTML="選擇題完成 10 題且維持高正確率！"; }
+                if(level===2) { t.innerHTML="🥈 白銀證書"; d.innerHTML="選擇題完成 20 題，太神了！"; }
+                if(level===3) { t.innerHTML="🏆 黃金結業！"; d.innerHTML="選擇題刷滿 25 題且正確率 95%！"; }
             } else {
-                if(level===1) { t.innerHTML="🧩 初级拼图学者"; d.innerHTML="成功拼出 10 个生字！"; }
-                if(level===2) { t.innerHTML="🧩 进阶拼图达人"; d.innerHTML="征服 20 个生字，只差一点了！"; }
-                if(level===3) { t.innerHTML="👑 拼图大师！"; d.innerHTML="满分全制霸！肌肉记忆完美！"; }
+                if(level===1) { t.innerHTML="🧩 初級拼圖學者"; d.innerHTML="成功拼出 10 個生字！"; }
+                if(level===2) { t.innerHTML="🧩 進階拼圖達人"; d.innerHTML="征服 20 個生字，只差一點了！"; }
+                if(level===3) { t.innerHTML="👑 拼圖大師！"; d.innerHTML="滿分全制霸！肌肉記憶完美！"; }
             }
             document.getElementById('stayBtn').onclick = () => { closeModal(type, level); };
             document.getElementById('gradModal').style.display = 'flex';
