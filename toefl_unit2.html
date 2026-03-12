@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOEFL (Unit 2)</title>
+    <title>📕 TOEFL (Unit 2)</title>
     <style>
       body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #FFF5F5; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; color: #4A1515; padding-top: 15px; position: relative;}
         h1 { color: #800000; margin-bottom: 10px; font-size: 22px; text-align: center; font-weight: 800;}
@@ -57,7 +57,7 @@
 </head>
 <body>
      
-    <h1>📘 TOEFL (Unit 2)</h1>
+    <h1>📕 TOEFL (Unit 2)</h1>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('flashcard')">📇 單詞卡</button>
@@ -142,16 +142,39 @@
         const STORAGE_KEY = 'spartan_toefl_u2';
         
         let vocabData = [
-            { word: "Censure", engDef: "To express severe disapproval in a formal statement.", translation: "V./N. 嚴厲斥責", synAnt: "同: Condemn; 反: Praise", usage: "Face severe censure", example: "The politician faced severe censure for his comments." },
-            { word: "Bereave", engDef: "To be deprived of a loved one through a profound absence.", translation: "V. 剝奪，使喪失", synAnt: "同: Deprive", usage: "Bereaved family", example: "The accident bereaved them of their only child." }
-            // ⚠️ 在此補滿 25 詞
-        ];
+    { word: "Biodiversity", engDef: "The variety of life in a particular habitat or ecosystem.", translation: "N. 生物多樣性", synAnt: "同: Variety", usage: "Global biodiversity", example: "Deforestation poses a severe threat to global biodiversity." },
+    { word: "Sustainable", engDef: "Able to be maintained at a certain rate or level.", translation: "Adj. 可持續的", synAnt: "同: Maintainable", usage: "Sustainable energy", example: "Wind energy is a sustainable alternative to fossil fuels." },
+    { word: "Habitat", engDef: "The natural home or environment of an organism.", translation: "N. 棲息地", synAnt: "同: Environment", usage: "Natural habitat", example: "The loss of its natural habitat led to the decline of the tiger." },
+    { word: "Ecosystem", engDef: "A biological community of interacting organisms and their environment.", translation: "N. 生態系統", synAnt: "同: Network", usage: "Fragile ecosystem", example: "Pollution can disrupt the delicate balance of an ecosystem." },
+    { word: "Adaptation", engDef: "The process by which a species becomes fitted to its environment.", translation: "N. 適應", synAnt: "同: Adjustment", usage: "Evolutionary adaptation", example: "The camel's hump is an adaptation for surviving in the desert." },
+    { word: "Conservation", engDef: "Prevention of wasteful use of a resource or protecting nature.", translation: "N. 保護", synAnt: "同: Preservation", usage: "Wildlife conservation", example: "Wildlife conservation efforts have helped save the bald eagle." },
+    { word: "Deforestation", engDef: "The action of clearing a wide area of trees.", translation: "N. 濫伐森林", synAnt: "同: Logging", usage: "Rapid deforestation", example: "Deforestation has led to significant soil erosion in the tropics." },
+    { word: "Pollution", engDef: "Presence of harmful substances in the environment.", translation: "N. 污染", synAnt: "同: Contamination", usage: "Water pollution", example: "Industrial waste is a major source of water pollution." },
+    { word: "Resource", engDef: "A supply of materials or assets that can be used.", translation: "N. 資源", synAnt: "同: Supply, Asset", usage: "Renewable resource", example: "Freshwater is a vital resource that must be protected." },
+    { word: "Climate", engDef: "The long-term weather conditions in an area.", translation: "N. 氣候", synAnt: "同: Weather pattern", usage: "Arid climate", example: "The region's arid climate makes farming extremely difficult." },
+    { word: "Erosion", engDef: "The gradual destruction of land by wind or water.", translation: "N. 侵蝕", synAnt: "同: Abrasion", usage: "Soil erosion", example: "Roots of trees help prevent soil erosion during heavy rains." },
+    { word: "Extinction", engDef: "The state of a species being no longer in existence.", translation: "N. 滅絕", synAnt: "同: Annihilation", usage: "Face extinction", example: "Many species are facing extinction due to climate change." },
+    { word: "Interaction", engDef: "Reciprocal action or influence between two or more things.", translation: "N. 相互作用", synAnt: "同: Cooperation", usage: "Complex interaction", example: "The interaction between bees and flowers is a form of mutualism." },
+    { word: "Niche", engDef: "The specific role of a species within its environment.", translation: "N. 生態位", synAnt: "同: Place, Role", usage: "Ecological niche", example: "Every organism occupies a unique niche in the forest." },
+    { word: "Organism", engDef: "An individual animal, plant, or single-celled life form.", translation: "N. 生物", synAnt: "同: Living thing", usage: "Microscopic organism", example: "Microscopic organisms in the soil are vital for plant growth." },
+    { word: "Preservation", engDef: "The act of keeping something in its original state.", translation: "N. 保存", synAnt: "同: Conservation", usage: "Preservation of wetlands", example: "The preservation of wetlands is crucial for flood control." },
+    { word: "Resilience", engDef: "The capacity of an ecosystem to recover from difficulties.", translation: "N. 韌性", synAnt: "同: Adaptability", usage: "Show resilience", example: "Mangrove forests show great resilience against storm surges." },
+    { word: "Restoration", engDef: "The action of returning something to its former condition.", translation: "N. 恢復 / 修復", synAnt: "同: Renewal", usage: "Ecological restoration", example: "The restoration of the damaged reef took over a decade." },
+    { word: "Species", engDef: "A group of organisms consisting of similar individuals.", translation: "N. 物種", synAnt: "同: Kind, Type", usage: "Endangered species", example: "Several new species of fish were found in the deep ocean." },
+    { word: "Symbiosis", engDef: "Interaction between two different organisms living in close association.", translation: "N. 共生", synAnt: "同: Partnership", usage: "Live in symbiosis", example: "Some fungi live in symbiosis with the roots of tall trees." },
+    { word: "Terrestrial", engDef: "Relating to the earth or its inhabitants; living on land.", translation: "Adj. 陸地的", synAnt: "同: Land-based; 反: Aquatic", usage: "Terrestrial animals", example: "Elephants are the largest terrestrial animals on Earth." },
+    { word: "Toxic", engDef: "Poisonous; relating to or caused by poison.", translation: "Adj. 有毒的", synAnt: "同: Lethal, Harmful", usage: "Toxic waste", example: "The local river was contaminated with toxic heavy metals." },
+    { word: "Vegetation", engDef: "Plants considered collectively in a particular area.", translation: "N. 植被", synAnt: "同: Flora, Plants", usage: "Lush vegetation", example: "The lush vegetation of the rainforest supports many animals." },
+    { word: "Vulnerable", engDef: "Susceptible to physical or emotional harm.", translation: "Adj. 易受傷害的", synAnt: "同: Exposed, Weak", usage: "Vulnerable species", example: "Young seedlings are vulnerable to extreme frost in winter." },
+    { word: "Watershed", engDef: "An area of land that separates waters flowing to different rivers.", translation: "N. 分水嶺", synAnt: "同: Divide", usage: "Protect the watershed", example: "The protection of the watershed is essential for city water." }
+];
 
-        let clozeData = {
-            passage: "He faced severe [1] from the public. This event seemed to [2] him of all hope.",
-            blanks: ["Censure", "Bereave"], 
-            options: ["Censure", "Bereave", "Obsolete"] 
-        };
+let clozeData = {
+    passage: "Protecting the Earth's [1] is essential for maintaining a healthy [2]. When a natural [3] is destroyed by human activities, such as urban expansion, many [4] species face the imminent threat of [5].",
+    blanks: ["biodiversity", "ecosystem", "habitat", "vulnerable", "extinction"], 
+    options: ["biodiversity", "ecosystem", "habitat", "vulnerable", "extinction", "sustainable", "erosion"]
+};
+
 
         // ==========================================
         // V6.0 核心引擎

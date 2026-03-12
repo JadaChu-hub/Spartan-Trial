@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOEFL (Unit 1)</title>
+    <title>📕 TOEFL (Unit 1)</title>
     <style>
       body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #FFF5F5; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; color: #4A1515; padding-top: 15px; position: relative;}
         h1 { color: #800000; margin-bottom: 10px; font-size: 22px; text-align: center; font-weight: 800;}
@@ -57,7 +57,7 @@
 </head>
 <body>
      
-    <h1>📘 TOEFL (Unit 1)</h1>
+    <h1>📕 TOEFL (Unit 1)</h1>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('flashcard')">📇 單詞卡</button>
@@ -140,18 +140,40 @@
         // ⚠️ 修改區：存檔鍵名、生字資料、克漏字資料
         // ==========================================
         const STORAGE_KEY = 'spartan_toefl_u1';
-        
-        let vocabData = [
-            { word: "Censure", engDef: "To express severe disapproval in a formal statement.", translation: "V./N. 嚴厲斥責", synAnt: "同: Condemn; 反: Praise", usage: "Face severe censure", example: "The politician faced severe censure for his comments." },
-            { word: "Bereave", engDef: "To be deprived of a loved one through a profound absence.", translation: "V. 剝奪，使喪失", synAnt: "同: Deprive", usage: "Bereaved family", example: "The accident bereaved them of their only child." }
-            // ⚠️ 在此補滿 25 詞
-        ];
+       let vocabData = [
+    { word: "Analyze", engDef: "To examine data in detail to explain and interpret it.", translation: "V. 分析", synAnt: "同: Examine, Inspect", usage: "Analyze the data", example: "Researchers must analyze the chemical composition of the core samples." },
+    { word: "Hypothesis", engDef: "A proposed explanation based on limited evidence for investigation.", translation: "N. 假設", synAnt: "同: Theory; 反: Fact", usage: "Test a hypothesis", example: "The test results supported the original hypothesis about soil acidity." },
+    { word: "Empirical", engDef: "Based on observation or experience rather than theory or logic.", translation: "Adj. 實證的", synAnt: "同: Factual; 反: Theoretical", usage: "Empirical evidence", example: "The theory lacks empirical support from actual field observations." },
+    { word: "Variable", engDef: "An element or factor that is liable to change.", translation: "N. 變數", synAnt: "同: Factor; 反: Constant", usage: "Independent variable", example: "Temperature was the primary variable controlled in the experiment." },
+    { word: "Assess", engDef: "To evaluate the nature, quality, or importance of something.", translation: "V. 評估", synAnt: "同: Evaluate, Appraise", usage: "Assess the impact", example: "Engineers need to assess the structural integrity of the bridge." },
+    { word: "Evaluate", engDef: "To form an idea of the amount or value.", translation: "V. 評價", synAnt: "同: Judge, Rate", usage: "Evaluate the effectiveness", example: "The committee will evaluate the effectiveness of the program." },
+    { word: "Data", engDef: "Facts and statistics collected together for reference or analysis.", translation: "N. 數據", synAnt: "同: Evidence, Info", usage: "Collect data", example: "The data indicates a significant increase in global temperatures." },
+    { word: "Deduce", engDef: "To arrive at a fact or conclusion by reasoning.", translation: "V. 推斷", synAnt: "同: Infer, Conclude", usage: "Deduce from facts", example: "From the footprints, we can deduce that the animal was large." },
+    { word: "Identify", engDef: "To recognize or name someone or something exactly.", translation: "V. 識別", synAnt: "同: Recognize, Pinpoint", usage: "Identify the cause", example: "Scientists identified the virus using an electron microscope." },
+    { word: "Method", engDef: "A particular procedure for accomplishing something.", translation: "N. 方法", synAnt: "同: Technique, Approach", usage: "Scientific method", example: "This new method reduces the time needed for DNA sequencing." },
+    { word: "Paradigm", engDef: "A typical example or pattern of something; a model.", translation: "N. 範式", synAnt: "同: Model, Pattern", usage: "Paradigm shift", example: "The discovery represents a new paradigm in particle physics." },
+    { word: "Parameter", engDef: "A measurable factor forming one of a set of boundaries.", translation: "N. 參數", synAnt: "同: Limit, Bound", usage: "Set the parameters", example: "The parameters of the study were restricted to urban areas." },
+    { word: "Precise", engDef: "Marked by exactness and accuracy of expression or detail.", translation: "Adj. 精確的", synAnt: "同: Accurate; 反: Vague", usage: "Precise measurement", example: "The precise timing of the solar eclipse was calculated months ago." },
+    { word: "Predict", engDef: "To say or estimate that something will happen.", translation: "V. 預測", synAnt: "同: Forecast; 反: Recount", usage: "Predict the outcome", example: "Economists predict a slow recovery for the global market." },
+    { word: "Principle", engDef: "A fundamental truth that serves as the basis for reasoning.", translation: "N. 原理", synAnt: "同: Rule, Basis", usage: "Basic principle", example: "The principle of gravity explains how planets remain in orbit." },
+    { word: "Protocol", engDef: "The official procedure or system of rules in research.", translation: "N. 協議 / 方案", synAnt: "同: Procedure, Plan", usage: "Safety protocol", example: "Following the strict safety protocol is mandatory in the lab." },
+    { word: "Qualitative", engDef: "Relating to the quality of something rather than amount.", translation: "Adj. 定性的", synAnt: "同: Descriptive", usage: "Qualitative research", example: "Qualitative research focuses on human experiences and behaviors." },
+    { word: "Quantitative", engDef: "Relating to the amount or number of something.", translation: "Adj. 定量的", synAnt: "同: Numerical", usage: "Quantitative analysis", example: "The scientist conducted a quantitative analysis of the data." },
+    { word: "Replicate", engDef: "To make an exact copy of or reproduce.", translation: "V. 複製", synAnt: "同: Duplicate, Repeat", usage: "Replicate the study", example: "Other laboratories were unable to replicate the controversial study." },
+    { word: "Rigorous", engDef: "Extremely thorough, exhaustive, or accurate.", translation: "Adj. 嚴謹的", synAnt: "同: Stringent; 反: Lax", usage: "Rigorous testing", example: "The theory underwent rigorous testing before being accepted." },
+    { word: "Sample", engDef: "A small part intended to show what the whole is like.", translation: "N. 樣本", synAnt: "同: Specimen, Example", usage: "Sample size", example: "The geologist took a soil sample from the volcanic site." },
+    { word: "Scrutinize", engDef: "To examine or inspect closely and thoroughly.", translation: "V. 細閱", synAnt: "同: Inspect, Audit", usage: "Scrutinize the details", example: "The committee will scrutinize every detail of the proposal." },
+    { word: "Theory", engDef: "A system of ideas intended to explain something.", translation: "N. 理論", synAnt: "同: Concept; 反: Practice", usage: "Evolutionary theory", example: "Darwin's theory of evolution changed our view of biology." },
+    { word: "Valid", engDef: "Having a sound basis in logic or fact; reasonable.", translation: "Adj. 有效的", synAnt: "同: Logical; 反: Invalid", usage: "Valid conclusion", example: "The results are only valid if the control group is maintained." },
+    { word: "Verify", engDef: "To make sure that something is true or accurate.", translation: "V. 證實", synAnt: "同: Confirm; 反: Refute", usage: "Verify the results", example: "Please verify your identity before accessing the research files." }
+];
 
-        let clozeData = {
-            passage: "He faced severe [1] from the public. This event seemed to [2] him of all hope.",
-            blanks: ["Censure", "Bereave"], 
-            options: ["Censure", "Bereave", "Obsolete"] 
-        };
+let clozeData = {
+    passage: "In the field of academic research, scientists must [1] empirical data to ensure the [2] nature of their findings. When a researcher proposes a new [3], they must design a [4] experiment that allows other experts to [5] the results perfectly.",
+    blanks: ["analyze", "valid", "hypothesis", "rigorous", "replicate"], 
+    options: ["analyze", "valid", "hypothesis", "rigorous", "replicate", "scrutinize", "parameter"]
+};
+
 
         // ==========================================
         // V6.0 核心引擎

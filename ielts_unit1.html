@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IELTS 雅思 (Unit 1)</title>
-    <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/full.js"></script>
+    <title>📓 IELTS (Unit 1)</title>
     <style>
         /* ======= 🌟 IELTS 專屬優雅紫配色 (Elegant Purple) ======= */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #F8F0FA; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; color: #380B61; padding-top: 15px; position: relative;}
@@ -29,7 +28,7 @@
         .word-text { font-size: 30px; font-weight: bold; margin-bottom: 10px;}
         .eng-def { font-size: 15px; color: #7B1FA2; font-style: italic; padding: 0 10px; line-height: 1.3;}
         
-        .card-back { background-color: #F3E5F5; color: #311B92; transform: rotateY(180deg); align-items: flex-start; text-align: left; backface-visibility: hidden;}
+        .card-back { background-color: #F3E5F5; color: #311B92; transform: rotateY(180deg); align-items: flex-start; text-align: left;backface-visibility: hidden; }
         .translation { font-size: 17px; font-weight: bold; margin-bottom: 8px; color: #4A148C; border-bottom: 1px solid #CE93D8; padding-bottom: 4px; width: 100%;}
         .details { font-size: 13px; margin-bottom: 6px; line-height: 1.3; }
         .details strong { color: #8E24AA; }
@@ -76,16 +75,14 @@
     </style>
 </head>
 <body>
-
-    <button class="lang-toggle-btn" onclick="toggleLanguage()">繁 / 简</button>
-    
-    <h1>IELTS (Unit 1)</h1>
+       
+    <h1>📓 IELTS (Unit 1)</h1>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('flashcard')">📇 单词卡</button>
-        <button class="tab-btn" onclick="switchTab('quiz')">📝 随机测验</button>
-        <button class="tab-btn" onclick="switchTab('spell')">🧩 字母拼图</button>
-        <button class="tab-btn" onclick="switchTab('cloze')">📖 实力总结</button>
+        <button class="tab-btn active" onclick="switchTab('flashcard')">📇 單詞卡</button>
+        <button class="tab-btn" onclick="switchTab('quiz')">📝 隨機測驗</button>
+        <button class="tab-btn" onclick="switchTab('spell')">🧩 字母拼圖</button>
+        <button class="tab-btn" onclick="switchTab('cloze')">📖 實力總結</button>
     </div>
 
     <div id="flashcard-view" class="view-section active">
@@ -100,111 +97,105 @@
                     </div>
                 </div>
                 <div class="card-back">
-                    <div class="translation" id="translationText">解释</div>
-                    <div class="details" id="synAntText"><strong>同/反义：</strong><span>...</span></div>
+                    <div class="translation" id="translationText">解釋</div>
+                    <div class="details" id="synAntText"><strong>同/反義：</strong><span>...</span></div>
                     <div class="details" id="usageText"><strong>固定用法：</strong><span>...</span></div>
                     <div class="example" id="exampleText">例句...</div>
-                    <button class="action-btn" onclick="speakText('example', event)" style="margin-top: 10px; padding: 6px 12px; font-size: 12px; align-self: center;">🔊 朗读例句</button>
+                    <button class="action-btn" onclick="speakText('example', event)" style="margin-top: 10px; padding: 6px 12px; font-size: 12px; align-self: center;">🔊 朗讀例句</button>
                 </div>
             </div>
         </div>
         <div class="controls">
-            <button class="action-btn" onclick="prevCard()">⬅️ 上个</button>
+            <button class="action-btn" onclick="prevCard()">⬅️ 上個</button>
             <button class="action-btn" onclick="flipCard()">🔄 翻面</button>
-            <button class="action-btn" onclick="nextCard()">下个 ➡️</button>
+            <button class="action-btn" onclick="nextCard()">下個 ➡️</button>
             <button class="action-btn green-btn" onclick="shuffleCards()">🔀 洗牌</button>
         </div>
         <div class="counter" id="counterText">1 / ?</div>
     </div>
 
     <div id="quiz-view" class="view-section">
-        <div class="mastery-text" id="masteryText">🏆 测验熟练度：0% (0/0) <br> 🎖️ 证书进度：0 / 3</div>
+        <div class="mastery-text" id="masteryText">🏆 測驗熟練度：0% (0/0) <br> 🎖️ 證書進度：0 / 3</div>
         <div class="quiz-question" id="quizQuestion">
-            <span style="font-size:13px; color:#486581;" id="quizHint">请选出对应答案：</span><br><br>
+            <span style="font-size:13px; color:#486581;" id="quizHint">請選出對應答案：</span><br><br>
             <span id="quizDesc" style="font-size:18px;">...</span>
         </div>
         <div class="quiz-options" id="quizOptions"></div>
         <div class="feedback" id="quizFeedback"></div>
-        <button class="action-btn" style="margin-top: 15px;" onclick="generateQuiz()">下一题</button>
+        <button class="action-btn" style="margin-top: 15px;" onclick="generateQuiz()">下一題</button>
     </div>
 
     <div id="spell-view" class="view-section">
         <div style="width: 100%;">
-            <div class="mastery-text" id="spellProgressText" style="margin-bottom: 5px;">⌨️ 词汇收集：0 / 25 (0%)</div>
+            <div class="mastery-text" id="spellProgressText" style="margin-bottom: 5px;">⌨️ 詞彙收集：0 / 25 (0%)</div>
             <div class="progress-container"><div class="progress-fill" id="spellProgressBar"></div></div>
         </div>
-        <div class="quiz-question" style="font-size:14px; margin-bottom: 10px;" id="spellPrompt">解释与例句</div>
+        <div class="quiz-question" style="font-size:14px; margin-bottom: 10px;" id="spellPrompt">解釋與例句</div>
         <div class="spell-answer-box" id="spellAnswerBox"></div>
         <div class="letter-pool" id="letterPool"></div>
         <button class="action-btn" id="submitSpellBtn" onclick="checkSpell()">送出答案</button>
         <div class="feedback" id="spellFeedback"></div>
-        <button class="action-btn" style="margin-top: 15px; display: none;" id="nextSpellBtn" onclick="generateSpell()">下一题</button>
+        <button class="action-btn" style="margin-top: 15px; display: none;" id="nextSpellBtn" onclick="generateSpell()">下一題</button>
     </div>
 
     <div id="cloze-view" class="view-section">
-        <div class="mastery-text">📖 单元主题实战演练</div>
+        <div class="mastery-text">📖 單元主題實戰演練</div>
         <div class="cloze-container" id="clozeContainer"></div>
         <div class="feedback" id="clozeFeedback"></div>
-        <button class="action-btn" style="margin-top: 15px;" onclick="checkCloze()">提交验证</button>
+        <button class="action-btn" style="margin-top: 15px;" onclick="checkCloze()">提交驗證</button>
     </div>
 
     <div class="grad-modal" id="gradModal">
-        <h2 class="grad-title" id="gradTitle">🛡️ 结业！</h2>
-        <p class="grad-desc" id="gradDesc">说明文字</p>
-        <button class="grad-btn" onclick="window.location.href='index.html'">🎓 荣耀结业 (返回大厅)</button>
-        <button class="grad-btn stay-btn" id="stayBtn" onclick="">📚 留下来继续复习</button>
+        <h2 class="grad-title" id="gradTitle">🛡️ 結業！</h2>
+        <p class="grad-desc" id="gradDesc">說明文字</p>
+        <button class="grad-btn" onclick="window.location.href='index.html'">🎓 榮耀結業 (返回大廳)</button>
+        <button class="grad-btn stay-btn" id="stayBtn" onclick="">📚 留下來繼續複習</button>
     </div>
 
     <script>
-        // ======= 🌟 繁简转换逻辑 =======
-        let currentLang = 'tw'; 
-        function toggleLanguage() {
-            const rootNode = document.body;
-            if (currentLang === 'tw') {
-                const converter = OpenCC.Converter({ from: 'tw', to: 'cn' });
-                OpenCC.HTML.Convert(converter, rootNode);
-                currentLang = 'cn';
-            } else {
-                const converter = OpenCC.Converter({ from: 'cn', to: 'tw' });
-                OpenCC.HTML.Convert(converter, rootNode);
-                currentLang = 'tw';
-            }
-        }
-
+        
         // ==========================================
-        // ⚠️ 修改区：已幫妳改為 IELTS 的專屬存檔金鑰
+        // ⚠️ 修改區：已幫妳改為 IELTS 的專屬存檔金鑰
         // ==========================================
         const STORAGE_KEY = 'spartan_ielts_u1';
         
         // ⚠️ 之後用 AI 萃取的 25 個雅思單字貼到這裡
-       let vocabData = [
-            { word: "Pedagogy", engDef: "The method and practice of teaching.", translation: "N. 教育学，教学法", synAnt: "同: Education, Didactics", usage: "Modern pedagogy (现代教学法) / Pedagogy of science (科学教育学)", example: "The university's new curriculum reflects a shift in modern pedagogy." },
-            { word: "Eradicate", engDef: "Destroy completely; put an end to.", translation: "V. 根除，消灭", synAnt: "同: Eliminate, Annihilate; 反: Establish", usage: "Eradicate poverty (消除贫困) / Eradicate disease (根除疾病)", example: "Global efforts are required to eradicate infectious diseases." },
-            { word: "Holistic", engDef: "Characterized by comprehension of the parts of something as intimately interconnected.", translation: "Adj. 整体的，全面的", synAnt: "同: Comprehensive, Integrated; 反: Partial", usage: "Holistic approach (整体方法) / Holistic education (全人教育)", example: "A holistic approach is necessary to address complex environmental issues." },
-            { word: "Disparity", engDef: "A great difference.", translation: "N. 差异，不平等", synAnt: "同: Inequality, Discrepancy; 反: Equality", usage: "Economic disparity (经济差距) / Growing disparity (日益扩大的差距)", example: "The disparity in wealth between the two regions is growing rapidly." },
-            { word: "Mitigate", engDef: "Make less severe, serious, or painful.", translation: "V. 减轻，缓和", synAnt: "同: Alleviate, Lessen; 反: Aggravate", usage: "Mitigate the impact (减轻影响) / Mitigate risks (降低风险)", example: "The government implemented measures to mitigate the effects of the drought." },
-            { word: "Innate", engDef: "Inborn; natural.", translation: "Adj. 先天的，固有的", synAnt: "同: Inherent, Intrinsic; 反: Acquired", usage: "Innate talent (天赋) / Innate immunity (先天免疫)", example: "Some researchers believe that language capacity is an innate human trait." },
-            { word: "Marginalize", engDef: "Treat as insignificant or peripheral.", translation: "V. 使边缘化", synAnt: "同: Sideline, Isolate; 反: Integrate", usage: "Marginalized groups (边缘群体) / Socially marginalized (社会边缘化)", example: "We must ensure that minorities are not marginalized in the political process." },
-            { word: "Pragmatic", engDef: "Dealing with things sensibly and realistically.", translation: "Adj. 务实的，实用的", synAnt: "同: Practical, Realistic; 反: Idealistic", usage: "Pragmatic approach (务实的方法) / Pragmatic solution (切合实际的解决方案)", example: "The council took a pragmatic approach to solving the traffic problem." },
-            { word: "Obligation", engDef: "An act or course of action to which a person is morally or legally bound.", translation: "N. 义务，责任", synAnt: "同: Duty, Responsibility", usage: "Moral obligation (道德义务) / Legal obligation (法律责任)", example: "Citizens have an obligation to obey the laws of their country." },
-            { word: "Consensus", engDef: "A general agreement.", translation: "N. 共识，一致同意", synAnt: "同: Agreement, Harmony; 反: Disagreement", usage: "Reach a consensus (达成共识) / General consensus (普遍共识)", example: "It took hours of debate for the committee to reach a consensus." },
-            { word: "Implement", engDef: "Put a decision, plan, or agreement into effect.", translation: "V. 实施，执行", synAnt: "同: Execute, Apply; 反: Cancel", usage: "Implement a policy (实施政策) / Implement changes (执行变更)", example: "The new regulations will be implemented starting next month." },
-            { word: "Elicit", engDef: "Evoke or draw out a response, answer, or fact.", translation: "V. 引出，探出", synAnt: "同: Evoke, Extract", usage: "Elicit a response (引出回应) / Elicit information (探取信息)", example: "The questionnaire was designed to elicit honest feedback from the participants." },
-            { word: "Detrimental", engDef: "Tending to cause harm.", translation: "Adj. 有害的，不利的", synAnt: "同: Harmful, Damaging; 反: Beneficial", usage: "Detrimental effect (不利影响) / Detrimental to health (对健康有害)", example: "Prolonged exposure to the sun can be detrimental to your skin." },
-            { word: "Foster", engDef: "Encourage or promote the development of something.", translation: "V. 培养，促进", synAnt: "同: Encourage, Cultivate; 反: Hinder", usage: "Foster economic growth (促进经济增长) / Foster creativity (培养创造力)", example: "The program aims to foster a sense of community among students." },
-            { word: "Alleviate", engDef: "Make suffering, deficiency, or a problem less severe.", translation: "V. 减轻，缓解", synAnt: "同: Relieve, Ease; 反: Exacerbate", usage: "Alleviate poverty (缓解贫困) / Alleviate symptoms (减轻症状)", example: "The new medication helps to alleviate the symptoms of the disease." },
-            { word: "Cohesion", engDef: "The action or fact of forming a united whole.", translation: "N. 凝聚力，团结", synAnt: "同: Unity, Solidarity; 反: Division", usage: "Social cohesion (社会凝聚力) / Group cohesion (团队凝聚力)", example: "Strong leadership is essential for maintaining group cohesion." },
-            { word: "Conformity", engDef: "Compliance with standards, rules, or laws.", translation: "N. 遵守，一致", synAnt: "同: Compliance, Obedience; 反: Rebellion", usage: "Conformity to rules (遵守规则) / Social conformity (社会从众)", example: "There is often pressure on teenagers to demonstrate conformity to peer norms." },
-            { word: "Scrutinize", engDef: "Examine or inspect closely and thoroughly.", translation: "V. 仔细审查", synAnt: "同: Examine, Inspect", usage: "Scrutinize the data (仔细审查数据) / Closely scrutinize (密切监视)", example: "The auditors will scrutinize the company's financial records." },
-            { word: "Pervasive", engDef: "Spreading widely throughout an area or a group of people.", translation: "Adj. 普遍的，弥漫的", synAnt: "同: Ubiquitous, Widespread", usage: "Pervasive influence (普遍的影响) / Pervasive problem (普遍存在的问题)", example: "Corruption is a pervasive issue in many developing nations." },
-            { word: "Viable", engDef: "Capable of working successfully; feasible.", translation: "Adj. 可行的，能存活的", synAnt: "同: Feasible, Practical; 反: Impossible", usage: "Viable alternative (可行的替代方案) / Economically viable (经济上可行的)", example: "Wind power is increasingly seen as a viable alternative to fossil fuels." },
-            { word: "Autonomous", engDef: "Having the freedom to govern itself or control its own affairs.", translation: "Adj. 自治的，自主的", synAnt: "同: Independent, Self-governing; 反: Dependent", usage: "Autonomous region (自治区) / Autonomous learning (自主学习)", example: "The province was granted an autonomous status after the treaty." },
-            { word: "Paradox", engDef: "A seemingly absurd or self-contradictory statement.", translation: "N. 悖论，矛盾", synAnt: "同: Contradiction, Anomaly", usage: "Apparent paradox (明显的悖论) / Resolve the paradox (解决矛盾)", example: "It is a paradox that in a world of plenty, millions still go hungry." },
-            { word: "Incentive", engDef: "A thing that motivates or encourages one to do something.", translation: "N. 动机，刺激", synAnt: "同: Motivation, Encouragement; 反: Deterrent", usage: "Financial incentive (经济刺激) / Provide an incentive (提供诱因)", example: "The company offered a bonus as an incentive to improve sales." },
-            { word: "Compulsory", engDef: "Required by law or a rule; obligatory.", translation: "Adj. 强制的，必修的", synAnt: "同: Mandatory, Obligatory; 反: Optional", usage: "Compulsory education (义务教育) / Compulsory subject (必修科目)", example: "English is a compulsory subject in most schools." },
-            { word: "Hierarchy", engDef: "A system in which people or groups are ranked one above the other.", translation: "N. 等级制度", synAnt: "同: Ranking, Pecking order", usage: "Social hierarchy (社会阶层) / Corporate hierarchy (企业层级)", example: "The military has a strict hierarchy of command." }
-        ];
+        let vocabData = [
+    { word: "Curriculum", engDef: "Total set of courses offered in an academic program.", translation: "N. 課程", synAnt: "同: Syllabus", usage: "Revise curriculum", example: "The university revised its curriculum to include digital literacy skills." },
+    { word: "Pedagogy", engDef: "The method and practice of teaching as a subject.", translation: "N. 教育學", synAnt: "同: Instruction", usage: "Modern pedagogy", example: "Effective pedagogy focuses on student engagement rather than rote learning." },
+    { word: "Cognitive", engDef: "Relating to mental processes like perception and reasoning.", translation: "Adj. 認知的", synAnt: "同: Intellectual", usage: "Cognitive development", example: "Early childhood is a critical period for cognitive development." },
+    { word: "Didactic", engDef: "Intended to teach, often with a moralizing tone.", translation: "Adj. 教導的", synAnt: "同: Instructive", usage: "Didactic nature", example: "The didactic nature of the lecture made complex theories accessible." },
+    { word: "Assessment", engDef: "Evaluation of the quality or ability of someone.", translation: "N. 評估", synAnt: "同: Evaluation", usage: "Continuous assessment", example: "The final assessment determines sixty percent of the total grade." },
+    { word: "Scholarship", engDef: "A grant or payment made to support education.", translation: "N. 獎學金", synAnt: "同: Fellowship", usage: "Academic scholarship", example: "Her academic achievement earned her a full scholarship to Harvard." },
+    { word: "Discipline", engDef: "A branch of knowledge or field of study.", translation: "N. 學科", synAnt: "同: Field", usage: "Academic discipline", example: "Physics is a rigorous discipline that requires strong mathematical skills." },
+    { word: "Qualification", engDef: "Certificate or record showing completion of a course.", translation: "N. 資格", synAnt: "同: Certificate", usage: "Gain a qualification", example: "She obtained a teaching qualification after two years of training." },
+    { word: "Literacy", engDef: "The ability to read, write, and use information.", translation: "N. 素養 / 識字", synAnt: "反: Illiteracy", usage: "Digital literacy", example: "Improving digital literacy is essential in the modern workforce." },
+    { word: "Acquisition", engDef: "The learning or developing of a specific skill.", translation: "N. 習得", synAnt: "同: Attainment", usage: "Language acquisition", example: "Second language acquisition is most effective during early childhood." },
+    { word: "Holistic", engDef: "Considering the whole system rather than just parts.", translation: "Adj. 全面的", synAnt: "同: Comprehensive", usage: "Holistic approach", example: "A holistic approach to learning considers emotional and social needs." },
+    { word: "Tertiary", engDef: "Relating to education at the university level.", translation: "Adj. 高等教育的", synAnt: "同: Higher-ed", usage: "Tertiary education", example: "Demand for tertiary education has surged in developing nations." },
+    { word: "Vocational", engDef: "Relating to technical skills or training for jobs.", translation: "Adj. 職業的", synAnt: "同: Technical", usage: "Vocational training", example: "Vocational training provides practical skills for the labor market." },
+    { word: "Autonomy", engDef: "The condition of being independent and self-governing.", translation: "N. 自主性", synAnt: "同: Independence", usage: "Learner autonomy", example: "Encouraging learner autonomy helps students take control of their progress." },
+    { word: "Theoretical", engDef: "Based on ideas rather than experience or practice.", translation: "Adj. 理論的", synAnt: "反: Empirical", usage: "Theoretical framework", example: "The study provides a theoretical framework for social research." },
+    { word: "Intellectual", engDef: "Relating to the intellect; appealing to or requiring use of the intellect.", translation: "Adj. 智力的 ; 學術的", synAnt: "同: Scholarly", usage: "Intellectual property", example: "The university provides an environment for intense intellectual growth." },
+    { word: "Methodology", engDef: "A system of methods used in a particular study.", translation: "N. 方法論", synAnt: "同: Procedure", usage: "Research methodology", example: "The researcher detailed the methodology used in the data collection." },
+    { word: "Institutional", engDef: "Relating to an established organization or public body.", translation: "Adj. 制度的", synAnt: "同: Organizational", usage: "Institutional reform", example: "Institutional changes are needed to ensure equal access to education." },
+    { word: "Collaborative", engDef: "Produced by two or more parties working together.", translation: "Adj. 合作的", synAnt: "同: Cooperative", usage: "Collaborative learning", example: "Collaborative learning encourages students to share diverse viewpoints." },
+    { word: "Proficiency", engDef: "High degree of skill or expertise in something.", translation: "N. 精通", synAnt: "同: Competence", usage: "Language proficiency", example: "High language proficiency is required for international academic success." },
+    { word: "Compulsory", engDef: "Required by law or a rule; obligatory.", translation: "Adj. 強制的", synAnt: "同: Mandatory", usage: "Compulsory education", example: "Primary education is compulsory for all children in this region." },
+    { word: "Egalitarian", engDef: "Believing in the principle of equal opportunities.", translation: "Adj. 平等主義的", synAnt: "同: Equitable", usage: "Egalitarian system", example: "The school promotes an egalitarian approach to classroom participation." },
+    { word: "Elite", engDef: "Belonging to a group with superior status.", translation: "Adj. 精英的", synAnt: "同: Superior", usage: "Elite universities", example: "Many elite institutions are now focusing on social diversity." },
+    { word: "Streaming", engDef: "Grouping students by their academic ability levels.", translation: "N. 分班 / 分流", synAnt: "同: Tracking", usage: "Academic streaming", example: "Educational streaming remains a controversial topic among modern pedagogues." },
+    { word: "Assimilation", engDef: "The process of absorbing and understanding new information.", translation: "N. 吸收 / 同化", synAnt: "同: Absorption", usage: "Knowledge assimilation", example: "The rapid assimilation of information is a key academic skill." },
+    { word: "Framework", engDef: "A basic structure underlying a system or concept.", translation: "N. 框架", synAnt: "同: Structure", usage: "Analytical framework", example: "The thesis was built on a solid analytical framework." }
+];
+// Note: Cut 'Framework' (26th word) out if array strictly requires 25. Replaced 'Empirical' with 'Intellectual', leaving 25 exact. I will trim 'Framework' here for exactly 25.
+vocabData.pop(); 
 
+let clozeData = {
+    passage: "Modern education systems are moving away from traditional [1] methods toward a more [2] approach. This shift emphasizes the importance of fostering learner [3] and critical thinking rather than simple knowledge [4]. Furthermore, the integration of digital [5] into the core curriculum is heavily prioritized.",
+    blanks: ["didactic", "holistic", "autonomy", "acquisition", "literacy"], 
+    options: ["didactic", "holistic", "autonomy", "acquisition", "literacy", "streaming", "tertiary"]
+};
         let clozeData = {
             passage: "To [1] poverty, the government must invest in early childhood [2]. Implementing a [3] curriculum that addresses both academic and emotional needs is crucial. This will reduce the social [4] between different communities and [5] the negative effects of economic instability.",
             blanks: ["Eradicate", "Pedagogy", "Holistic", "Disparity", "Mitigate"], 
@@ -245,13 +236,13 @@
             if(t==='quiz') generateQuiz(); if(t==='spell') generateSpell(); if(t==='cloze') renderCloze();
         }
 
-        // 单词卡
+        // 單詞卡
         function renderCard() {
             if(!vocabData.length) return; document.getElementById('flashcard').classList.remove('flipped');
             setTimeout(() => {
                 let d = vocabData[currentIndex];
                 document.getElementById('wordText').innerHTML = d.word; document.getElementById('engDefText').innerHTML = d.engDef || '';
-                document.getElementById('translationText').innerHTML = d.translation; document.getElementById('synAntText').innerHTML = `<strong>同/反义：</strong> ${d.synAnt}`;
+                document.getElementById('translationText').innerHTML = d.translation; document.getElementById('synAntText').innerHTML = `<strong>同/反義：</strong> ${d.synAnt}`;
                 document.getElementById('usageText').innerHTML = `<strong>用法：</strong> ${d.usage || ''}`; document.getElementById('exampleText').innerHTML = d.example;
                 document.getElementById('counterText').innerHTML = `${currentIndex + 1} / ${vocabData.length}`; updateStarUI(); 
             }, 150);
@@ -261,11 +252,11 @@
         function prevCard() { if(currentIndex > 0){ currentIndex--; renderCard(); } }
         function shuffleCards() { vocabData.sort(()=>Math.random()-0.5); currentIndex=0; renderCard(); }
 
-        // 随机测验 (修改为 10 / 20 / 25 门槛)
+        // 隨機測驗 (修改為 10 / 20 / 25 門檻)
         function updateMasteryUI() {
             let rate = localData.attempts===0 ? 0 : Math.round((localData.correct/localData.attempts)*100);
             let certs = (localData.certs.c1?1:0) + (localData.certs.c2?1:0) + (localData.certs.c3?1:0);
-            document.getElementById('masteryText').innerHTML = `🏆 熟练度：${rate}% (${localData.correct}/${localData.attempts}) <br> 🎖️ 证书进度：${certs} / 3`;
+            document.getElementById('masteryText').innerHTML = `🏆 熟練度：${rate}% (${localData.correct}/${localData.attempts}) <br> 🎖️ 證書進度：${certs} / 3`;
             if(localData.attempts>=10 && rate>=90 && !localData.certs.c1) showModal('quiz', 1);
             else if(localData.attempts>=20 && rate>=90 && !localData.certs.c2) showModal('quiz', 2);
             else if(localData.attempts>=25 && rate>=95 && !localData.certs.c3) showModal('quiz', 3);
@@ -274,7 +265,7 @@
             if(vocabData.length<4) return; document.getElementById('quizFeedback').innerHTML = ""; 
             isEngToChnQuiz = Math.random() > 0.5;
             currentQuizAnswer = vocabData[Math.floor(Math.random() * vocabData.length)];
-            document.getElementById('quizHint').innerHTML = isEngToChnQuiz ? "👀 请选出中文：" : "🧠 请选出英文：";
+            document.getElementById('quizHint').innerHTML = isEngToChnQuiz ? "👀 請選出中文：" : "🧠 請選出英文：";
             document.getElementById('quizDesc').innerHTML = isEngToChnQuiz ? currentQuizAnswer.word : currentQuizAnswer.translation;
             let ops = [currentQuizAnswer], others = vocabData.filter(v=>v.word!==currentQuizAnswer.word).sort(()=>Math.random()-0.5);
             ops.push(others[0], others[1], others[2]); ops.sort(()=>Math.random()-0.5);
@@ -283,15 +274,15 @@
         }
         function checkQuiz(w) {
             let fb = document.getElementById('quizFeedback'); localData.attempts++;
-            if(w === currentQuizAnswer.word){ fb.innerHTML = "✅ 正确！"; fb.style.color = "green"; localData.correct++; }
-            else{ fb.innerHTML = `❌ 错误！正解是：${isEngToChnQuiz ? currentQuizAnswer.translation : currentQuizAnswer.word}`; fb.style.color = "red"; }
+            if(w === currentQuizAnswer.word){ fb.innerHTML = "✅ 正確！"; fb.style.color = "green"; localData.correct++; }
+            else{ fb.innerHTML = `❌ 錯誤！正解是：${isEngToChnQuiz ? currentQuizAnswer.translation : currentQuizAnswer.word}`; fb.style.color = "red"; }
             localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateMasteryUI();
         }
 
-        // 拼图 (修改为 10 / 20 / 25 门槛)
+        // 拼圖 (修改為 10 / 20 / 25 門檻)
         function updateSpellUI() {
             let uc = localData.spelledWords.length, total = vocabData.length;
-            document.getElementById('spellProgressText').innerHTML = `⌨️ 词汇收集：${uc} / ${total}`;
+            document.getElementById('spellProgressText').innerHTML = `⌨️ 詞彙收集：${uc} / ${total}`;
             document.getElementById('spellProgressBar').style.width = Math.round((uc/total)*100) + '%';
             if(uc>=10 && !localData.spellCerts.c1) showModal('spell', 1);
             else if(uc>=20 && !localData.spellCerts.c2) showModal('spell', 2);
@@ -302,7 +293,7 @@
             document.getElementById('submitSpellBtn').style.display = "inline-block"; document.getElementById('spellAnswerBox').style.display = "flex";
             document.getElementById('letterPool').style.display = "flex"; updateSpellUI();
             if(localData.spelledWords.length >= vocabData.length){
-                document.getElementById('spellPrompt').innerHTML = "🎉 挑战成功！全部生字收集完毕！";
+                document.getElementById('spellPrompt').innerHTML = "🎉 挑戰成功！全部生字收集完畢！";
                 document.getElementById('spellAnswerBox').style.display = "none"; document.getElementById('letterPool').style.display = "none"; document.getElementById('submitSpellBtn').style.display = "none"; return;
             }
             currentSpellAnswer = vocabData[Math.floor(Math.random() * vocabData.length)];
@@ -328,16 +319,16 @@
         function checkSpell() {
             let ans = spellCurrentAnswer.map(i=>i.char).join(''), corr = currentSpellAnswer.word.toLowerCase(), fb = document.getElementById('spellFeedback');
             if(ans === corr){
-                fb.innerHTML = "✅ 拼字正确！"; fb.style.color = "green"; 
+                fb.innerHTML = "✅ 拼字正確！"; fb.style.color = "green"; 
                 if(!localData.spelledWords.includes(currentSpellAnswer.word)){ localData.spelledWords.push(currentSpellAnswer.word); localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateSpellUI(); }
-            } else { fb.innerHTML = `❌ 错误！正解：${currentSpellAnswer.word}`; fb.style.color = "red"; }
+            } else { fb.innerHTML = `❌ 錯誤！正解：${currentSpellAnswer.word}`; fb.style.color = "red"; }
             document.getElementById('nextSpellBtn').style.display = "inline-block"; document.getElementById('submitSpellBtn').style.display = "none";
         }
 
         // 克漏字
         function renderCloze() {
             let c = document.getElementById('clozeContainer'), h = clozeData.passage; document.getElementById('clozeFeedback').innerHTML = "";
-            let opts = `<option value="">-- 选择 --</option>` + clozeData.options.map(o=>`<option value="${o}">${o}</option>`).join('');
+            let opts = `<option value="">-- 選擇 --</option>` + clozeData.options.map(o=>`<option value="${o}">${o}</option>`).join('');
             for(let i=0; i<clozeData.blanks.length; i++) h = h.replace(`[${i+1}]`, `<select id="clz${i}" class="cloze-select">${opts}</select>`);
             c.innerHTML = h;
         }
@@ -349,21 +340,21 @@
                 else{ sel.style.borderColor="red"; sel.style.backgroundColor="#ffebee"; }
             }
             let fb = document.getElementById('clozeFeedback');
-            if(cor === clozeData.blanks.length){ fb.innerHTML="🎉 太棒了！段落完全正确！"; fb.style.color="green"; }
-            else{ fb.innerHTML=`💪 答对了 ${cor}/${clozeData.blanks.length} 个！`; fb.style.color="red"; }
+            if(cor === clozeData.blanks.length){ fb.innerHTML="🎉 太棒了！段落完全正確！"; fb.style.color="green"; }
+            else{ fb.innerHTML=`💪 答對了 ${cor}/${clozeData.blanks.length} 個！`; fb.style.color="red"; }
         }
 
-        // 弹窗
+        // 彈窗
         function showModal(type, level) {
             let t = document.getElementById('gradTitle'), d = document.getElementById('gradDesc');
             if(type==='quiz'){
-                if(level===1) { t.innerHTML="🥉 青铜证书"; d.innerHTML="选择题完成 10 题且维持高正确率！"; }
-                if(level===2) { t.innerHTML="🥈 白银证书"; d.innerHTML="选择题完成 20 题，太神了！"; }
-                if(level===3) { t.innerHTML="🏆 黄金结业！"; d.innerHTML="选择题刷满 25 题且正确率 95%！"; }
+                if(level===1) { t.innerHTML="🥉 青銅證書"; d.innerHTML="選擇題完成 10 題且維持高正確率！"; }
+                if(level===2) { t.innerHTML="🥈 白銀證書"; d.innerHTML="選擇題完成 20 題，太神了！"; }
+                if(level===3) { t.innerHTML="🏆 黃金結業！"; d.innerHTML="選擇題刷滿 25 題且正確率 95%！"; }
             } else {
-                if(level===1) { t.innerHTML="🧩 初级拼图学者"; d.innerHTML="成功拼出 10 个生字！"; }
-                if(level===2) { t.innerHTML="🧩 进阶拼图达人"; d.innerHTML="征服 20 个生字，只差一点了！"; }
-                if(level===3) { t.innerHTML="👑 拼图大师！"; d.innerHTML="满分全制霸！肌肉记忆完美！"; }
+                if(level===1) { t.innerHTML="🧩 初級拼圖學者"; d.innerHTML="成功拼出 10 個生字！"; }
+                if(level===2) { t.innerHTML="🧩 進階拼圖達人"; d.innerHTML="征服 20 個生字，只差一點了！"; }
+                if(level===3) { t.innerHTML="👑 拼圖大師！"; d.innerHTML="滿分全制霸！肌肉記憶完美！"; }
             }
             document.getElementById('stayBtn').onclick = () => { closeModal(type, level); };
             document.getElementById('gradModal').style.display = 'flex';
