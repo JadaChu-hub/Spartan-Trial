@@ -75,9 +75,7 @@
     </style>
 </head>
 <body>
-
-    <button class="lang-toggle-btn" onclick="toggleLanguage()">繁 / 简</button>
-    
+        
     <h1>📘 AP (Unit 1)</h1>
 
     <div class="tabs">
@@ -155,55 +153,38 @@
     </div>
 
     <script>
-        // ======= 🌟 繁简转换逻辑 (終極防彈版) =======
-        // 使用 window. 前綴，防止妳不小心貼兩次造成 let 重複宣告當機
-        window.currentLang = window.currentLang || 'tw'; 
-        window.converterToCn = window.converterToCn || null;
-        window.converterToTw = window.converterToTw || null;
-
-       function toggleLanguage() {
-            // 直接呼叫瀏覽器內建的翻譯機制 (Google Translate)
-            const currentUrl = encodeURIComponent(window.location.href);
-            // 由於這是一個單機版網頁，如果沒有放上網，Google 翻譯無法直接抓取本地路徑。
-            // 因此，如果是本地測試，我們會給出一個溫馨提示。
-            if (window.location.hostname === '' || window.location.hostname === 'localhost') {
-               alert("💡 提示：您目前正在離線或本機端測試。\n\n繁簡轉換引擎因網路限制無法下載。當您將此網頁上傳至 GitHub 等公開伺服器後，可直接使用瀏覽器（如 Chrome、Safari）內建的『網頁翻譯』功能來切換繁簡體喔！");
-            } else {
-               alert("💡 提示：由於網路限制，內建轉換引擎無法載入。\n\n請直接使用您瀏覽器（例如 Chrome 的網址列右側）內建的『翻譯此網頁』功能，選擇簡體中文即可完美轉換！");
-            }
-        }
-
+        
         // ==========================================
         // ⚠️ 存檔金鑰 (AP Unit 1)
         // ==========================================
         const STORAGE_KEY = 'spartan_ap_u1';
         
-        let vocabData = [
-            { word: "Censure", engDef: "Express severe disapproval of someone or something.", translation: "V./N. 严厉斥责，公开谴责", synAnt: "同: Condemn, Reprimand; 反: Praise", usage: "Face severe censure (面临严厉谴责)", example: "The politician faced severe censure for his inappropriate comments during the debate." },
-            { word: "Bereave", engDef: "Be deprived of a loved one through a profound absence.", translation: "V. 剥夺，使丧失", synAnt: "同: Deprive, Dispossess", usage: "Be bereaved of (被剥夺...) / Bereaved family (丧亲的家庭)", example: "The sudden accident bereaved them of their only child." },
-            { word: "Furrow", engDef: "Make a rut, groove, or trail in.", translation: "N. 犁沟，皱纹；V. 皱眉", synAnt: "同: Crease, Groove", usage: "Furrow one's brow (紧皱眉头)", example: "He deeply furrowed his brow as he tried to solve the complex math problem." },
-            { word: "Corrugation", engDef: "A ridge or groove on a surface.", translation: "N. 起皱，瓦楞", synAnt: "同: Fold, Ridge", usage: "Cardboard corrugation (纸板瓦楞)", example: "The roof was made of metal with deep corrugations to drain the rain." },
-            { word: "Obsolete", engDef: "No longer produced or used; out of date.", translation: "Adj. 废弃的，过时的", synAnt: "同: Outdated, Antiquated; 反: Modern", usage: "Render obsolete (使之过时)", example: "The invention of the smartphone rendered many traditional cameras obsolete." },
-            { word: "Rove", engDef: "Travel constantly without a fixed destination.", translation: "V. 漫游，流浪", synAnt: "同: Wander, Roam", usage: "Roving eye (游移的目光)", example: "The wolves rove around the vast forest looking for their next meal." },
-            { word: "Indict", engDef: "Formally accuse of or charge with a serious crime.", translation: "V. 控告，起诉", synAnt: "同: Accuse, Charge", usage: "Grand jury indictment (大陪审团起诉)", example: "The grand jury voted to indict the CEO for financial fraud." },
-            { word: "Impeach", engDef: "Call into question the integrity or validity of.", translation: "V. 弹劾，怀疑", synAnt: "同: Challenge, Question", usage: "Impeach a president (弹劾总统)", example: "The parliament attempted to impeach the president over the corruption scandal." },
-            { word: "Brigand", engDef: "A member of a gang that ambushes and robs people.", translation: "N. 强盗，土匪", synAnt: "同: Bandit, Outlaw", usage: "Band of brigands (一伙强盗)", example: "The traveling merchants were attacked by a ruthless band of brigands." },
-            { word: "Infect", engDef: "Affect with a disease-causing organism.", translation: "V. 传染，感染", synAnt: "同: Contaminate, Taint", usage: "Highly infectious (高传染性的)", example: "His enthusiasm for the project was so strong that it quickly infected the whole team." },
-            { word: "Sully", engDef: "Damage the purity or integrity of.", translation: "V. 玷污，破坏", synAnt: "同: Tarnish, Stain", usage: "Sully one's reputation (玷污名声)", example: "She refused to let the false accusations sully her family's good name." },
-            { word: "Delegate", engDef: "Entrust a task or responsibility to another person.", translation: "N. 代表；V. 委派", synAnt: "同: Representative, Assign", usage: "Delegate authority (下放权力)", example: "A good manager knows how to delegate tasks effectively to their team." },
-            { word: "Epigraph", engDef: "A short quotation at the beginning of a book or chapter.", translation: "N. 题词，引言", synAnt: "同: Inscription, Quote", usage: "Opening epigraph (开篇题词)", example: "The author used a line from Shakespeare as the epigraph for her new novel." },
-            { word: "Bisect", engDef: "Divide into two parts.", translation: "V. 平分，二等分", synAnt: "同: Halve, Split", usage: "Bisect an angle (平分一个角)", example: "The new highway will bisect the national park, causing environmental concerns." },
-            { word: "Wistful", engDef: "Having or showing a feeling of vague or regretful longing.", translation: "Adj. 渴望的，惆怅的", synAnt: "同: Nostalgic, Yearning", usage: "Wistful smile (惆怅的微笑)", example: "She gave a wistful look at the old photographs from her childhood." },
-            { word: "Amicable", engDef: "Characterized by friendliness and absence of discord.", translation: "Adj. 友好的，和睦的", synAnt: "同: Friendly, Harmonious; 反: Hostile", usage: "Amicable agreement (和平协议)", example: "Despite their differences, they managed to reach an amicable agreement." },
-            { word: "Extirpate", engDef: "Root out and destroy completely.", translation: "V. 根除，灭绝", synAnt: "同: Eradicate, Eliminate", usage: "Extirpate a disease (根除疾病)", example: "The government initiated a program to extirpate the invasive species from the lake." },
-            { word: "Annihilate", engDef: "Destroy utterly; obliterate.", translation: "V. 彻底消灭", synAnt: "同: Decimate, Destroy", usage: "Total annihilation (绝对歼灭)", example: "The powerful hurricane threatened to annihilate the small coastal town." },
-            { word: "Bulwark", engDef: "A defensive wall or a person acting as a defense.", translation: "N. 壁垒，防御者", synAnt: "同: Bastion, Rampart", usage: "Bulwark of democracy (民主的堡垒)", example: "A strong constitution is a nation's bulwark against tyranny." },
+       let vocabData = [
+            { word: "Censure", engDef: "Express severe disapproval of someone or something.", translation: "V./N. 嚴厲斥責，公開譴責", synAnt: "同: Condemn, Reprimand; 反: Praise", usage: "Face severe censure (面臨嚴厲譴責)", example: "The politician faced severe censure for his inappropriate comments during the debate." },
+            { word: "Bereave", engDef: "Be deprived of a loved one through a profound absence.", translation: "V. 剝奪，使喪失", synAnt: "同: Deprive, Dispossess", usage: "Be bereaved of (被剝奪...) / Bereaved family (喪親的家庭)", example: "The sudden accident bereaved them of their only child." },
+            { word: "Furrow", engDef: "Make a rut, groove, or trail in.", translation: "N. 犁溝，皺紋；V. 皺眉", synAnt: "同: Crease, Groove", usage: "Furrow one's brow (緊皺眉頭)", example: "He deeply furrowed his brow as he tried to solve the complex math problem." },
+            { word: "Corrugation", engDef: "A ridge or groove on a surface.", translation: "N. 起皺，瓦楞", synAnt: "同: Fold, Ridge", usage: "Cardboard corrugation (紙板瓦楞)", example: "The roof was made of metal with deep corrugations to drain the rain." },
+            { word: "Obsolete", engDef: "No longer produced or used; out of date.", translation: "Adj. 廢棄的，過時的", synAnt: "同: Outdated, Antiquated; 反: Modern", usage: "Render obsolete (使之過時)", example: "The invention of the smartphone rendered many traditional cameras obsolete." },
+            { word: "Rove", engDef: "Travel constantly without a fixed destination.", translation: "V. 漫遊，流浪", synAnt: "同: Wander, Roam", usage: "Roving eye (遊移的目光)", example: "The wolves rove around the vast forest looking for their next meal." },
+            { word: "Indict", engDef: "Formally accuse of or charge with a serious crime.", translation: "V. 控告，起訴", synAnt: "同: Accuse, Charge", usage: "Grand jury indictment (大陪審團起訴)", example: "The grand jury voted to indict the CEO for financial fraud." },
+            { word: "Impeach", engDef: "Call into question the integrity or validity of.", translation: "V. 彈劾，懷疑", synAnt: "同: Challenge, Question", usage: "Impeach a president (彈劾總統)", example: "The parliament attempted to impeach the president over the corruption scandal." },
+            { word: "Brigand", engDef: "A member of a gang that ambushes and robs people.", translation: "N. 強盜，土匪", synAnt: "同: Bandit, Outlaw", usage: "Band of brigands (一夥強盜)", example: "The traveling merchants were attacked by a ruthless band of brigands." },
+            { word: "Infect", engDef: "Affect with a disease-causing organism.", translation: "V. 傳染，感染", synAnt: "同: Contaminate, Taint", usage: "Highly infectious (高傳染性的)", example: "His enthusiasm for the project was so strong that it quickly infected the whole team." },
+            { word: "Sully", engDef: "Damage the purity or integrity of.", translation: "V. 玷污，破壞", synAnt: "同: Tarnish, Stain", usage: "Sully one's reputation (玷污名聲)", example: "She refused to let the false accusations sully her family's good name." },
+            { word: "Delegate", engDef: "Entrust a task or responsibility to another person.", translation: "N. 代表；V. 委派", synAnt: "同: Representative, Assign", usage: "Delegate authority (下放權力)", example: "A good manager knows how to delegate tasks effectively to their team." },
+            { word: "Epigraph", engDef: "A short quotation at the beginning of a book or chapter.", translation: "N. 題詞，引言", synAnt: "同: Inscription, Quote", usage: "Opening epigraph (開篇題詞)", example: "The author used a line from Shakespeare as the epigraph for her new novel." },
+            { word: "Bisect", engDef: "Divide into two parts.", translation: "V. 平分，二等分", synAnt: "同: Halve, Split", usage: "Bisect an angle (平分一個角)", example: "The new highway will bisect the national park, causing environmental concerns." },
+            { word: "Wistful", engDef: "Having or showing a feeling of vague or regretful longing.", translation: "Adj. 渴望的，惆悵的", synAnt: "同: Nostalgic, Yearning", usage: "Wistful smile (惆悵的微笑)", example: "She gave a wistful look at the old photographs from her childhood." },
+            { word: "Amicable", engDef: "Characterized by friendliness and absence of discord.", translation: "Adj. 友好的，和睦的", synAnt: "同: Friendly, Harmonious; 反: Hostile", usage: "Amicable agreement (和平協議)", example: "Despite their differences, they managed to reach an amicable agreement." },
+            { word: "Extirpate", engDef: "Root out and destroy completely.", translation: "V. 根除，滅絕", synAnt: "同: Eradicate, Eliminate", usage: "Extirpate a disease (根除疾病)", example: "The government initiated a program to extirpate the invasive species from the lake." },
+            { word: "Annihilate", engDef: "Destroy utterly; obliterate.", translation: "V. 徹底消滅", synAnt: "同: Decimate, Destroy", usage: "Total annihilation (絕對殲滅)", example: "The powerful hurricane threatened to annihilate the small coastal town." },
+            { word: "Bulwark", engDef: "A defensive wall or a person acting as a defense.", translation: "N. 壁壘，防禦者", synAnt: "同: Bastion, Rampart", usage: "Bulwark of democracy (民主的堡壘)", example: "A strong constitution is a nation's bulwark against tyranny." },
             { word: "Heed", engDef: "Pay attention to; take notice of.", translation: "V. 注意，留心", synAnt: "同: Mind, Observe", usage: "Pay heed to (留意)", example: "They failed to heed the weather warnings and got caught in the storm." },
-            { word: "Relic", engDef: "An object surviving from an earlier time.", translation: "N. 遗物，遗迹", synAnt: "同: Artifact, Remnant", usage: "Ancient relic (古代遗物)", example: "The sword in the museum is a fascinating relic of the medieval period." },
-            { word: "Wont", engDef: "One's customary behavior in a particular situation.", translation: "N. 习惯，惯常做法", synAnt: "同: Custom, Habit", usage: "As is one's wont (正如某人的习惯)", example: "He went for a long walk before breakfast, as was his daily wont." },
-            { word: "Absolve", engDef: "Set or declare someone free from blame or guilt.", translation: "V. 赦免，免除", synAnt: "同: Exonerate, Forgive; 反: Blame", usage: "Absolve from blame (免除责备)", example: "The priest was asked to absolve the dying man of his earthly sins." },
-            { word: "Exonerate", engDef: "Officially absolve from blame.", translation: "V. 使免罪", synAnt: "同: Clear, Vindicate; 反: Convict", usage: "Totally exonerated (彻底洗清嫌疑)", example: "The newly discovered video footage finally exonerated the wrongly accused suspect." },
-            { word: "Relish", engDef: "Enjoy greatly.", translation: "V./N. 享受，期盼", synAnt: "同: Enjoy, Savor", usage: "Relish the challenge (乐于迎接挑战)", example: "The ambitious young lawyer relished the opportunity to argue the difficult case." }
+            { word: "Relic", engDef: "An object surviving from an earlier time.", translation: "N. 遺物，遺跡", synAnt: "同: Artifact, Remnant", usage: "Ancient relic (古代遺物)", example: "The sword in the museum is a fascinating relic of the medieval period." },
+            { word: "Wont", engDef: "One's customary behavior in a particular situation.", translation: "N. 習慣，慣常做法", synAnt: "同: Custom, Habit", usage: "As is one's wont (正如某人的習慣)", example: "He went for a long walk before breakfast, as was his daily wont." },
+            { word: "Absolve", engDef: "Set or declare someone free from blame or guilt.", translation: "V. 赦免，免除", synAnt: "同: Exonerate, Forgive; 反: Blame", usage: "Absolve from blame (免除責備)", example: "The priest was asked to absolve the dying man of his earthly sins." },
+            { word: "Exonerate", engDef: "Officially absolve from blame.", translation: "V. 使免罪", synAnt: "同: Clear, Vindicate; 反: Convict", usage: "Totally exonerated (徹底洗清嫌疑)", example: "The newly discovered video footage finally exonerated the wrongly accused suspect." },
+            { word: "Relish", engDef: "Enjoy greatly.", translation: "V./N. 享受，期盼", synAnt: "同: Enjoy, Savor", usage: "Relish the challenge (樂於迎接挑戰)", example: "The ambitious young lawyer relished the opportunity to argue the difficult case." }
         ];
 
         let clozeData = {

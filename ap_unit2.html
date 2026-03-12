@@ -70,16 +70,14 @@
     </style>
 </head>
 <body>
-
-    <button class="lang-toggle-btn" onclick="toggleLanguage()">繁 / 简</button>
-    
+       
     <h1>📘 AP (Unit 2)</h1>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('flashcard')">📇 单词卡</button>
-        <button class="tab-btn" onclick="switchTab('quiz')">📝 随机测验</button>
-        <button class="tab-btn" onclick="switchTab('spell')">🧩 字母拼图</button>
-        <button class="tab-btn" onclick="switchTab('cloze')">📖 实力总结</button>
+        <button class="tab-btn active" onclick="switchTab('flashcard')">📇 單詞卡</button>
+        <button class="tab-btn" onclick="switchTab('quiz')">📝 隨機測驗</button>
+        <button class="tab-btn" onclick="switchTab('spell')">🧩 字母拼圖</button>
+        <button class="tab-btn" onclick="switchTab('cloze')">📖 實力總結</button>
     </div>
 
     <div id="flashcard-view" class="view-section active">
@@ -94,110 +92,94 @@
                     </div>
                 </div>
                 <div class="card-back">
-                    <div class="translation" id="translationText">解释</div>
-                    <div class="details" id="synAntText"><strong>同/反义：</strong><span>...</span></div>
+                    <div class="translation" id="translationText">解釋</div>
+                    <div class="details" id="synAntText"><strong>同/反義：</strong><span>...</span></div>
                     <div class="details" id="usageText"><strong>固定用法：</strong><span>...</span></div>
                     <div class="example" id="exampleText">例句...</div>
-                    <button class="action-btn" onclick="speakText('example', event)" style="margin-top: 10px; padding: 6px 12px; font-size: 12px; align-self: center;">🔊 朗读例句</button>
+                    <button class="action-btn" onclick="speakText('example', event)" style="margin-top: 10px; padding: 6px 12px; font-size: 12px; align-self: center;">🔊 朗讀例句</button>
                 </div>
             </div>
         </div>
         <div class="controls">
-            <button class="action-btn" onclick="prevCard()">⬅️ 上个</button>
+            <button class="action-btn" onclick="prevCard()">⬅️ 上個</button>
             <button class="action-btn" onclick="flipCard()">🔄 翻面</button>
-            <button class="action-btn" onclick="nextCard()">下个 ➡️</button>
+            <button class="action-btn" onclick="nextCard()">下個 ➡️</button>
             <button class="action-btn green-btn" onclick="shuffleCards()">🔀 洗牌</button>
         </div>
         <div class="counter" id="counterText">1 / ?</div>
     </div>
 
     <div id="quiz-view" class="view-section">
-        <div class="mastery-text" id="masteryText">🏆 测验熟练度：0% (0/0) <br> 🎖️ 证书进度：0 / 3</div>
+        <div class="mastery-text" id="masteryText">🏆 測驗熟練度：0% (0/0) <br> 🎖️ 證書進度：0 / 3</div>
         <div class="quiz-question" id="quizQuestion">
-            <span style="font-size:13px; color:#486581;" id="quizHint">请选出对应答案：</span><br><br>
+            <span style="font-size:13px; color:#486581;" id="quizHint">請選出對應答案：</span><br><br>
             <span id="quizDesc" style="font-size:18px;">...</span>
         </div>
         <div class="quiz-options" id="quizOptions"></div>
         <div class="feedback" id="quizFeedback"></div>
-        <button class="action-btn" style="margin-top: 15px;" onclick="generateQuiz()">下一题</button>
+        <button class="action-btn" style="margin-top: 15px;" onclick="generateQuiz()">下一題</button>
     </div>
 
     <div id="spell-view" class="view-section">
         <div style="width: 100%;">
-            <div class="mastery-text" id="spellProgressText" style="margin-bottom: 5px;">⌨️ 词汇收集：0 / 25 (0%)</div>
+            <div class="mastery-text" id="spellProgressText" style="margin-bottom: 5px;">⌨️ 詞彙收集：0 / 25 (0%)</div>
             <div class="progress-container"><div class="progress-fill" id="spellProgressBar"></div></div>
         </div>
-        <div class="quiz-question" style="font-size:14px; margin-bottom: 10px;" id="spellPrompt">解释与例句</div>
+        <div class="quiz-question" style="font-size:14px; margin-bottom: 10px;" id="spellPrompt">解釋與例句</div>
         <div class="spell-answer-box" id="spellAnswerBox"></div>
         <div class="letter-pool" id="letterPool"></div>
         <button class="action-btn" id="submitSpellBtn" onclick="checkSpell()">送出答案</button>
         <div class="feedback" id="spellFeedback"></div>
-        <button class="action-btn" style="margin-top: 15px; display: none;" id="nextSpellBtn" onclick="generateSpell()">下一题</button>
+        <button class="action-btn" style="margin-top: 15px; display: none;" id="nextSpellBtn" onclick="generateSpell()">下一題</button>
     </div>
 
     <div id="cloze-view" class="view-section">
-        <div class="mastery-text">📖 单元主题实战演练</div>
+        <div class="mastery-text">📖 單元主題實戰演練</div>
         <div class="cloze-container" id="clozeContainer"></div>
         <div class="feedback" id="clozeFeedback"></div>
-        <button class="action-btn" style="margin-top: 15px;" onclick="checkCloze()">提交验证</button>
+        <button class="action-btn" style="margin-top: 15px;" onclick="checkCloze()">提交驗證</button>
     </div>
 
     <div class="grad-modal" id="gradModal">
-        <h2 class="grad-title" id="gradTitle">🛡️ 结业！</h2>
-        <p class="grad-desc" id="gradDesc">说明文字</p>
-        <button class="grad-btn" onclick="window.location.href='index.html'">🎓 荣耀结业 (返回大厅)</button>
-        <button class="grad-btn stay-btn" id="stayBtn" onclick="">📚 留下来继续复习</button>
+        <h2 class="grad-title" id="gradTitle">🛡️ 結業！</h2>
+        <p class="grad-desc" id="gradDesc">說明文字</p>
+        <button class="grad-btn" onclick="window.location.href='index.html'">🎓 榮耀結業 (返回大廳)</button>
+        <button class="grad-btn stay-btn" id="stayBtn" onclick="">📚 留下來繼續複習</button>
     </div>
 
     <script>
-        // ======= 🌟 繁简转换逻辑 =======
-       let currentLang = 'tw'; 
-        let converterToCn = null;
-        let converterToTw = null;
-
-        function toggleLanguage() {
-            // 直接呼叫瀏覽器內建的翻譯機制 (Google Translate)
-            const currentUrl = encodeURIComponent(window.location.href);
-            // 由於這是一個單機版網頁，如果沒有放上網，Google 翻譯無法直接抓取本地路徑。
-            // 因此，如果是本地測試，我們會給出一個溫馨提示。
-            if (window.location.hostname === '' || window.location.hostname === 'localhost') {
-               alert("💡 提示：您目前正在離線或本機端測試。\n\n繁簡轉換引擎因網路限制無法下載。當您將此網頁上傳至 GitHub 等公開伺服器後，可直接使用瀏覽器（如 Chrome、Safari）內建的『網頁翻譯』功能來切換繁簡體喔！");
-            } else {
-               alert("💡 提示：由於網路限制，內建轉換引擎無法載入。\n\n請直接使用您瀏覽器（例如 Chrome 的網址列右側）內建的『翻譯此網頁』功能，選擇簡體中文即可完美轉換！");
-            }
-        }
-
+       
         // ==========================================
-        // ⚠️ 修改区：存档键名、生字数据、克漏字数据
+        // ⚠️ 修改區：存檔鍵名、生字資料、克漏字資料
         // ==========================================
         const STORAGE_KEY = 'spartan_ap_u2';
         
        let vocabData = [
-            { word: "Aberration", engDef: "A departure from what is normal, usual, or expected.", translation: "N. 异常，失常", synAnt: "同: Anomaly, Deviation", usage: "Statistical aberration (统计异常)", example: "The sudden drop in temperature in July was an environmental aberration." },
-            { word: "Benevolent", engDef: "Well meaning and kindly.", translation: "Adj. 仁慈的，慈善的", synAnt: "同: Kind, Generous; 反: Malevolent", usage: "Benevolent dictator (仁慈的独裁者)", example: "The benevolent donor anonymously gave millions to the children's hospital." },
-            { word: "Capricious", engDef: "Given to sudden and unaccountable changes of mood or behavior.", translation: "Adj. 反复无常的，任性的", synAnt: "同: Fickle, Unpredictable; 反: Stable", usage: "Capricious weather (多变的天气)", example: "The king was known for his capricious rulings that confused his subjects." },
-            { word: "Dearth", engDef: "A scarcity or lack of something.", translation: "N. 缺乏，不足", synAnt: "同: Scarcity, Shortage; 反: Abundance", usage: "Dearth of evidence (证据不足)", example: "There is a severe dearth of clean water in the drought-stricken region." },
-            { word: "Enigma", engDef: "A person or thing that is mysterious, puzzling, or difficult to understand.", translation: "N. 谜，不可思议的事物", synAnt: "同: Mystery, Puzzle", usage: "Remain an enigma (依然是个谜)", example: "The motives of the serial killer remained an enigma to the detectives." },
-            { word: "Fervent", engDef: "Having or displaying a passionate intensity.", translation: "Adj. 热烈的，狂热的", synAnt: "同: Passionate, Intense; 反: Apathetic", usage: "Fervent supporter (狂热的支持者)", example: "She gave a fervent speech that moved the entire audience to tears." },
-            { word: "Gregarious", engDef: "Fond of company; sociable.", translation: "Adj. 爱交际的，合群的", synAnt: "同: Sociable, Outgoing; 反: Introverted", usage: "Gregarious personality (开朗交际的性格)", example: "His gregarious nature made him the most popular student on campus." },
-            { word: "Haughty", engDef: "Arrogantly superior and disdainful.", translation: "Adj. 傲慢的，自大的", synAnt: "同: Arrogant, Proud; 反: Humble", usage: "Haughty demeanor (傲慢的态度)", example: "The aristocrat shot a haughty glance at the servants working below." },
-            { word: "Inevitable", engDef: "Certain to happen; unavoidable.", translation: "Adj. 必然的，不可避免的", synAnt: "同: Unavoidable, Inescapable; 反: Preventable", usage: "Inevitable consequence (必然的后果)", example: "With the continuous printing of money, inflation became an inevitable outcome." },
-            { word: "Juxtapose", engDef: "Place or deal with close together for contrasting effect.", translation: "V. 并列，并置", synAnt: "同: Place side by side, Compare", usage: "Juxtapose the old and new (新旧并列)", example: "The exhibition aimed to juxtapose modern art with classical sculptures." },
-            { word: "Lethargic", engDef: "Affected by lethargy; sluggish and apathetic.", translation: "Adj. 昏睡的，无精打采的", synAnt: "同: Sluggish, Lazy; 反: Energetic", usage: "Feel lethargic (感到无力)", example: "The extreme heat made everyone in the village feel lethargic and slow." },
-            { word: "Mitigate", engDef: "Make less severe, serious, or painful.", translation: "V. 减轻，缓和", synAnt: "同: Alleviate, Reduce; 反: Aggravate", usage: "Mitigate the impact (减轻影响)", example: "The government took immediate steps to mitigate the economic crisis." },
-            { word: "Nostalgia", engDef: "A sentimental longing or wistful affection for the past.", translation: "N. 怀旧，思乡", synAnt: "同: Homesickness, Remembrance", usage: "Sense of nostalgia (怀旧感)", example: "Hearing that old song filled her with a deep sense of nostalgia." },
-            { word: "Ostentatious", engDef: "Characterized by vulgar or pretentious display.", translation: "Adj. 炫耀的，卖弄的", synAnt: "同: Showy, Pretentious; 反: Modest", usage: "Ostentatious lifestyle (奢华炫耀的生活)", example: "He drove an ostentatious sports car to show off his sudden wealth." },
-            { word: "Pragmatic", engDef: "Dealing with things sensibly and realistically.", translation: "Adj. 务实的，实用的", synAnt: "同: Practical, Realistic; 反: Idealistic", usage: "Pragmatic approach (务实的方法)", example: "The manager took a pragmatic approach to solving the supply chain issues." },
-            { word: "Quixotic", engDef: "Exceedingly idealistic; unrealistic and impractical.", translation: "Adj. 唐吉诃德式的，不切实际的", synAnt: "同: Idealistic, Romantic; 反: Pragmatic", usage: "Quixotic scheme (不切实际的计划)", example: "His quixotic quest to eliminate all world hunger ended in financial ruin." },
-            { word: "Resilient", engDef: "Able to withstand or recover quickly from difficult conditions.", translation: "Adj. 适应力强的，有弹性的", synAnt: "同: Tough, Flexible; 反: Fragile", usage: "Resilient economy (复苏力强的经济)", example: "Children are often incredibly resilient when faced with major life changes." },
-            { word: "Scrutinize", engDef: "Examine or inspect closely and thoroughly.", translation: "V. 仔细审查", synAnt: "同: Examine, Inspect", usage: "Scrutinize the document (仔细审查文件)", example: "The legal team will scrutinize every clause in the contract before signing." },
-            { word: "Trepidation", engDef: "A feeling of fear or agitation about something that may happen.", translation: "N. 恐惧，惊恐", synAnt: "同: Fear, Apprehension; 反: Confidence", usage: "With trepidation (忐忑不安地)", example: "She entered the boss's office with deep trepidation regarding her job security." },
-            { word: "Ubiquitous", engDef: "Present, appearing, or found everywhere.", translation: "Adj. 无所不在的", synAnt: "同: Omnipresent, Universal; 反: Rare", usage: "Ubiquitous presence (无处不在)", example: "Smartphones have become a ubiquitous tool in modern society." },
+            { word: "Aberration", engDef: "A departure from what is normal, usual, or expected.", translation: "N. 異常，失常", synAnt: "同: Anomaly, Deviation", usage: "Statistical aberration (統計異常)", example: "The sudden drop in temperature in July was an environmental aberration." },
+            { word: "Benevolent", engDef: "Well meaning and kindly.", translation: "Adj. 仁慈的，慈善的", synAnt: "同: Kind, Generous; 反: Malevolent", usage: "Benevolent dictator (仁慈的獨裁者)", example: "The benevolent donor anonymously gave millions to the children's hospital." },
+            { word: "Capricious", engDef: "Given to sudden and unaccountable changes of mood or behavior.", translation: "Adj. 反復無常的，任性的", synAnt: "同: Fickle, Unpredictable; 反: Stable", usage: "Capricious weather (多變的天氣)", example: "The king was known for his capricious rulings that confused his subjects." },
+            { word: "Dearth", engDef: "A scarcity or lack of something.", translation: "N. 缺乏，不足", synAnt: "同: Scarcity, Shortage; 反: Abundance", usage: "Dearth of evidence (證據不足)", example: "There is a severe dearth of clean water in the drought-stricken region." },
+            { word: "Enigma", engDef: "A person or thing that is mysterious, puzzling, or difficult to understand.", translation: "N. 謎，不可思議的事物", synAnt: "同: Mystery, Puzzle", usage: "Remain an enigma (依然是個謎)", example: "The motives of the serial killer remained an enigma to the detectives." },
+            { word: "Fervent", engDef: "Having or displaying a passionate intensity.", translation: "Adj. 熱烈的，狂熱的", synAnt: "同: Passionate, Intense; 反: Apathetic", usage: "Fervent supporter (狂熱的支持者)", example: "She gave a fervent speech that moved the entire audience to tears." },
+            { word: "Gregarious", engDef: "Fond of company; sociable.", translation: "Adj. 愛交際的，合群的", synAnt: "同: Sociable, Outgoing; 反: Introverted", usage: "Gregarious personality (開朗交際的性格)", example: "His gregarious nature made him the most popular student on campus." },
+            { word: "Haughty", engDef: "Arrogantly superior and disdainful.", translation: "Adj. 傲慢的，自大的", synAnt: "同: Arrogant, Proud; 反: Humble", usage: "Haughty demeanor (傲慢的態度)", example: "The aristocrat shot a haughty glance at the servants working below." },
+            { word: "Inevitable", engDef: "Certain to happen; unavoidable.", translation: "Adj. 必然的，不可避免的", synAnt: "同: Unavoidable, Inescapable; 反: Preventable", usage: "Inevitable consequence (必然的後果)", example: "With the continuous printing of money, inflation became an inevitable outcome." },
+            { word: "Juxtapose", engDef: "Place or deal with close together for contrasting effect.", translation: "V. 並列，並置", synAnt: "同: Place side by side, Compare", usage: "Juxtapose the old and new (新舊並列)", example: "The exhibition aimed to juxtapose modern art with classical sculptures." },
+            { word: "Lethargic", engDef: "Affected by lethargy; sluggish and apathetic.", translation: "Adj. 昏睡的，無精打采的", synAnt: "同: Sluggish, Lazy; 反: Energetic", usage: "Feel lethargic (感到無力)", example: "The extreme heat made everyone in the village feel lethargic and slow." },
+            { word: "Mitigate", engDef: "Make less severe, serious, or painful.", translation: "V. 減輕，緩和", synAnt: "同: Alleviate, Reduce; 反: Aggravate", usage: "Mitigate the impact (減輕影響)", example: "The government took immediate steps to mitigate the economic crisis." },
+            { word: "Nostalgia", engDef: "A sentimental longing or wistful affection for the past.", translation: "N. 懷舊，思鄉", synAnt: "同: Homesickness, Remembrance", usage: "Sense of nostalgia (懷舊感)", example: "Hearing that old song filled her with a deep sense of nostalgia." },
+            { word: "Ostentatious", engDef: "Characterized by vulgar or pretentious display.", translation: "Adj. 炫耀的，賣弄的", synAnt: "同: Showy, Pretentious; 反: Modest", usage: "Ostentatious lifestyle (奢華炫耀的生活)", example: "He drove an ostentatious sports car to show off his sudden wealth." },
+            { word: "Pragmatic", engDef: "Dealing with things sensibly and realistically.", translation: "Adj. 務實的，實用的", synAnt: "同: Practical, Realistic; 反: Idealistic", usage: "Pragmatic approach (務實的方法)", example: "The manager took a pragmatic approach to solving the supply chain issues." },
+            { word: "Quixotic", engDef: "Exceedingly idealistic; unrealistic and impractical.", translation: "Adj. 唐吉訶德式的，不切實際的", synAnt: "同: Idealistic, Romantic; 反: Pragmatic", usage: "Quixotic scheme (不切實際的計畫)", example: "His quixotic quest to eliminate all world hunger ended in financial ruin." },
+            { word: "Resilient", engDef: "Able to withstand or recover quickly from difficult conditions.", translation: "Adj. 適應力強的，有彈性的", synAnt: "同: Tough, Flexible; 反: Fragile", usage: "Resilient economy (復蘇力強的經濟)", example: "Children are often incredibly resilient when faced with major life changes." },
+            { word: "Scrutinize", engDef: "Examine or inspect closely and thoroughly.", translation: "V. 仔細審查", synAnt: "同: Examine, Inspect", usage: "Scrutinize the document (仔細審查檔)", example: "The legal team will scrutinize every clause in the contract before signing." },
+            { word: "Trepidation", engDef: "A feeling of fear or agitation about something that may happen.", translation: "N. 恐懼，驚恐", synAnt: "同: Fear, Apprehension; 反: Confidence", usage: "With trepidation (忐忑不安地)", example: "She entered the boss's office with deep trepidation regarding her job security." },
+            { word: "Ubiquitous", engDef: "Present, appearing, or found everywhere.", translation: "Adj. 無所不在的", synAnt: "同: Omnipresent, Universal; 反: Rare", usage: "Ubiquitous presence (無處不在)", example: "Smartphones have become a ubiquitous tool in modern society." },
             { word: "Venerate", engDef: "Regard with great respect; revere.", translation: "V. 崇敬，敬仰", synAnt: "同: Revere, Respect; 反: Despise", usage: "Venerate the ancestors (敬重祖先)", example: "The old professor is highly venerated by his colleagues and students alike." },
-            { word: "Wane", engDef: "Decrease in vigor, power, or extent; become weaker.", translation: "V. 衰退，减弱", synAnt: "同: Decline, Diminish; 反: Grow", usage: "Waning interest (兴趣减退)", example: "Public support for the war began to wane as the casualties increased." },
-            { word: "Xenophobia", engDef: "Dislike of or prejudice against people from other countries.", translation: "N. 排外，仇外心理", synAnt: "同: Racism, Bigotry", usage: "Rise in xenophobia (仇外心理抬头)", example: "Economic hardships often trigger an unfortunate rise in xenophobia." },
-            { word: "Yearning", engDef: "A feeling of intense longing for something.", translation: "N. 渴望，向往", synAnt: "同: Longing, Craving", usage: "A yearning for freedom (对自由的渴望)", example: "He felt a deep yearning to return to his peaceful hometown." },
-            { word: "Zealous", engDef: "Having or showing zeal; passionate.", translation: "Adj. 热心的，狂热的", synAnt: "同: Fervent, Enthusiastic; 反: Apathetic", usage: "Zealous supporter (狂热的支持者)", example: "The zealous detective worked day and night to solve the cold case." }
+            { word: "Wane", engDef: "Decrease in vigor, power, or extent; become weaker.", translation: "V. 衰退，減弱", synAnt: "同: Decline, Diminish; 反: Grow", usage: "Waning interest (興趣減退)", example: "Public support for the war began to wane as the casualties increased." },
+            { word: "Xenophobia", engDef: "Dislike of or prejudice against people from other countries.", translation: "N. 排外，仇外心理", synAnt: "同: Racism, Bigotry", usage: "Rise in xenophobia (仇外心理抬頭)", example: "Economic hardships often trigger an unfortunate rise in xenophobia." },
+            { word: "Yearning", engDef: "A feeling of intense longing for something.", translation: "N. 渴望，嚮往", synAnt: "同: Longing, Craving", usage: "A yearning for freedom (對自由的渴望)", example: "He felt a deep yearning to return to his peaceful hometown." },
+            { word: "Zealous", engDef: "Having or showing zeal; passionate.", translation: "Adj. 熱心的，狂熱的", synAnt: "同: Fervent, Enthusiastic; 反: Apathetic", usage: "Zealous supporter (狂熱的支持者)", example: "The zealous detective worked day and night to solve the cold case." }
         ];
 
         let clozeData = {
@@ -205,7 +187,6 @@
             blanks: ["Aberration", "Mitigate", "Pragmatic", "Trepidation", "Inevitable"], 
             options: ["Pragmatic", "Trepidation", "Aberration", "Inevitable", "Mitigate", "Quixotic"] 
         };
-
 
         // ==========================================
         // V6.0 核心引擎
@@ -241,13 +222,13 @@
             if(t==='quiz') generateQuiz(); if(t==='spell') generateSpell(); if(t==='cloze') renderCloze();
         }
 
-        // 单词卡
+        // 單詞卡
         function renderCard() {
             if(!vocabData.length) return; document.getElementById('flashcard').classList.remove('flipped');
             setTimeout(() => {
                 let d = vocabData[currentIndex];
                 document.getElementById('wordText').innerHTML = d.word; document.getElementById('engDefText').innerHTML = d.engDef || '';
-                document.getElementById('translationText').innerHTML = d.translation; document.getElementById('synAntText').innerHTML = `<strong>同/反义：</strong> ${d.synAnt}`;
+                document.getElementById('translationText').innerHTML = d.translation; document.getElementById('synAntText').innerHTML = `<strong>同/反義：</strong> ${d.synAnt}`;
                 document.getElementById('usageText').innerHTML = `<strong>用法：</strong> ${d.usage || ''}`; document.getElementById('exampleText').innerHTML = d.example;
                 document.getElementById('counterText').innerHTML = `${currentIndex + 1} / ${vocabData.length}`; updateStarUI(); 
             }, 150);
@@ -257,11 +238,11 @@
         function prevCard() { if(currentIndex > 0){ currentIndex--; renderCard(); } }
         function shuffleCards() { vocabData.sort(()=>Math.random()-0.5); currentIndex=0; renderCard(); }
 
-        // 随机测验 (修改为 10 / 20 / 25 门槛)
+        // 隨機測驗 (修改為 10 / 20 / 25 門檻)
         function updateMasteryUI() {
             let rate = localData.attempts===0 ? 0 : Math.round((localData.correct/localData.attempts)*100);
             let certs = (localData.certs.c1?1:0) + (localData.certs.c2?1:0) + (localData.certs.c3?1:0);
-            document.getElementById('masteryText').innerHTML = `🏆 熟练度：${rate}% (${localData.correct}/${localData.attempts}) <br> 🎖️ 证书进度：${certs} / 3`;
+            document.getElementById('masteryText').innerHTML = `🏆 熟練度：${rate}% (${localData.correct}/${localData.attempts}) <br> 🎖️ 證書進度：${certs} / 3`;
             if(localData.attempts>=10 && rate>=90 && !localData.certs.c1) showModal('quiz', 1);
             else if(localData.attempts>=20 && rate>=90 && !localData.certs.c2) showModal('quiz', 2);
             else if(localData.attempts>=25 && rate>=95 && !localData.certs.c3) showModal('quiz', 3);
@@ -270,7 +251,7 @@
             if(vocabData.length<4) return; document.getElementById('quizFeedback').innerHTML = ""; 
             isEngToChnQuiz = Math.random() > 0.5;
             currentQuizAnswer = vocabData[Math.floor(Math.random() * vocabData.length)];
-            document.getElementById('quizHint').innerHTML = isEngToChnQuiz ? "👀 请选出中文：" : "🧠 请选出英文：";
+            document.getElementById('quizHint').innerHTML = isEngToChnQuiz ? "👀 請選出中文：" : "🧠 請選出英文：";
             document.getElementById('quizDesc').innerHTML = isEngToChnQuiz ? currentQuizAnswer.word : currentQuizAnswer.translation;
             let ops = [currentQuizAnswer], others = vocabData.filter(v=>v.word!==currentQuizAnswer.word).sort(()=>Math.random()-0.5);
             ops.push(others[0], others[1], others[2]); ops.sort(()=>Math.random()-0.5);
@@ -279,15 +260,15 @@
         }
         function checkQuiz(w) {
             let fb = document.getElementById('quizFeedback'); localData.attempts++;
-            if(w === currentQuizAnswer.word){ fb.innerHTML = "✅ 正确！"; fb.style.color = "green"; localData.correct++; }
-            else{ fb.innerHTML = `❌ 错误！正解是：${isEngToChnQuiz ? currentQuizAnswer.translation : currentQuizAnswer.word}`; fb.style.color = "red"; }
+            if(w === currentQuizAnswer.word){ fb.innerHTML = "✅ 正確！"; fb.style.color = "green"; localData.correct++; }
+            else{ fb.innerHTML = `❌ 錯誤！正解是：${isEngToChnQuiz ? currentQuizAnswer.translation : currentQuizAnswer.word}`; fb.style.color = "red"; }
             localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateMasteryUI();
         }
 
-        // 拼图 (修改为 10 / 20 / 25 门槛)
+        // 拼圖 (修改為 10 / 20 / 25 門檻)
         function updateSpellUI() {
             let uc = localData.spelledWords.length, total = vocabData.length;
-            document.getElementById('spellProgressText').innerHTML = `⌨️ 词汇收集：${uc} / ${total}`;
+            document.getElementById('spellProgressText').innerHTML = `⌨️ 詞彙收集：${uc} / ${total}`;
             document.getElementById('spellProgressBar').style.width = Math.round((uc/total)*100) + '%';
             if(uc>=10 && !localData.spellCerts.c1) showModal('spell', 1);
             else if(uc>=20 && !localData.spellCerts.c2) showModal('spell', 2);
@@ -298,7 +279,7 @@
             document.getElementById('submitSpellBtn').style.display = "inline-block"; document.getElementById('spellAnswerBox').style.display = "flex";
             document.getElementById('letterPool').style.display = "flex"; updateSpellUI();
             if(localData.spelledWords.length >= vocabData.length){
-                document.getElementById('spellPrompt').innerHTML = "🎉 挑战成功！全部生字收集完毕！";
+                document.getElementById('spellPrompt').innerHTML = "🎉 挑戰成功！全部生字收集完畢！";
                 document.getElementById('spellAnswerBox').style.display = "none"; document.getElementById('letterPool').style.display = "none"; document.getElementById('submitSpellBtn').style.display = "none"; return;
             }
             currentSpellAnswer = vocabData[Math.floor(Math.random() * vocabData.length)];
@@ -324,16 +305,16 @@
         function checkSpell() {
             let ans = spellCurrentAnswer.map(i=>i.char).join(''), corr = currentSpellAnswer.word.toLowerCase(), fb = document.getElementById('spellFeedback');
             if(ans === corr){
-                fb.innerHTML = "✅ 拼字正确！"; fb.style.color = "green"; 
+                fb.innerHTML = "✅ 拼字正確！"; fb.style.color = "green"; 
                 if(!localData.spelledWords.includes(currentSpellAnswer.word)){ localData.spelledWords.push(currentSpellAnswer.word); localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateSpellUI(); }
-            } else { fb.innerHTML = `❌ 错误！正解：${currentSpellAnswer.word}`; fb.style.color = "red"; }
+            } else { fb.innerHTML = `❌ 錯誤！正解：${currentSpellAnswer.word}`; fb.style.color = "red"; }
             document.getElementById('nextSpellBtn').style.display = "inline-block"; document.getElementById('submitSpellBtn').style.display = "none";
         }
 
         // 克漏字
         function renderCloze() {
             let c = document.getElementById('clozeContainer'), h = clozeData.passage; document.getElementById('clozeFeedback').innerHTML = "";
-            let opts = `<option value="">-- 选择 --</option>` + clozeData.options.map(o=>`<option value="${o}">${o}</option>`).join('');
+            let opts = `<option value="">-- 選擇 --</option>` + clozeData.options.map(o=>`<option value="${o}">${o}</option>`).join('');
             for(let i=0; i<clozeData.blanks.length; i++) h = h.replace(`[${i+1}]`, `<select id="clz${i}" class="cloze-select">${opts}</select>`);
             c.innerHTML = h;
         }
@@ -345,21 +326,21 @@
                 else{ sel.style.borderColor="red"; sel.style.backgroundColor="#ffebee"; }
             }
             let fb = document.getElementById('clozeFeedback');
-            if(cor === clozeData.blanks.length){ fb.innerHTML="🎉 太棒了！段落完全正确！"; fb.style.color="green"; }
-            else{ fb.innerHTML=`💪 答对了 ${cor}/${clozeData.blanks.length} 个！`; fb.style.color="red"; }
+            if(cor === clozeData.blanks.length){ fb.innerHTML="🎉 太棒了！段落完全正確！"; fb.style.color="green"; }
+            else{ fb.innerHTML=`💪 答對了 ${cor}/${clozeData.blanks.length} 個！`; fb.style.color="red"; }
         }
 
-        // 弹窗
+        // 彈窗
         function showModal(type, level) {
             let t = document.getElementById('gradTitle'), d = document.getElementById('gradDesc');
             if(type==='quiz'){
-                if(level===1) { t.innerHTML="🥉 青铜证书"; d.innerHTML="选择题完成 10 题且维持高正确率！"; }
-                if(level===2) { t.innerHTML="🥈 白银证书"; d.innerHTML="选择题完成 20 题，太神了！"; }
-                if(level===3) { t.innerHTML="🏆 黄金结业！"; d.innerHTML="选择题刷满 25 题且正确率 95%！"; }
+                if(level===1) { t.innerHTML="🥉 青銅證書"; d.innerHTML="選擇題完成 10 題且維持高正確率！"; }
+                if(level===2) { t.innerHTML="🥈 白銀證書"; d.innerHTML="選擇題完成 20 題，太神了！"; }
+                if(level===3) { t.innerHTML="🏆 黃金結業！"; d.innerHTML="選擇題刷滿 25 題且正確率 95%！"; }
             } else {
-                if(level===1) { t.innerHTML="🧩 初级拼图学者"; d.innerHTML="成功拼出 10 个生字！"; }
-                if(level===2) { t.innerHTML="🧩 进阶拼图达人"; d.innerHTML="征服 20 个生字，只差一点了！"; }
-                if(level===3) { t.innerHTML="👑 拼图大师！"; d.innerHTML="满分全制霸！肌肉记忆完美！"; }
+                if(level===1) { t.innerHTML="🧩 初級拼圖學者"; d.innerHTML="成功拼出 10 個生字！"; }
+                if(level===2) { t.innerHTML="🧩 進階拼圖達人"; d.innerHTML="征服 20 個生字，只差一點了！"; }
+                if(level===3) { t.innerHTML="👑 拼圖大師！"; d.innerHTML="滿分全制霸！肌肉記憶完美！"; }
             }
             document.getElementById('stayBtn').onclick = () => { closeModal(type, level); };
             document.getElementById('gradModal').style.display = 'flex';
