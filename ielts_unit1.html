@@ -160,7 +160,7 @@
         const STORAGE_KEY = 'spartan_ielts_u1';
         
         // ⚠️ 之後用 AI 萃取的 25 個雅思單字貼到這裡
-        let vocabData = [
+       let vocabData = [
     { word: "Curriculum", engDef: "Total set of courses offered in an academic program.", translation: "N. 課程", synAnt: "同: Syllabus", usage: "Revise curriculum", example: "The university revised its curriculum to include digital literacy skills." },
     { word: "Pedagogy", engDef: "The method and practice of teaching as a subject.", translation: "N. 教育學", synAnt: "同: Instruction", usage: "Modern pedagogy", example: "Effective pedagogy focuses on student engagement rather than rote learning." },
     { word: "Cognitive", engDef: "Relating to mental processes like perception and reasoning.", translation: "Adj. 認知的", synAnt: "同: Intellectual", usage: "Cognitive development", example: "Early childhood is a critical period for cognitive development." },
@@ -196,11 +196,7 @@ let clozeData = {
     blanks: ["didactic", "holistic", "autonomy", "acquisition", "literacy"], 
     options: ["didactic", "holistic", "autonomy", "acquisition", "literacy", "streaming", "tertiary"]
 };
-        let clozeData = {
-            passage: "To [1] poverty, the government must invest in early childhood [2]. Implementing a [3] curriculum that addresses both academic and emotional needs is crucial. This will reduce the social [4] between different communities and [5] the negative effects of economic instability.",
-            blanks: ["Eradicate", "Pedagogy", "Holistic", "Disparity", "Mitigate"], 
-            options: ["Holistic", "Eradicate", "Disparity", "Pedagogy", "Mitigate", "Innate"] 
-        };
+
 
         // ==========================================
         // V6.0 核心引擎
