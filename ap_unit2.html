@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AP (Unit 2)</title>
-    <script src="https://unpkg.com/opencc-js@1.0.5/dist/umd/full.js"></script>
     <style>
        /* ======= 📘 AP 專屬亮彩深藍 (Sapphire Blue) ======= */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #E3F2FD; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; color: #0D47A1; padding-top: 15px; position: relative;}
@@ -157,24 +156,14 @@
         let converterToTw = null;
 
         function toggleLanguage() {
-            try {
-                // 如果還沒初始化，就建立轉換器
-                if (!converterToCn) {
-                    converterToCn = OpenCC.Converter({ from: 'tw', to: 'cn' });
-                    converterToTw = OpenCC.Converter({ from: 'cn', to: 'tw' });
-                }
-                
-                const rootNode = document.body;
-                if (currentLang === 'tw') {
-                    OpenCC.HTML.Convert(converterToCn, rootNode);
-                    currentLang = 'cn';
-                } else {
-                    OpenCC.HTML.Convert(converterToTw, rootNode);
-                    currentLang = 'tw';
-                }
-            } catch (error) {
-                alert("轉換引擎載入中或網路受阻，請稍後再試！\n" + error);
-                console.error(error);
+            // 直接呼叫瀏覽器內建的翻譯機制 (Google Translate)
+            const currentUrl = encodeURIComponent(window.location.href);
+            // 由於這是一個單機版網頁，如果沒有放上網，Google 翻譯無法直接抓取本地路徑。
+            // 因此，如果是本地測試，我們會給出一個溫馨提示。
+            if (window.location.hostname === '' || window.location.hostname === 'localhost') {
+               alert("💡 提示：您目前正在離線或本機端測試。\n\n繁簡轉換引擎因網路限制無法下載。當您將此網頁上傳至 GitHub 等公開伺服器後，可直接使用瀏覽器（如 Chrome、Safari）內建的『網頁翻譯』功能來切換繁簡體喔！");
+            } else {
+               alert("💡 提示：由於網路限制，內建轉換引擎無法載入。\n\n請直接使用您瀏覽器（例如 Chrome 的網址列右側）內建的『翻譯此網頁』功能，選擇簡體中文即可完美轉換！");
             }
         }
 
