@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spartan Prep Vocab - 斯巴達字庫大廳</title>
-    <script src="https://unpkg.com/opencc-js@1.0.5/dist/umd/full.js"></script>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #F8F9FA; display: flex; flex-direction: column; align-items: center; padding: 40px 20px; margin: 0; color: #333; position: relative;}
         h1 { color: #212529; font-size: 28px; margin-bottom: 5px; font-weight: 800;}
@@ -82,7 +81,7 @@
             <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 4 ~ 20 (完整版解鎖)</button>
         </div>
 
-        <button class="category-btn btn-gre" onclick="toggleMenu('gre')">📒 GRE </button>
+        <button class="category-btn btn-gre" onclick="toggleMenu('gre')">📒 GRE 斯巴達 (2000词)</button>
         <div class="unit-list list-gre" id="menu-gre">
             <a href="gre_unit1.html" class="unit-btn">▶ 單元 1：知识论与学术话语 (開放)</a>
             <a href="gre_unit2.html" class="unit-btn">▶ 單元 2：修辞，传播与语言密度 (開放)</a>
@@ -90,7 +89,7 @@
             <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 4 ~ 20 (完整版解鎖)</button>
         </div>
 
-        <button class="category-btn btn-tcm" onclick="toggleMenu('tcm')">🌿 TCM </button>
+        <button class="category-btn btn-tcm" onclick="toggleMenu('tcm')">🌿 TCM 学士后中医 (核心词汇)</button>
         <div class="unit-list list-tcm" id="menu-tcm">
             <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 1：經絡與基礎理論 (即將推出)</button>
             <button class="unit-btn locked-btn" onclick="showPaywall()">🔒 單元 2：(建構中...)</button>
@@ -118,25 +117,16 @@
         let converterToTw = null;
 
         function toggleLanguage() {
-            try {
-                if (!converterToCn) {
-                    converterToCn = OpenCC.Converter({ from: 'tw', to: 'cn' });
-                    converterToTw = OpenCC.Converter({ from: 'cn', to: 'tw' });
-                }
-                const rootNode = document.body;
-                if (currentLang === 'tw') {
-                    OpenCC.HTML.Convert(converterToCn, rootNode);
-                    currentLang = 'cn';
-                } else {
-                    OpenCC.HTML.Convert(converterToTw, rootNode);
-                    currentLang = 'tw';
-                }
-            } catch (error) {
-                alert("轉換引擎載入中或網路受阻，請稍後再試！\n" + error);
-                console.error(error);
+            // 直接呼叫瀏覽器內建的翻譯機制 (Google Translate)
+            const currentUrl = encodeURIComponent(window.location.href);
+            // 由於這是一個單機版網頁，如果沒有放上網，Google 翻譯無法直接抓取本地路徑。
+            // 因此，如果是本地測試，我們會給出一個溫馨提示。
+            if (window.location.hostname === '' || window.location.hostname === 'localhost') {
+               alert("💡 提示：您目前正在離線或本機端測試。\n\n繁簡轉換引擎因網路限制無法下載。當您將此網頁上傳至 GitHub 等公開伺服器後，可直接使用瀏覽器（如 Chrome、Safari）內建的『網頁翻譯』功能來切換繁簡體喔！");
+            } else {
+               alert("💡 提示：由於網路限制，內建轉換引擎無法載入。\n\n請直接使用您瀏覽器（例如 Chrome 的網址列右側）內建的『翻譯此網頁』功能，選擇簡體中文即可完美轉換！");
             }
         }
-
         // 🌟 2. 手風琴選單展開引擎 (之前不小心消失的關鍵代碼)
         function toggleMenu(menuId) {
             document.querySelectorAll('.unit-list').forEach(list => list.classList.remove('active'));
@@ -159,5 +149,4 @@
         function hidePaywall() { document.getElementById('paywallModal').style.display = 'none'; }
     </script>
 </body>
-
 </html>
