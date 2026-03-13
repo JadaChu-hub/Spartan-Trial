@@ -49,18 +49,21 @@
         .quiz-options { width: 100%; display: flex; flex-direction: column; gap: 8px; padding: 0 20px; box-sizing: border-box;}
         .quiz-option { padding: 12px; background-color: #ffffff; color: #1565C0; border: 2px solid #1565C0; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; text-align: center; transition: 0.2s; }
         .quiz-option:hover { background-color: #E3F2FD; }
+        .quiz-option:disabled { opacity: 0.6; cursor: not-allowed; }
         .feedback { margin-top: 12px; font-weight: bold; font-size: 16px; min-height: 22px; text-align: center;}
         
         .progress-container { width: 90%; background-color: #BBDEFB; border-radius: 10px; margin: 5px auto 15px auto; overflow: hidden; height: 12px; }
         .progress-fill { width: 0%; height: 100%; background-color: #1565C0; transition: width 0.5s; }
-        .spell-answer-box { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; min-height: 45px; padding: 10px; border: 2px dashed #1565C0; border-radius: 10px; margin-bottom: 15px; width: 90%; background-color: #ffffff; }
-        .letter-pool { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 15px; width: 95%; }
-        .letter-tile { background-color: #1565C0; color: white; border: none; border-radius: 6px; padding: 10px 14px; font-size: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 3px 0 #0D47A1; user-select: none; }
+        
+        .spell-answer-box { display: flex; flex-wrap: nowrap; gap: 4px; justify-content: center; align-items: center; min-height: 45px; padding: 10px; border: 2px dashed #1565C0; border-radius: 10px; margin-bottom: 15px; width: 90%; background-color: #ffffff; overflow-x: auto;}
+        .letter-pool { display: flex; flex-wrap: nowrap; gap: 4px; justify-content: center; margin-bottom: 15px; width: 95%; overflow-x: auto;}
+        .letter-tile { background-color: #1565C0; color: white; border: none; border-radius: 6px; padding: 10px 0; font-size: clamp(14px, 4vw, 20px); font-weight: bold; cursor: pointer; box-shadow: 0 3px 0 #0D47A1; user-select: none; flex: 1 1 0px; min-width: 0; max-width: 45px; text-align: center;}
         .letter-tile:active { transform: translateY(3px); box-shadow: 0 0 0 #0D47A1; }
         .letter-tile.in-answer { background-color: #1E88E5; box-shadow: 0 3px 0 #1565C0; }
 
         .cloze-container { background: white; padding: 15px; border-radius: 12px; border: 2px solid #90CAF9; width: 90%; font-size: 15px; line-height: 1.8; color: #0D47A1;}
         .cloze-select { padding: 2px 5px; font-size: 14px; color: #1565C0; border: 1px solid #1565C0; border-radius: 4px; font-weight: bold; background-color: #E3F2FD;}
+        .cloze-fulltext-word { color: #D32F2F; border-bottom: 2px solid #D32F2F; padding: 0 4px; font-weight: bold; background-color: #FFEBEE; border-radius: 3px; }
 
         .grad-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(227, 242, 253, 0.95); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;}
         .grad-title { color: #1565C0; font-size: 26px; margin-bottom: 10px; }
@@ -110,7 +113,7 @@
     </div>
 
     <div id="quiz-view" class="view-section">
-        <div class="mastery-text" id="masteryText">🏆 測驗熟練度：0% (0/0) <br> 🎖️ 證書進度：0 / 3</div>
+        <div class="mastery-text" id="masteryText">🏆 熟練度：0% <br> 🎖️ 證書進度：🔒 🔒 🔒</div>
         <div class="quiz-question" id="quizQuestion">
             <span style="font-size:13px; color:#486581;" id="quizHint">請選出對應答案：</span><br><br>
             <span id="quizDesc" style="font-size:18px;">...</span>
@@ -122,7 +125,7 @@
 
     <div id="spell-view" class="view-section">
         <div style="width: 100%;">
-            <div class="mastery-text" id="spellProgressText" style="margin-bottom: 5px;">⌨️ 詞彙收集：0 / 25 (0%)</div>
+            <div class="mastery-text" id="spellProgressText" style="margin-bottom: 5px;">⌨️ 拼圖進度：0% (0/0)</div>
             <div class="progress-container"><div class="progress-fill" id="spellProgressBar"></div></div>
         </div>
         <div class="quiz-question" style="font-size:14px; margin-bottom: 10px;" id="spellPrompt">解釋與例句</div>
@@ -134,73 +137,95 @@
     </div>
 
     <div id="cloze-view" class="view-section">
-        <div class="mastery-text">📖 單元主題實戰演練</div>
+        <div class="mastery-text" id="clozeCounter">📖 單元主題實戰演練 (1/4)</div>
         <div class="cloze-container" id="clozeContainer"></div>
         <div class="feedback" id="clozeFeedback"></div>
-        <button class="action-btn" style="margin-top: 15px;" onclick="checkCloze()">提交驗證</button>
+        
+        <div id="clozeControls" class="controls" style="margin-top: 15px; width: 100%; display: flex; justify-content: center; gap: 10px;">
+            <button class="action-btn" onclick="changeCloze(-1)">⬅️ 上一篇</button>
+            <button class="action-btn" id="submitClozeBtn" style="background-color: #D32F2F;" onclick="checkCloze()">✅ 提交驗證</button>
+            <button class="action-btn" onclick="changeCloze(1)">下一篇 ➡️</button>
+        </div>
+
+        <div id="clozeSuccessActions" style="display: none; gap: 10px; justify-content: center; margin-top: 15px; flex-wrap: wrap; width: 100%;">
+            </div>
     </div>
 
     <div class="grad-modal" id="gradModal">
         <h2 class="grad-title" id="gradTitle">🛡️ 結業！</h2>
         <p class="grad-desc" id="gradDesc">說明文字</p>
-        <button class="grad-btn" onclick="window.location.href='index.html'">🎓 榮耀結業 (返回大廳)</button>
+        <button class="grad-btn" id="exitBtn" onclick="window.location.href='index.html'">🎓 榮耀結業 (返回大廳)</button>
         <button class="grad-btn stay-btn" id="stayBtn" onclick="">📚 留下來繼續複習</button>
     </div>
 
     <script>
-       
-        // ==========================================
-        // ⚠️ 修改區：存檔鍵名、生字資料、克漏字資料
-        // ==========================================
-        const STORAGE_KEY = 'spartan_ap_u1';
+        const STORAGE_KEY = 'spartan_ap_u1_v7';
         
+        // 單字庫保持不變
         let vocabData = [
-    { word: "Exigence", engDef: "An issue or situation that prompts someone to write or speak.", translation: "N. 緊急需求 ; 寫作契機", synAnt: "同: Urgency, impetus", usage: "The exigence of the situation", example: "The sudden ecological disaster provided the exigence for the senator’s speech." },
-    { word: "Context", engDef: "The circumstances surrounding a specific text or historical event.", translation: "N. 語境 ; 背景", synAnt: "同: Framework, milieu", usage: "In the context of", example: "One must analyze the speech in the context of the Civil Rights Movement." },
-    { word: "Audience", engDef: "The specific group of readers or listeners targeted by a text.", translation: "N. 聽眾 ; 受眾", synAnt: "同: Spectators", usage: "Target audience", example: "The writer adjusted her tone to suit a highly academic audience." },
-    { word: "Purpose", engDef: "The specific goal the writer intends to achieve with a text.", translation: "N. 目的 ; 意圖", synAnt: "同: Objective, intent", usage: "The primary purpose is to", example: "Her purpose was to persuade the committee to fund the new library." },
-    { word: "Persona", engDef: "The character or face that a writer shows to the audience.", translation: "N. 人格面具 ; 形象", synAnt: "同: Mask, image", usage: "Adopt a persona", example: "The speaker adopts a grandfatherly persona to deliver difficult moral truths." },
-    { word: "Message", engDef: "The central point or core idea a writer communicates.", translation: "N. 信息 ; 核心思想", synAnt: "同: Core idea", usage: "The underlying message", example: "The central message of the essay emphasizes the importance of community." },
-    { word: "Occasion", engDef: "The specific time, place, and event of a rhetorical act.", translation: "N. 場合 ; 時機", synAnt: "同: Incident", usage: "The occasion for the speech", example: "The commencement ceremony was the occasion for her call to service." },
-    { word: "Rhetoric", engDef: "The art of effective or persuasive speaking or writing.", translation: "N. 修辭學 ; 雄辯術", synAnt: "同: Eloquence", usage: "Employ rhetoric", example: "The politician used powerful rhetoric to unify the fragmented nation." },
-    { word: "Claim", engDef: "An assertion that requires support and is open to challenge.", translation: "N. 主張 ; 斷言", synAnt: "同: Assertion, thesis", usage: "Make a claim", example: "The author makes a bold claim about the decline of digital literacy." },
-    { word: "Evidence", engDef: "Facts or details used to support a claim or thesis.", translation: "N. 證據 ; 證明", synAnt: "同: Data, proof", usage: "Empirical evidence", example: "The writer provides statistical evidence to substantiate her claim." },
-    { word: "Reasoning", engDef: "The logical process of connecting evidence to a specific claim.", translation: "N. 推理 ; 論證", synAnt: "同: Logic", usage: "Line of reasoning", example: "Her inductive reasoning moves from specific data points to a general theory." },
-    { word: "Bias", engDef: "A prejudice in favor of or against one thing or person.", translation: "N. 偏見 ; 偏向", synAnt: "同: Partiality", usage: "Inherent bias", example: "The journalist’s personal bias is revealed through his choice of loaded words." },
-    { word: "Constraint", engDef: "A limitation or restriction that affects a writer’s choices.", translation: "N. 約束 ; 限制", synAnt: "同: Limitation", usage: "Rhetorical constraints", example: "The author faced political constraints that limited the directness of his critique." },
-    { word: "Discourse", engDef: "Written or spoken communication or debate on a subject.", translation: "N. 話語 ; 論述", synAnt: "同: Dialogue", usage: "Academic discourse", example: "The essay contributes to the broader discourse on environmental ethics." },
-    { word: "Expository", engDef: "Intended to explain or describe something in detail.", translation: "Adj. 說明的 ; 解釋性的", synAnt: "同: Explanatory", usage: "Expository writing", example: "The book provides an expository account of the history of linguistics." },
-    { word: "Pervasive", engDef: "Spreading widely throughout an area or a group of people.", translation: "Adj. 普遍的 ; 滲透的", synAnt: "同: Ubiquitous", usage: "Pervasive influence", example: "The fear of economic instability is pervasive in the speaker’s community." },
-    { word: "Subtle", engDef: "So delicate or precise as to be difficult to analyze.", translation: "Adj. 微妙的 ; 精巧的", synAnt: "同: Nuanced", usage: "Subtle shift", example: "A subtle shift in tone occurs as the author moves to the conclusion." },
-    { word: "Manifest", engDef: "To show plainly; to make something clear by evidence.", translation: "V. 顯現 ; 表明", synAnt: "同: Demonstrate", usage: "Manifest as", example: "The character’s frustration began to manifest through his erratic behavior." },
-    { word: "Implicit", engDef: "Implied though not plainly expressed in the text.", translation: "Adj. 含蓄的 ; 暗示的", synAnt: "同: Inherent; 反: Explicit", usage: "Implicit critique", example: "The author’s critique of capitalism is implicit rather than stated directly." },
-    { word: "Explicit", engDef: "Stated clearly and in detail, leaving no room for doubt.", translation: "Adj. 明確的 ; 直言的", synAnt: "同: Overt; 反: Implicit", usage: "Explicit demand", example: "The speaker was explicit in her demand for immediate policy reform." },
-    { word: "Background", engDef: "The history or events leading up to a specific moment.", translation: "N. 背景 ; 經歷", synAnt: "同: Context", usage: "Audience background", example: "Without a historical background, the reader might miss the satire." },
-    { word: "Value", engDef: "A principle or standard that a person or group considers important.", translation: "N. 價值觀 ; 準則", synAnt: "同: Ethic", usage: "Shared values", example: "The argument appeals to the American value of individual liberty." },
-    { word: "Belief", engDef: "An acceptance that a statement is true or that something exists.", translation: "N. 信仰 ; 觀念", synAnt: "同: Conviction", usage: "Core beliefs", example: "The writer’s core beliefs are rooted in traditional humanism." },
-    { word: "Situation", engDef: "A set of circumstances in which one finds oneself.", translation: "N. 情況 ; 局面", synAnt: "同: State", usage: "Rhetorical situation", example: "To understand the text, we must first define the rhetorical situation." },
-    { word: "Prompt", engDef: "To cause or bring about an action or feeling.", translation: "V. 促使 ; 激起", synAnt: "同: Trigger", usage: "Prompted by", example: "The student was prompted to research the topic after reading the article." }
-];
+            { word: "Exigence", engDef: "An issue or situation that prompts someone to write or speak.", translation: "N. 緊急需求 ; 寫作契機", synAnt: "同: Urgency, impetus", usage: "The exigence of the situation", example: "The sudden ecological disaster provided the exigence for the senator’s speech." },
+            { word: "Context", engDef: "The circumstances surrounding a specific text or historical event.", translation: "N. 語境 ; 背景", synAnt: "同: Framework, milieu", usage: "In the context of", example: "One must analyze the speech in the context of the Civil Rights Movement." },
+            { word: "Audience", engDef: "The specific group of readers or listeners targeted by a text.", translation: "N. 聽眾 ; 受眾", synAnt: "同: Spectators", usage: "Target audience", example: "The writer adjusted her tone to suit a highly academic audience." },
+            { word: "Purpose", engDef: "The specific goal the writer intends to achieve with a text.", translation: "N. 目的 ; 意圖", synAnt: "同: Objective, intent", usage: "The primary purpose is to", example: "Her purpose was to persuade the committee to fund the new library." },
+            { word: "Persona", engDef: "The character or face that a writer shows to the audience.", translation: "N. 人格面具 ; 形象", synAnt: "同: Mask, image", usage: "Adopt a persona", example: "The speaker adopts a grandfatherly persona to deliver difficult moral truths." },
+            { word: "Message", engDef: "The central point or core idea a writer communicates.", translation: "N. 信息 ; 核心思想", synAnt: "同: Core idea", usage: "The underlying message", example: "The central message of the essay emphasizes the importance of community." },
+            { word: "Occasion", engDef: "The specific time, place, and event of a rhetorical act.", translation: "N. 場合 ; 時機", synAnt: "同: Incident", usage: "The occasion for the speech", example: "The commencement ceremony was the occasion for her call to service." },
+            { word: "Rhetoric", engDef: "The art of effective or persuasive speaking or writing.", translation: "N. 修辭學 ; 雄辯術", synAnt: "同: Eloquence", usage: "Employ rhetoric", example: "The politician used powerful rhetoric to unify the fragmented nation." },
+            { word: "Claim", engDef: "An assertion that requires support and is open to challenge.", translation: "N. 主張 ; 斷言", synAnt: "同: Assertion, thesis", usage: "Make a claim", example: "The author makes a bold claim about the decline of digital literacy." },
+            { word: "Evidence", engDef: "Facts or details used to support a claim or thesis.", translation: "N. 證據 ; 證明", synAnt: "同: Data, proof", usage: "Empirical evidence", example: "The writer provides statistical evidence to substantiate her claim." },
+            { word: "Reasoning", engDef: "The logical process of connecting evidence to a specific claim.", translation: "N. 推理 ; 論證", synAnt: "同: Logic", usage: "Line of reasoning", example: "Her inductive reasoning moves from specific data points to a general theory." },
+            { word: "Bias", engDef: "A prejudice in favor of or against one thing or person.", translation: "N. 偏見 ; 偏向", synAnt: "同: Partiality", usage: "Inherent bias", example: "The journalist’s personal bias is revealed through his choice of loaded words." },
+            { word: "Constraint", engDef: "A limitation or restriction that affects a writer’s choices.", translation: "N. 約束 ; 限制", synAnt: "同: Limitation", usage: "Rhetorical constraints", example: "The author faced political constraints that limited the directness of his critique." },
+            { word: "Discourse", engDef: "Written or spoken communication or debate on a subject.", translation: "N. 話語 ; 論述", synAnt: "同: Dialogue", usage: "Academic discourse", example: "The essay contributes to the broader discourse on environmental ethics." },
+            { word: "Expository", engDef: "Intended to explain or describe something in detail.", translation: "Adj. 說明的 ; 解釋性的", synAnt: "同: Explanatory", usage: "Expository writing", example: "The book provides an expository account of the history of linguistics." },
+            { word: "Pervasive", engDef: "Spreading widely throughout an area or a group of people.", translation: "Adj. 普遍的 ; 滲透的", synAnt: "同: Ubiquitous", usage: "Pervasive influence", example: "The fear of economic instability is pervasive in the speaker’s community." },
+            { word: "Subtle", engDef: "So delicate or precise as to be difficult to analyze.", translation: "Adj. 微妙的 ; 精巧的", synAnt: "同: Nuanced", usage: "Subtle shift", example: "A subtle shift in tone occurs as the author moves to the conclusion." },
+            { word: "Manifest", engDef: "To show plainly; to make something clear by evidence.", translation: "V. 顯現 ; 表明", synAnt: "同: Demonstrate", usage: "Manifest as", example: "The character’s frustration began to manifest through his erratic behavior." },
+            { word: "Implicit", engDef: "Implied though not plainly expressed in the text.", translation: "Adj. 含蓄的 ; 暗示的", synAnt: "同: Inherent; 反: Explicit", usage: "Implicit critique", example: "The author’s critique of capitalism is implicit rather than stated directly." },
+            { word: "Explicit", engDef: "Stated clearly and in detail, leaving no room for doubt.", translation: "Adj. 明確的 ; 直言的", synAnt: "同: Overt; 反: Implicit", usage: "Explicit demand", example: "The speaker was explicit in her demand for immediate policy reform." },
+            { word: "Background", engDef: "The history or events leading up to a specific moment.", translation: "N. 背景 ; 經歷", synAnt: "同: Context", usage: "Audience background", example: "Without a historical background, the reader might miss the satire." },
+            { word: "Value", engDef: "A principle or standard that a person or group considers important.", translation: "N. 價值觀 ; 準則", synAnt: "同: Ethic", usage: "Shared values", example: "The argument appeals to the American value of individual liberty." },
+            { word: "Belief", engDef: "An acceptance that a statement is true or that something exists.", translation: "N. 信仰 ; 觀念", synAnt: "同: Conviction", usage: "Core beliefs", example: "The writer’s core beliefs are rooted in traditional humanism." },
+            { word: "Situation", engDef: "A set of circumstances in which one finds oneself.", translation: "N. 情況 ; 局面", synAnt: "同: State", usage: "Rhetorical situation", example: "To understand the text, we must first define the rhetorical situation." },
+            { word: "Prompt", engDef: "To cause or bring about an action or feeling.", translation: "V. 促使 ; 激起", synAnt: "同: Trigger", usage: "Prompted by", example: "The student was prompted to research the topic after reading the article." }
+        ];
 
-let clozeData = {
-    passage: "In any sophisticated analysis, the scholar must first identify the [1] that motivated the author to produce the text. By examining the rhetorical [2], one can understand how the [3] of the writing aligns with the expectations of the [4]. Furthermore, the historical [5] often dictates the specific stylistic choices that the writer employs.",
-    blanks: ["exigence", "situation", "purpose", "audience", "context"], 
-    options: ["exigence", "situation", "purpose", "audience", "context", "manifest", "implicit"]
-};
+        // 🌟 V7: 擴充為 4 篇短文，涵蓋 20 個重要詞彙
+        let clozeData = [
+            {
+                passage: "In any sophisticated analysis, the scholar must first identify the [1] that motivated the author to produce the text. By examining the rhetorical [2], one can understand how the [3] of the writing aligns with the expectations of the [4]. Furthermore, the historical [5] often dictates the specific stylistic choices that the writer employs.",
+                blanks: ["Exigence", "Situation", "Purpose", "Audience", "Context"], 
+                options: ["Exigence", "Situation", "Purpose", "Audience", "Context", "Manifest", "Implicit"]
+            },
+            {
+                passage: "A strong argumentative essay relies on a clear [1] that is supported by verifiable [2]. However, simply presenting facts is not enough; the author must use logical [3] to connect the data to the main argument. It is also crucial to avoid personal [4], which can weaken the objective tone. When stating the main thesis, it should be [5] so the reader knows exactly what is being argued.",
+                blanks: ["Claim", "Evidence", "Reasoning", "Bias", "Explicit"], 
+                options: ["Claim", "Evidence", "Reasoning", "Bias", "Explicit", "Subtle", "Prompt"]
+            },
+            {
+                passage: "Mastering the art of [1] allows a speaker to effectively persuade their listeners. Often, a politician will adopt a relatable [2] to build trust. Even if the underlying [3] is controversial, framing it well can overcome many a political [4]. In today's media landscape, the influence of such persuasive speech is [5], reaching every corner of society.",
+                blanks: ["Rhetoric", "Persona", "Message", "Constraint", "Pervasive"], 
+                options: ["Rhetoric", "Persona", "Message", "Constraint", "Pervasive", "Occasion", "Value"]
+            },
+            {
+                passage: "In academic [1], clarity is key, especially when writing an [2] essay meant to explain complex theories. Sometimes, a writer might employ [3] nuances that are not immediately obvious to a casual reader. Over time, the true intent begins to [4] itself through careful analysis. Thus, understanding the [5] meanings between the lines is just as important as reading what is openly stated.",
+                blanks: ["Discourse", "Expository", "Subtle", "Manifest", "Implicit"], 
+                options: ["Discourse", "Expository", "Subtle", "Manifest", "Implicit", "Belief", "Background"]
+            }
+        ];
 
-
-        // ==========================================
-        // V6.0 核心引擎
-        // ==========================================
         let currentIndex = 0; let currentQuizAnswer = null; let isEngToChnQuiz = true;
         let currentSpellAnswer = null; let spellScrambledLetters = []; let spellCurrentAnswer = [];
+        let currentClozeIndex = 0; // V7 新增：追蹤目前是第幾篇克漏字
         
         let localData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { 
-            starred: [], attempts: 0, correct: 0, certs: { c1: false, c2: false, c3: false },
-            spelledWords: [], spellCerts: { c1: false, c2: false, c3: false }
+            starred: [], 
+            quizProgress: {}, certs: { c1: false, c2: false, c3: false },
+            spellProgress: {}, spellCerts: { c1: false, c2: false, c3: false }
         };
+        if (!localData.quizProgress) localData.quizProgress = {};
         if (!localData.certs) localData.certs = { c1: false, c2: false, c3: false };
-        if (!localData.spelledWords) localData.spelledWords = [];
+        if (!localData.spellProgress) localData.spellProgress = {};
         if (!localData.spellCerts) localData.spellCerts = { c1: false, c2: false, c3: false };
 
         function speakText(type, event) {
@@ -239,57 +264,130 @@ let clozeData = {
         function prevCard() { if(currentIndex > 0){ currentIndex--; renderCard(); } }
         function shuffleCards() { vocabData.sort(()=>Math.random()-0.5); currentIndex=0; renderCard(); }
 
-        // 隨機測驗 (修改為 10 / 20 / 25 門檻)
+        // 隨機測驗 
         function updateMasteryUI() {
-            let rate = localData.attempts===0 ? 0 : Math.round((localData.correct/localData.attempts)*100);
-            let certs = (localData.certs.c1?1:0) + (localData.certs.c2?1:0) + (localData.certs.c3?1:0);
-            document.getElementById('masteryText').innerHTML = `🏆 熟練度：${rate}% (${localData.correct}/${localData.attempts}) <br> 🎖️ 證書進度：${certs} / 3`;
-            if(localData.attempts>=10 && rate>=90 && !localData.certs.c1) showModal('quiz', 1);
-            else if(localData.attempts>=20 && rate>=90 && !localData.certs.c2) showModal('quiz', 2);
-            else if(localData.attempts>=25 && rate>=95 && !localData.certs.c3) showModal('quiz', 3);
+            let totalTarget = vocabData.length * 3;
+            let currentTotal = 0;
+            vocabData.forEach(v => { currentTotal += Math.min(localData.quizProgress[v.word] || 0, 3); });
+            
+            let rate = totalTarget === 0 ? 0 : Math.round((currentTotal / totalTarget) * 100);
+
+            let certIcons = "";
+            certIcons += localData.certs.c1 ? "🥉 " : "🔒 ";
+            certIcons += localData.certs.c2 ? "🥈 " : "🔒 ";
+            certIcons += localData.certs.c3 ? "🏆" : "🔒";
+
+            document.getElementById('masteryText').innerHTML = `🏆 熟練度：${rate}% <br> 🎖️ 證書進度：${certIcons}`;
+
+            if(rate >= 33 && !localData.certs.c1) showModal('quiz', 1);
+            else if(rate >= 66 && !localData.certs.c2) showModal('quiz', 2);
+            else if(rate >= 100 && !localData.certs.c3) showModal('quiz', 3);
         }
+        
         function generateQuiz() {
-            if(vocabData.length<4) return; document.getElementById('quizFeedback').innerHTML = ""; 
+            document.getElementById('quizFeedback').innerHTML = ""; 
+            let pool = vocabData.filter(v => (localData.quizProgress[v.word] || 0) < 3);
+            let nextBtn = document.querySelector('#quiz-view .action-btn');
+
+            if (pool.length === 0 && vocabData.length > 0) {
+                document.getElementById('quizHint').innerHTML = "🎉 恭喜完成！";
+                document.getElementById('quizDesc').innerHTML = "本單元測驗已全數熟練達標！";
+                document.getElementById('quizOptions').innerHTML = "";
+                nextBtn.innerText = "🔄 重新挑戰測驗";
+                nextBtn.onclick = resetQuiz;
+                return;
+            }
+
+            nextBtn.innerText = "下一題";
+            nextBtn.onclick = generateQuiz;
+
             isEngToChnQuiz = Math.random() > 0.5;
-            currentQuizAnswer = vocabData[Math.floor(Math.random() * vocabData.length)];
+            currentQuizAnswer = pool[Math.floor(Math.random() * pool.length)]; 
+            
             document.getElementById('quizHint').innerHTML = isEngToChnQuiz ? "👀 請選出中文：" : "🧠 請選出英文：";
             document.getElementById('quizDesc').innerHTML = isEngToChnQuiz ? currentQuizAnswer.word : currentQuizAnswer.translation;
-            let ops = [currentQuizAnswer], others = vocabData.filter(v=>v.word!==currentQuizAnswer.word).sort(()=>Math.random()-0.5);
-            ops.push(others[0], others[1], others[2]); ops.sort(()=>Math.random()-0.5);
+            
+            let ops = [currentQuizAnswer];
+            let others = vocabData.filter(v => v.word !== currentQuizAnswer.word).sort(()=>Math.random()-0.5);
+            ops.push(others[0], others[1], others[2]); 
+            ops.sort(()=>Math.random()-0.5);
+            
             document.getElementById('quizOptions').innerHTML = ops.map(opt => `<button class="quiz-option" onclick="checkQuiz('${opt.word}')">${isEngToChnQuiz ? opt.translation : opt.word}</button>`).join('');
             updateMasteryUI();
         }
+
         function checkQuiz(w) {
-            let fb = document.getElementById('quizFeedback'); localData.attempts++;
-            if(w === currentQuizAnswer.word){ fb.innerHTML = "✅ 正確！"; fb.style.color = "green"; localData.correct++; }
-            else{ fb.innerHTML = `❌ 錯誤！正解是：${isEngToChnQuiz ? currentQuizAnswer.translation : currentQuizAnswer.word}`; fb.style.color = "red"; }
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateMasteryUI();
+            let fb = document.getElementById('quizFeedback'); 
+            if(w === currentQuizAnswer.word){ 
+                fb.innerHTML = "✅ 正確！"; fb.style.color = "green"; 
+                if (!localData.quizProgress[currentQuizAnswer.word]) localData.quizProgress[currentQuizAnswer.word] = 0;
+                localData.quizProgress[currentQuizAnswer.word]++;
+            } else { 
+                fb.innerHTML = `❌ 錯誤！正解是：${isEngToChnQuiz ? currentQuizAnswer.translation : currentQuizAnswer.word}`; 
+                fb.style.color = "red"; 
+            }
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.disabled = true);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); 
+            updateMasteryUI();
         }
 
-        // 拼圖 (修改為 10 / 20 / 25 門檻)
-        function updateSpellUI() {
-            let uc = localData.spelledWords.length, total = vocabData.length;
-            document.getElementById('spellProgressText').innerHTML = `⌨️ 詞彙收集：${uc} / ${total}`;
-            document.getElementById('spellProgressBar').style.width = Math.round((uc/total)*100) + '%';
-            if(uc>=10 && !localData.spellCerts.c1) showModal('spell', 1);
-            else if(uc>=20 && !localData.spellCerts.c2) showModal('spell', 2);
-            else if(uc>=25 && !localData.spellCerts.c3) showModal('spell', 3);
+        function resetQuiz() {
+            localData.quizProgress = {};
+            localData.certs = { c1: false, c2: false, c3: false };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(localData));
+            updateMasteryUI(); generateQuiz();
         }
+
+        // 拼圖 
+        function updateSpellUI() {
+            let totalTarget = vocabData.length * 3;
+            let currentTotal = 0;
+            vocabData.forEach(v => { currentTotal += Math.min(localData.spellProgress[v.word] || 0, 3); });
+            let rate = totalTarget === 0 ? 0 : Math.round((currentTotal / totalTarget) * 100);
+
+            document.getElementById('spellProgressText').innerHTML = `⌨️ 拼圖進度：${rate}% (${currentTotal}/${totalTarget})`;
+            document.getElementById('spellProgressBar').style.width = rate + '%';
+
+            if(rate >= 33 && !localData.spellCerts.c1) showModal('spell', 1);
+            else if(rate >= 66 && !localData.spellCerts.c2) showModal('spell', 2);
+            else if(rate >= 100 && !localData.spellCerts.c3) showModal('spell', 3);
+        }
+
         function generateSpell() {
-            document.getElementById('spellFeedback').innerHTML = ""; document.getElementById('nextSpellBtn').style.display = "none";
-            document.getElementById('submitSpellBtn').style.display = "inline-block"; document.getElementById('spellAnswerBox').style.display = "flex";
-            document.getElementById('letterPool').style.display = "flex"; updateSpellUI();
-            if(localData.spelledWords.length >= vocabData.length){
-                document.getElementById('spellPrompt').innerHTML = "🎉 挑戰成功！全部生字收集完畢！";
-                document.getElementById('spellAnswerBox').style.display = "none"; document.getElementById('letterPool').style.display = "none"; document.getElementById('submitSpellBtn').style.display = "none"; return;
+            document.getElementById('spellFeedback').innerHTML = ""; 
+            document.getElementById('nextSpellBtn').style.display = "none";
+            
+            let pool = vocabData.filter(v => (localData.spellProgress[v.word] || 0) < 3);
+            let nextBtn = document.getElementById('nextSpellBtn');
+            let submitBtn = document.getElementById('submitSpellBtn');
+
+            if(pool.length === 0 && vocabData.length > 0) {
+                document.getElementById('spellPrompt').innerHTML = "🎉 挑戰成功！本單元拼圖已全數達標 3 次！";
+                document.getElementById('spellAnswerBox').style.display = "none"; 
+                document.getElementById('letterPool').style.display = "none"; 
+                submitBtn.style.display = "none"; 
+                
+                nextBtn.innerText = "🔄 重新挑戰拼圖";
+                nextBtn.onclick = resetSpell;
+                nextBtn.style.display = "inline-block";
+                return;
             }
-            currentSpellAnswer = vocabData[Math.floor(Math.random() * vocabData.length)];
+
+            submitBtn.style.display = "inline-block"; 
+            document.getElementById('spellAnswerBox').style.display = "flex";
+            document.getElementById('letterPool').style.display = "flex"; 
+            nextBtn.innerText = "下一題";
+            nextBtn.onclick = generateSpell;
+            updateSpellUI();
+
+            currentSpellAnswer = pool[Math.floor(Math.random() * pool.length)];
             let chars = currentSpellAnswer.word.toLowerCase().split('').sort(()=>Math.random()-0.5);
             spellScrambledLetters = chars.map((c, i) => ({ id: i, char: c, used: false })); spellCurrentAnswer = [];
             let blanks = currentSpellAnswer.word.replace(/[a-zA-Z]/g, "_ ");
             document.getElementById('spellPrompt').innerHTML = `<strong>${currentSpellAnswer.translation}</strong><br><em>${currentSpellAnswer.example.replace(new RegExp(currentSpellAnswer.word,"gi"), blanks.trim())}</em>`;
             renderSpellGame();
         }
+
         function renderSpellGame() {
             let ab = document.getElementById('spellAnswerBox'), lp = document.getElementById('letterPool'); ab.innerHTML = ''; lp.innerHTML = '';
             spellCurrentAnswer.forEach((item, i) => {
@@ -303,49 +401,143 @@ let clozeData = {
                 }
             });
         }
+
         function checkSpell() {
             let ans = spellCurrentAnswer.map(i=>i.char).join(''), corr = currentSpellAnswer.word.toLowerCase(), fb = document.getElementById('spellFeedback');
             if(ans === corr){
                 fb.innerHTML = "✅ 拼字正確！"; fb.style.color = "green"; 
-                if(!localData.spelledWords.includes(currentSpellAnswer.word)){ localData.spelledWords.push(currentSpellAnswer.word); localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateSpellUI(); }
-            } else { fb.innerHTML = `❌ 錯誤！正解：${currentSpellAnswer.word}`; fb.style.color = "red"; }
-            document.getElementById('nextSpellBtn').style.display = "inline-block"; document.getElementById('submitSpellBtn').style.display = "none";
-        }
-
-        // 克漏字
-        function renderCloze() {
-            let c = document.getElementById('clozeContainer'), h = clozeData.passage; document.getElementById('clozeFeedback').innerHTML = "";
-            let opts = `<option value="">-- 選擇 --</option>` + clozeData.options.map(o=>`<option value="${o}">${o}</option>`).join('');
-            for(let i=0; i<clozeData.blanks.length; i++) h = h.replace(`[${i+1}]`, `<select id="clz${i}" class="cloze-select">${opts}</select>`);
-            c.innerHTML = h;
-        }
-        function checkCloze() {
-            let cor = 0;
-            for(let i=0; i<clozeData.blanks.length; i++){
-                let sel = document.getElementById(`clz${i}`);
-                if(sel.value === clozeData.blanks[i]){ cor++; sel.style.borderColor="green"; sel.style.backgroundColor="#e8f5e9"; }
-                else{ sel.style.borderColor="red"; sel.style.backgroundColor="#ffebee"; }
+                if (!localData.spellProgress[currentSpellAnswer.word]) localData.spellProgress[currentSpellAnswer.word] = 0;
+                localData.spellProgress[currentSpellAnswer.word]++;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); 
+                updateSpellUI(); 
+            } else { 
+                fb.innerHTML = `❌ 錯誤！正解：${currentSpellAnswer.word}`; fb.style.color = "red"; 
             }
-            let fb = document.getElementById('clozeFeedback');
-            if(cor === clozeData.blanks.length){ fb.innerHTML="🎉 太棒了！段落完全正確！"; fb.style.color="green"; }
-            else{ fb.innerHTML=`💪 答對了 ${cor}/${clozeData.blanks.length} 個！`; fb.style.color="red"; }
+            document.getElementById('nextSpellBtn').style.display = "inline-block"; 
+            document.getElementById('submitSpellBtn').style.display = "none";
         }
 
-        // 彈窗
+        function resetSpell() {
+            localData.spellProgress = {};
+            localData.spellCerts = { c1: false, c2: false, c3: false };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(localData));
+            updateSpellUI(); generateSpell();
+        }
+
+        // 🌟 V7: 克漏字大升級 
+        function renderCloze() {
+            let d = clozeData[currentClozeIndex];
+            let c = document.getElementById('clozeContainer'); 
+            let h = d.passage; 
+            
+            document.getElementById('clozeFeedback').innerHTML = "";
+            document.getElementById('clozeCounter').innerHTML = `📖 單元主題實戰演練 (${currentClozeIndex + 1}/${clozeData.length})`;
+            
+            let opts = `<option value="">-- 選擇 --</option>` + d.options.map(o=>`<option value="${o}">${o}</option>`).join('');
+            for(let i=0; i<d.blanks.length; i++) {
+                h = h.replace(`[${i+1}]`, `<select id="clz${i}" class="cloze-select">${opts}</select>`);
+            }
+            c.innerHTML = h;
+
+            // 恢復 UI 初始狀態
+            document.getElementById('submitClozeBtn').style.display = "inline-block";
+            document.getElementById('clozeSuccessActions').style.display = "none";
+            document.getElementById('clozeSuccessActions').innerHTML = "";
+        }
+
+        function changeCloze(direction) {
+            currentClozeIndex += direction;
+            if (currentClozeIndex < 0) currentClozeIndex = clozeData.length - 1;
+            if (currentClozeIndex >= clozeData.length) currentClozeIndex = 0;
+            renderCloze();
+        }
+
+        function checkCloze() {
+            let d = clozeData[currentClozeIndex];
+            let cor = 0;
+            for(let i=0; i<d.blanks.length; i++){
+                let sel = document.getElementById(`clz${i}`);
+                if(!sel) continue;
+                // 轉為小寫做比對防錯
+                if(sel.value.toLowerCase() === d.blanks[i].toLowerCase()){ 
+                    cor++; sel.style.borderColor="green"; sel.style.backgroundColor="#e8f5e9"; sel.disabled = true;
+                } else { 
+                    sel.style.borderColor="red"; sel.style.backgroundColor="#ffebee"; 
+                }
+            }
+            
+            let fb = document.getElementById('clozeFeedback');
+            if(cor === d.blanks.length){ 
+                fb.innerHTML="🎉 太棒了！段落完全正確！"; fb.style.color="green"; 
+                
+                // 隱藏提交按鈕，顯示獎勵選單
+                document.getElementById('submitClozeBtn').style.display = "none";
+                let actionsDiv = document.getElementById('clozeSuccessActions');
+                actionsDiv.style.display = "flex";
+                actionsDiv.innerHTML = `
+                    <button class="action-btn" onclick="renderCloze()">🔄 再做一次</button>
+                    <button class="action-btn green-btn" onclick="readFullTextCloze()">📖 閱讀全文</button>
+                `;
+            } else { 
+                fb.innerHTML=`💪 答對了 ${cor}/${d.blanks.length} 個！`; fb.style.color="red"; 
+            }
+        }
+
+        // 🌟 V7: 閱讀全文功能
+        function readFullTextCloze() {
+            let d = clozeData[currentClozeIndex];
+            let c = document.getElementById('clozeContainer');
+            let h = d.passage;
+            
+            // 將所有 [1], [2] 替換成帶有 CSS 樣式的正確答案
+            for(let i=0; i<d.blanks.length; i++) {
+                h = h.replace(`[${i+1}]`, `<span class="cloze-fulltext-word">${d.blanks[i]}</span>`);
+            }
+            c.innerHTML = h;
+            
+            document.getElementById('clozeFeedback').innerHTML = "💡 全文閱讀模式";
+            document.getElementById('clozeFeedback').style.color = "#1565C0";
+            
+            // 更改下方按鈕為「返回測驗」
+            let actionsDiv = document.getElementById('clozeSuccessActions');
+            actionsDiv.innerHTML = `<button class="action-btn" onclick="renderCloze()">🔙 返回測驗模式</button>`;
+        }
+
+        // 通關彈窗
         function showModal(type, level) {
             let t = document.getElementById('gradTitle'), d = document.getElementById('gradDesc');
+            let stayBtn = document.getElementById('stayBtn');
+            let exitBtn = document.getElementById('exitBtn');
+
             if(type==='quiz'){
-                if(level===1) { t.innerHTML="🥉 青銅證書"; d.innerHTML="選擇題完成 10 題且維持高正確率！"; }
-                if(level===2) { t.innerHTML="🥈 白銀證書"; d.innerHTML="選擇題完成 20 題，太神了！"; }
-                if(level===3) { t.innerHTML="🏆 黃金結業！"; d.innerHTML="選擇題刷滿 25 題且正確率 95%！"; }
+                if(level===1) { t.innerHTML="🥉 青銅證書"; d.innerHTML="進度達成 33%，好的開始！"; }
+                if(level===2) { t.innerHTML="🥈 白銀證書"; d.innerHTML="進度達成 66%，再接再厲！"; }
+                if(level===3) { 
+                    t.innerHTML="🏆 黃金結業！"; d.innerHTML="太神啦！本單元測驗已全部熟練！"; 
+                    exitBtn.innerText = "📚 挑戰其他單元";
+                    stayBtn.innerText = "🔄 重新挑戰本單元";
+                    stayBtn.onclick = () => { resetQuiz(); closeModal(type, level); };
+                }
             } else {
-                if(level===1) { t.innerHTML="🧩 初級拼圖學者"; d.innerHTML="成功拼出 10 個生字！"; }
-                if(level===2) { t.innerHTML="🧩 進階拼圖達人"; d.innerHTML="征服 20 個生字，只差一點了！"; }
-                if(level===3) { t.innerHTML="👑 拼圖大師！"; d.innerHTML="滿分全制霸！肌肉記憶完美！"; }
+                if(level===1) { t.innerHTML="🥉 拼圖新手"; d.innerHTML="拼圖進度達成 33%！"; }
+                if(level===2) { t.innerHTML="🥈 拼圖達人"; d.innerHTML="拼圖進度達成 66%！"; }
+                if(level===3) { 
+                    t.innerHTML="🏆 拼圖大師！"; d.innerHTML="滿分全制霸！肌肉記憶完美！"; 
+                    exitBtn.innerText = "📚 挑戰其他單元";
+                    stayBtn.innerText = "🔄 重新挑戰拼圖";
+                    stayBtn.onclick = () => { resetSpell(); closeModal(type, level); };
+                }
             }
-            document.getElementById('stayBtn').onclick = () => { closeModal(type, level); };
+
+            if (level !== 3) {
+                stayBtn.innerText = "📚 留下來繼續複習";
+                stayBtn.onclick = () => { closeModal(type, level); };
+                exitBtn.innerText = "🎓 榮耀結業 (返回大廳)";
+            }
+
             document.getElementById('gradModal').style.display = 'flex';
         }
+
         function closeModal(type, level) {
             if(type==='quiz') localData.certs[`c${level}`] = true; else localData.spellCerts[`c${level}`] = true;
             localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); document.getElementById('gradModal').style.display = 'none';
