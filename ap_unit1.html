@@ -148,7 +148,7 @@
         </div>
 
         <div id="clozeSuccessActions" style="display: none; gap: 10px; justify-content: center; margin-top: 15px; flex-wrap: wrap; width: 100%;">
-            </div>
+        </div>
     </div>
 
     <div class="grad-modal" id="gradModal">
@@ -159,9 +159,9 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'spartan_ap_u1_v7';
+        // 變更快取 Key 確保重新測試不受舊資料影響
+        const STORAGE_KEY = 'spartan_ap_u1_v7_final';
         
-        // 單字庫保持不變
         let vocabData = [
             { word: "Exigence", engDef: "An issue or situation that prompts someone to write or speak.", translation: "N. 緊急需求 ; 寫作契機", synAnt: "同: Urgency, impetus", usage: "The exigence of the situation", example: "The sudden ecological disaster provided the exigence for the senator’s speech." },
             { word: "Context", engDef: "The circumstances surrounding a specific text or historical event.", translation: "N. 語境 ; 背景", synAnt: "同: Framework, milieu", usage: "In the context of", example: "One must analyze the speech in the context of the Civil Rights Movement." },
@@ -190,7 +190,6 @@
             { word: "Prompt", engDef: "To cause or bring about an action or feeling.", translation: "V. 促使 ; 激起", synAnt: "同: Trigger", usage: "Prompted by", example: "The student was prompted to research the topic after reading the article." }
         ];
 
-        // 🌟 V7: 擴充為 4 篇短文，涵蓋 20 個重要詞彙
         let clozeData = [
             {
                 passage: "In any sophisticated analysis, the scholar must first identify the [1] that motivated the author to produce the text. By examining the rhetorical [2], one can understand how the [3] of the writing aligns with the expectations of the [4]. Furthermore, the historical [5] often dictates the specific stylistic choices that the writer employs.",
@@ -216,7 +215,7 @@
 
         let currentIndex = 0; let currentQuizAnswer = null; let isEngToChnQuiz = true;
         let currentSpellAnswer = null; let spellScrambledLetters = []; let spellCurrentAnswer = [];
-        let currentClozeIndex = 0; // V7 新增：追蹤目前是第幾篇克漏字
+        let currentClozeIndex = 0; 
         
         let localData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { 
             starred: [], 
@@ -264,11 +263,17 @@
         function prevCard() { if(currentIndex > 0){ currentIndex--; renderCard(); } }
         function shuffleCards() { vocabData.sort(()=>Math.random()-0.5); currentIndex=0; renderCard(); }
 
-        // 隨機測驗 
+        // ====== 隨機測驗 (完美進度顯示) ======
         function updateMasteryUI() {
             let totalTarget = vocabData.length * 3;
             let currentTotal = 0;
-            vocabData.forEach(v => { currentTotal += Math.min(localData.quizProgress[v.word] || 0, 3); });
+            let fullyMasteredCount = 0; // 計算完全熟練的字數
+
+            vocabData.forEach(v => { 
+                let progress = localData.quizProgress[v.word] || 0;
+                currentTotal += Math.min(progress, 3); 
+                if (progress >= 3) fullyMasteredCount++;
+            });
             
             let rate = totalTarget === 0 ? 0 : Math.round((currentTotal / totalTarget) * 100);
 
@@ -277,7 +282,7 @@
             certIcons += localData.certs.c2 ? "🥈 " : "🔒 ";
             certIcons += localData.certs.c3 ? "🏆" : "🔒";
 
-            document.getElementById('masteryText').innerHTML = `🏆 熟練度：${rate}% <br> 🎖️ 證書進度：${certIcons}`;
+            document.getElementById('masteryText').innerHTML = `🏆 熟練度：${rate}% (${fullyMasteredCount}/${vocabData.length}) <br> 🎖️ 證書進度：${certIcons}`;
 
             if(rate >= 33 && !localData.certs.c1) showModal('quiz', 1);
             else if(rate >= 66 && !localData.certs.c2) showModal('quiz', 2);
@@ -338,14 +343,22 @@
             updateMasteryUI(); generateQuiz();
         }
 
-        // 拼圖 
+        // ====== 字母拼圖 (完美進度顯示) ======
         function updateSpellUI() {
             let totalTarget = vocabData.length * 3;
             let currentTotal = 0;
-            vocabData.forEach(v => { currentTotal += Math.min(localData.spellProgress[v.word] || 0, 3); });
+            let fullyMasteredCount = 0; // 計算完全熟練的字數
+
+            vocabData.forEach(v => { 
+                let progress = localData.spellProgress[v.word] || 0;
+                currentTotal += Math.min(progress, 3); 
+                if (progress >= 3) fullyMasteredCount++;
+            });
+            
             let rate = totalTarget === 0 ? 0 : Math.round((currentTotal / totalTarget) * 100);
 
-            document.getElementById('spellProgressText').innerHTML = `⌨️ 拼圖進度：${rate}% (${currentTotal}/${totalTarget})`;
+            // 完美的 1/25 顯示方式
+            document.getElementById('spellProgressText').innerHTML = `⌨️ 拼圖進度：${rate}% (${fullyMasteredCount}/${vocabData.length})`;
             document.getElementById('spellProgressBar').style.width = rate + '%';
 
             if(rate >= 33 && !localData.spellCerts.c1) showModal('spell', 1);
@@ -424,7 +437,7 @@
             updateSpellUI(); generateSpell();
         }
 
-        // 🌟 V7: 克漏字大升級 
+        // ====== 克漏字 ======
         function renderCloze() {
             let d = clozeData[currentClozeIndex];
             let c = document.getElementById('clozeContainer'); 
@@ -439,7 +452,6 @@
             }
             c.innerHTML = h;
 
-            // 恢復 UI 初始狀態
             document.getElementById('submitClozeBtn').style.display = "inline-block";
             document.getElementById('clozeSuccessActions').style.display = "none";
             document.getElementById('clozeSuccessActions').innerHTML = "";
@@ -458,7 +470,6 @@
             for(let i=0; i<d.blanks.length; i++){
                 let sel = document.getElementById(`clz${i}`);
                 if(!sel) continue;
-                // 轉為小寫做比對防錯
                 if(sel.value.toLowerCase() === d.blanks[i].toLowerCase()){ 
                     cor++; sel.style.borderColor="green"; sel.style.backgroundColor="#e8f5e9"; sel.disabled = true;
                 } else { 
@@ -470,7 +481,6 @@
             if(cor === d.blanks.length){ 
                 fb.innerHTML="🎉 太棒了！段落完全正確！"; fb.style.color="green"; 
                 
-                // 隱藏提交按鈕，顯示獎勵選單
                 document.getElementById('submitClozeBtn').style.display = "none";
                 let actionsDiv = document.getElementById('clozeSuccessActions');
                 actionsDiv.style.display = "flex";
@@ -483,13 +493,11 @@
             }
         }
 
-        // 🌟 V7: 閱讀全文功能
         function readFullTextCloze() {
             let d = clozeData[currentClozeIndex];
             let c = document.getElementById('clozeContainer');
             let h = d.passage;
             
-            // 將所有 [1], [2] 替換成帶有 CSS 樣式的正確答案
             for(let i=0; i<d.blanks.length; i++) {
                 h = h.replace(`[${i+1}]`, `<span class="cloze-fulltext-word">${d.blanks[i]}</span>`);
             }
@@ -498,12 +506,11 @@
             document.getElementById('clozeFeedback').innerHTML = "💡 全文閱讀模式";
             document.getElementById('clozeFeedback').style.color = "#1565C0";
             
-            // 更改下方按鈕為「返回測驗」
             let actionsDiv = document.getElementById('clozeSuccessActions');
             actionsDiv.innerHTML = `<button class="action-btn" onclick="renderCloze()">🔙 返回測驗模式</button>`;
         }
 
-        // 通關彈窗
+        // ====== 通關彈窗 ======
         function showModal(type, level) {
             let t = document.getElementById('gradTitle'), d = document.getElementById('gradDesc');
             let stayBtn = document.getElementById('stayBtn');
