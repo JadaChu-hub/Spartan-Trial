@@ -159,7 +159,7 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'spartan_ap_u1_v7_2';
+        const STORAGE_KEY = 'spartan_ap_u1_v7_3';
         
         let vocabData = [
             { word: "Exigence", engDef: "An issue or situation that prompts someone to write or speak.", translation: "N. 緊急需求 ; 寫作契機", synAnt: "同: Urgency, impetus", usage: "The exigence of the situation", example: "The sudden ecological disaster provided the exigence for the senator’s speech." },
@@ -261,7 +261,7 @@
         function prevCard() { if(currentIndex > 0){ currentIndex--; renderCard(); } }
         function shuffleCards() { vocabData.sort(()=>Math.random()-0.5); currentIndex=0; renderCard(); }
 
-        // ====== 隨機測驗 (回復成你最愛的乾淨版本：只留百分比，刪除 (x/y)) ======
+        // ====== 隨機測驗 ======
         function updateMasteryUI() {
             let totalTarget = vocabData.length * 3;
             let currentTotal = 0;
@@ -275,7 +275,6 @@
             certIcons += localData.certs.c2 ? "🥈 " : "🔒 ";
             certIcons += localData.certs.c3 ? "🏆" : "🔒";
 
-            // 乾淨俐落！只有熟練度百分比
             document.getElementById('masteryText').innerHTML = `🏆 熟練度：${rate}% <br> 🎖️ 證書進度：${certIcons}`;
 
             if(rate >= 33 && !localData.certs.c1) showModal('quiz', 1);
@@ -337,7 +336,7 @@
             updateMasteryUI(); generateQuiz();
         }
 
-        // ====== 字母拼圖 (保留 (x/25) 代表通關單字數) ======
+        // ====== 字母拼圖 ======
         function updateSpellUI() {
             let totalTarget = vocabData.length * 3;
             let currentTotal = 0;
@@ -351,7 +350,6 @@
             
             let rate = totalTarget === 0 ? 0 : Math.round((currentTotal / totalTarget) * 100);
 
-            // 保留直覺的 (x/25) 顯示方式
             document.getElementById('spellProgressText').innerHTML = `⌨️ 拼圖進度：${rate}% (${fullyMasteredCount}/${vocabData.length})`;
             document.getElementById('spellProgressBar').style.width = rate + '%';
 
@@ -431,7 +429,10 @@
             updateSpellUI(); generateSpell();
         }
 
+        // ====== 克漏字 (含自動停止語音 & 朗讀全文) ======
         function renderCloze() {
+            window.speechSynthesis.cancel(); // 💡 確保切換時停止語音
+            
             let d = clozeData[currentClozeIndex];
             let c = document.getElementById('clozeContainer'); 
             let h = d.passage; 
@@ -500,7 +501,19 @@
             document.getElementById('clozeFeedback').style.color = "#1565C0";
             
             let actionsDiv = document.getElementById('clozeSuccessActions');
-            actionsDiv.innerHTML = `<button class="action-btn" onclick="renderCloze()">🔙 返回測驗模式</button>`;
+            actionsDiv.innerHTML = `
+                <button class="action-btn" style="background-color: #F5A623;" onclick="speakFullCloze()">🔊 朗讀全文</button>
+                <button class="action-btn" onclick="renderCloze()">🔙 返回測驗模式</button>
+            `;
+        }
+
+        function speakFullCloze() {
+            window.speechSynthesis.cancel(); 
+            let textToSpeak = document.getElementById('clozeContainer').innerText; 
+            const u = new SpeechSynthesisUtterance(textToSpeak); 
+            u.lang = 'en-US'; 
+            u.rate = 0.85; 
+            window.speechSynthesis.speak(u);
         }
 
         function showModal(type, level) {
