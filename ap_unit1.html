@@ -239,36 +239,30 @@
                 let isButton = e.target.closest('button') !== null;
                 let isSelect = e.target.closest('select') !== null;
                 if (tag === 'select' || tag === 'option' || isButton || isSelect) {
-                    return; // 攔截：使用者正在操作選單或按鈕
+                    return; 
                 }
             }
             document.getElementById('flashcard').classList.toggle('flipped');
         }
 
-        // 🎙️ 升級版語音引擎：強制捕捉 Android TTS 的隱藏男聲代號 (-b, -d, -i, -j)
-        function getNaturalVoice() {
-            let gender = document.getElementById('voiceGender').value;
+        // 🎙️ 終極版語音引擎：加入 Pitch (音高) 控制以突破手機單一語音庫限制
+        function getNaturalVoice(gender) {
             let voices = window.speechSynthesis.getVoices();
             let preferredVoices = [];
             let langFilter = v => v.lang.includes('en-US') || v.lang.includes('en-GB') || v.lang.includes('en-AU');
             
             if (gender === 'female') {
-                preferredVoices = voices.filter(v => langFilter(v) && /Female|Samantha|Ava|Zira|Victoria|Karen|Tessa|\-a|\-c|\-e|\-f|\-g|\-h/i.test(v.name));
-                if (preferredVoices.length === 0) {
-                    preferredVoices = voices.filter(v => langFilter(v) && !/Male|David|Mark|Alex|Daniel|\-b|\-d|\-i|\-j/i.test(v.name));
-                }
+                preferredVoices = voices.filter(v => langFilter(v) && /Female|Samantha|Ava|Zira|Victoria|Karen|Tessa/i.test(v.name));
             } else {
-                preferredVoices = voices.filter(v => langFilter(v) && /Male|David|Mark|Alex|Tom|Daniel|James|Arthur|\-b|\-d|\-i|\-j/i.test(v.name));
-                if (preferredVoices.length === 0) {
-                    preferredVoices = voices.filter(v => langFilter(v) && /Male/i.test(v.name));
-                }
+                preferredVoices = voices.filter(v => langFilter(v) && /Male|David|Mark|Alex|Tom|Daniel|James|Arthur|Fred|Aaron/i.test(v.name));
             }
             
-            if (preferredVoices.length > 0) {
-                let usVoice = preferredVoices.find(v => v.lang.includes('en-US'));
-                return usVoice || preferredVoices[0];
+            if (preferredVoices.length === 0) {
+                preferredVoices = voices.filter(langFilter);
             }
-            return voices.find(v => v.lang.includes('en')) || voices[0];
+            
+            let usVoice = preferredVoices.find(v => v.lang.includes('en-US'));
+            return usVoice || preferredVoices[0] || voices[0];
         }
 
         function speakText(type, event) {
@@ -276,8 +270,20 @@
             window.speechSynthesis.cancel(); 
             let text = type === 'word' ? vocabData[currentIndex].word : vocabData[currentIndex].example;
             const u = new SpeechSynthesisUtterance(text); 
-            u.lang = 'en-US'; u.rate = 0.8; 
-            let voice = getNaturalVoice(); if (voice) u.voice = voice; 
+            u.lang = 'en-US'; 
+            u.rate = 0.8; 
+            
+            let gender = document.getElementById('voiceGender').value;
+            let voice = getNaturalVoice(gender); 
+            if (voice) u.voice = voice; 
+            
+            // 🔥 核心修復：透過音高強制區分男女聲
+            if (gender === 'male') {
+                u.pitch = 0.6; // 壓低音高，強制變男聲
+            } else {
+                u.pitch = 1.1; // 稍微調高，保持女聲清脆
+            }
+
             window.speechSynthesis.speak(u);
         }
 
@@ -285,8 +291,19 @@
             window.speechSynthesis.cancel();
             let textToSpeak = document.getElementById('clozeContainer').innerText; 
             const u = new SpeechSynthesisUtterance(textToSpeak); 
-            u.lang = 'en-US'; u.rate = 0.75; 
-            let voice = getNaturalVoice(); if (voice) u.voice = voice; 
+            u.lang = 'en-US'; 
+            u.rate = 0.75; 
+            
+            let gender = document.getElementById('voiceGender').value;
+            let voice = getNaturalVoice(gender); 
+            if (voice) u.voice = voice; 
+            
+            if (gender === 'male') {
+                u.pitch = 0.6; 
+            } else {
+                u.pitch = 1.1; 
+            }
+
             window.speechSynthesis.speak(u);
         }
 
