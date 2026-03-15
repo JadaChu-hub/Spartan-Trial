@@ -3,60 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📕 TOEFL (Unit 2)</title>
+    <title> 📕 TOEFL (Unit 2) - Spartan Vocab</title>
     <style>
-      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #FFF5F5; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; color: #4A1515; padding-top: 15px; position: relative;}
+       /* ======= 📕 TOEFL 專屬深紅學術 (Maroon) ======= */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #FFF5F5; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; color: #4A1515; padding-top: 15px; position: relative;}
         h1 { color: #800000; margin-bottom: 10px; font-size: 22px; text-align: center; font-weight: 800;}
-        .lang-toggle-btn { position: absolute; top: 10px; right: 10px; background-color: #ffffff; color: #800000; border: 2px solid #800000; padding: 4px 10px; border-radius: 15px; font-size: 12px; font-weight: bold; cursor: pointer; z-index: 100;}
+        
+        /* 🎙️ 語音切換選單 */
+        .voice-toggle-btn { position: absolute; top: 15px; right: 15px; background-color: #ffffff; color: #800000; border: 2px solid #800000; padding: 4px 8px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; z-index: 100; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+
         .tabs { display: flex; gap: 6px; margin-bottom: 15px; flex-wrap: wrap; justify-content: center; width: 95%;}
-        .tab-btn { padding: 8px 10px; font-size: 14px; border: none; border-radius: 8px; background-color: #F5D0D0; color: #800000; cursor: pointer; font-weight: bold; transition: 0.3s;}
-        .tab-btn.active { background-color: #800000; color: white; }
+        .tab-btn { padding: 8px 10px; font-size: 14px; border: none; border-radius: 8px; background-color: #F5D0D0; color: #800000; cursor: pointer; font-weight: bold; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);}
+        .tab-btn.active { background-color: #800000; color: white; box-shadow: 0 4px 8px rgba(0,0,0,0.15);}
+        
         .view-section { display: none; flex-direction: column; align-items: center; width: 100%; max-width: 380px; }
         .view-section.active { display: flex; }
+        
         .card-container { width: 90vw; max-width: 350px; height: 340px; perspective: 1000px; margin-bottom: 15px; cursor: pointer; }
-        .card { width: 100%; height: 100%; position: relative; transition: transform 0.6s; transform-style: preserve-3d; box-shadow: 0 10px 20px rgba(128, 0, 0, 0.1); border-radius: 15px; }
+        .card { width: 100%; height: 100%; position: relative; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; box-shadow: 0 10px 20px rgba(128, 0, 0, 0.15); border-radius: 16px; }
         .card.flipped { transform: rotateY(180deg); }
-        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 15px; padding: 20px; box-sizing: border-box; text-align: center; overflow-y: auto; }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 16px; padding: 24px; box-sizing: border-box; text-align: center; overflow-y: auto; }
+        
         .card-front { background-color: #ffffff; color: #800000; border: 2px solid #E6B8B8; backface-visibility: hidden;}
-        .word-text { font-size: 30px; font-weight: bold; margin-bottom: 10px;}
-        .eng-def { font-size: 15px; color: #8A4A4A; font-style: italic; padding: 0 10px; line-height: 1.3;}
-        .card-back { background-color: #FFF0F0; color: #5C2C2C; transform: rotateY(180deg); align-items: flex-start; text-align: left; backface-visibility: hidden;}
-        .translation { font-size: 17px; font-weight: bold; margin-bottom: 8px; color: #800000; border-bottom: 1px solid #E6B8B8; padding-bottom: 4px; width: 100%;}
-        .details { font-size: 13px; margin-bottom: 6px; line-height: 1.3; }
-        .details strong { color: #B22222; }
-        .example { font-size: 13px; font-style: italic; margin-top: 6px; padding-top: 6px; border-top: 1px dashed #E6B8B8; color: #7A3B3B; }
-        .front-tools { display: flex; gap: 20px; margin-top: 15px; align-items: center;}
+        .word-text { font-size: 30px; font-weight: 800; margin-bottom: 10px;}
+        .eng-def { font-size: 15px; color: #8A4A4A; font-style: italic; padding: 0 10px; line-height: 1.4;}
+        
+        .card-back { background-color: #FFF0F0; color: #5C2C2C; transform: rotateY(180deg); align-items: flex-start; text-align: left; backface-visibility: hidden; border: 1px solid #E6B8B8;}
+        .translation { font-size: 17px; font-weight: bold; margin-bottom: 10px; color: #800000; border-bottom: 2px solid #F5D0D0; padding-bottom: 6px; width: 100%;}
+        .details { font-size: 13.5px; margin-bottom: 8px; line-height: 1.4; color: #8A4A4A;}
+        .details strong { color: #800000; }
+        .example { font-size: 13.5px; font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #E6B8B8; color: #800000; line-height: 1.4;}
+        
+        .front-tools { display: flex; gap: 20px; margin-top: 20px; align-items: center;}
         .tool-btn { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; transition: 0.2s;}
-        .star-btn { color: #DDDDDD; }
-        .star-btn.active { color: #F5A623; transform: scale(1.2); }
-        .controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-        button.action-btn { padding: 8px 12px; font-size: 14px; border: none; border-radius: 8px; background-color: #800000; color: white; cursor: pointer; transition: 0.2s; }
-        button.action-btn:hover { background-color: #600000; }
+        .star-btn { color: #DDDDDD; text-shadow: 0 1px 2px rgba(0,0,0,0.1);}
+        .star-btn.active { color: #F5A623; transform: scale(1.2); text-shadow: 0 2px 4px rgba(245,166,35,0.3);}
+        
+        .controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        button.action-btn { padding: 10px 16px; font-size: 14px; border: none; border-radius: 10px; background-color: #800000; color: white; cursor: pointer; transition: 0.2s; font-weight: bold; box-shadow: 0 4px 6px rgba(128, 0, 0, 0.15);}
+        button.action-btn:hover { background-color: #4A1515; transform: translateY(-1px);}
         button.action-btn.green-btn { background-color: #B22222; }
-        .counter { margin-top: 10px; font-size: 13px; color: #8A4A4A; font-weight: bold;}
-        .mastery-text { font-size: 14px; color: #800000; font-weight: bold; margin-bottom: 15px; background: #F5D0D0; padding: 8px 12px; border-radius: 12px; text-align: center; width: 90%;}
+        button.action-btn.green-btn:hover { background-color: #800000; }
+        .counter { margin-top: 12px; font-size: 13px; color: #8A4A4A; font-weight: bold;}
+        
+        .mastery-text { font-size: 14px; color: #800000; font-weight: bold; margin-bottom: 15px; background: #F5D0D0; padding: 10px 15px; border-radius: 12px; text-align: center; width: 90%; border: 1px solid #E6B8B8;}
         .quiz-question { font-size: 16px; font-weight: bold; color: #800000; text-align: center; margin-bottom: 15px; padding: 0 15px; line-height: 1.4;}
-        .quiz-options { width: 100%; display: flex; flex-direction: column; gap: 8px; padding: 0 20px; box-sizing: border-box;}
-        .quiz-option { padding: 12px; background-color: #ffffff; color: #800000; border: 2px solid #800000; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; text-align: center; transition: 0.2s; }
-        .feedback { margin-top: 12px; font-weight: bold; font-size: 16px; min-height: 22px; text-align: center;}
-        .progress-container { width: 90%; background-color: #F5D0D0; border-radius: 10px; margin: 5px auto 15px auto; overflow: hidden; height: 12px; }
-        .progress-fill { width: 0%; height: 100%; background-color: #800000; transition: width 0.5s; }
-        .spell-answer-box { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; min-height: 45px; padding: 10px; border: 2px dashed #800000; border-radius: 10px; margin-bottom: 15px; width: 90%; background-color: #ffffff; }
-        .letter-pool { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 15px; width: 95%; }
-        .letter-tile { background-color: #800000; color: white; border: none; border-radius: 6px; padding: 10px 14px; font-size: 20px; font-weight: bold; cursor: pointer; box-shadow: 0 3px 0 #4A1515; user-select: none; }
-        .letter-tile:active { transform: translateY(3px); box-shadow: 0 0 0 #4A1515; }
-        .letter-tile.in-answer { background-color: #B22222; box-shadow: 0 3px 0 #800000; }
-        .cloze-container { background: white; padding: 15px; border-radius: 12px; border: 2px solid #E6B8B8; width: 90%; font-size: 15px; line-height: 1.8; color: #5C2C2C;}
-        .cloze-select { padding: 2px 5px; font-size: 14px; color: #800000; border: 1px solid #800000; border-radius: 4px; font-weight: bold; background-color: #FFF0F0;}
-        .grad-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 245, 245, 0.95); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;}
-        .grad-title { color: #800000; font-size: 26px; margin-bottom: 10px; }
-        .grad-desc { color: #5C2C2C; font-size: 15px; line-height: 1.5; margin-bottom: 25px;}
-        .grad-btn { width: 100%; max-width: 250px; background-color: #800000; color: white; font-size: 15px; font-weight: bold; padding: 12px 20px; border: none; border-radius: 30px; cursor: pointer; margin-bottom: 10px;}
-        .grad-btn.stay-btn { background-color: #F5D0D0; color: #800000; border: 1px solid #800000;}
+        .quiz-options { width: 100%; display: flex; flex-direction: column; gap: 10px; padding: 0 20px; box-sizing: border-box;}
+        .quiz-option { padding: 14px; background-color: #ffffff; color: #800000; border: 2px solid #E6B8B8; border-radius: 12px; font-size: 15px; font-weight: bold; cursor: pointer; text-align: center; transition: 0.2s; }
+        .quiz-option:hover { background-color: #FFF5F5; border-color: #800000; }
+        .quiz-option:disabled { opacity: 0.6; cursor: not-allowed; }
+        .feedback { margin-top: 15px; font-weight: bold; font-size: 16px; min-height: 22px; text-align: center;}
+        
+        .progress-container { width: 90%; background-color: #F5D0D0; border-radius: 10px; margin: 5px auto 15px auto; overflow: hidden; height: 10px; }
+        .progress-fill { width: 0%; height: 100%; background-color: #800000; transition: width 0.5s cubic-bezier(0.4, 0.2, 0.2, 1); }
+        
+        .spell-answer-box { display: flex; flex-wrap: nowrap; gap: 6px; justify-content: center; align-items: center; min-height: 50px; padding: 12px; border: 2px dashed #E6B8B8; border-radius: 12px; margin-bottom: 15px; width: 90%; background-color: #ffffff; overflow-x: auto;}
+        .letter-pool { display: flex; flex-wrap: nowrap; gap: 6px; justify-content: center; margin-bottom: 15px; width: 95%; overflow-x: auto;}
+        .letter-tile { background-color: #800000; color: white; border: none; border-radius: 8px; padding: 12px 0; font-size: clamp(16px, 4vw, 22px); font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #4A1515; user-select: none; flex: 1 1 0px; min-width: 0; max-width: 45px; text-align: center; transition: background-color 0.2s;}
+        .letter-tile:active { transform: translateY(4px); box-shadow: 0 0 0 #4A1515; }
+        .letter-tile.in-answer { background-color: #4A1515; box-shadow: 0 4px 0 #2A0B0B; }
+
+        .cloze-container { background: white; padding: 20px; border-radius: 16px; border: 1px solid #E6B8B8; width: 90%; font-size: 15px; line-height: 1.8; color: #4A1515; box-shadow: 0 8px 16px rgba(128, 0, 0, 0.05);}
+        .cloze-select { padding: 4px 8px; font-size: 14.5px; color: #800000; border: 1px solid #8A4A4A; border-radius: 6px; font-weight: bold; background-color: #FFF5F5; cursor: pointer;}
+        .cloze-fulltext-word { color: #ffffff; padding: 2px 6px; font-weight: bold; background-color: #B22222; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}
+
+        .grad-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 245, 245, 0.96); z-index: 1000; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; backdrop-filter: blur(5px);}
+        .grad-title { color: #800000; font-size: 28px; margin-bottom: 12px; font-weight: 800;}
+        .grad-desc { color: #4A1515; font-size: 16px; line-height: 1.5; margin-bottom: 30px;}
+        .grad-btn { width: 100%; max-width: 260px; background-color: #800000; color: white; font-size: 16px; font-weight: bold; padding: 14px 20px; border: none; border-radius: 30px; cursor: pointer; margin-bottom: 12px; box-shadow: 0 6px 12px rgba(128, 0, 0, 0.2);}
+        .grad-btn:hover { background-color: #4A1515; }
+        .grad-btn.stay-btn { background-color: transparent; color: #800000; border: 2px solid #800000; box-shadow: none;}
+        .grad-btn.stay-btn:hover { background-color: #F5D0D0; }
     </style>
 </head>
 <body>
-     
+    
+    <select id="voiceGender" class="voice-toggle-btn">
+        <option value="female">👩 女聲 (Female)</option>
+        <option value="male">👨 男聲 (Male)</option>
+    </select>
+
     <h1>📕 TOEFL (Unit 2)</h1>
 
     <div class="tabs">
@@ -80,9 +106,9 @@
                 <div class="card-back">
                     <div class="translation" id="translationText">解釋</div>
                     <div class="details" id="synAntText"><strong>同/反義：</strong><span>...</span></div>
-                    <div class="details" id="usageText"><strong>固定用法：</strong><span>...</span></div>
+                    <div class="details" id="usageText"><strong>常見搭配：</strong><span>...</span></div>
                     <div class="example" id="exampleText">例句...</div>
-                    <button class="action-btn" onclick="speakText('example', event)" style="margin-top: 10px; padding: 6px 12px; font-size: 12px; align-self: center;">🔊 朗讀例句</button>
+                    <button class="action-btn" onclick="speakText('example', event)" style="margin-top: 15px; padding: 8px 16px; font-size: 13px; align-self: center; background-color: #B22222;">🔊 朗讀例句</button>
                 </div>
             </div>
         </div>
@@ -96,10 +122,10 @@
     </div>
 
     <div id="quiz-view" class="view-section">
-        <div class="mastery-text" id="masteryText">🏆 測驗熟練度：0% (0/0) <br> 🎖️ 證書進度：0 / 3</div>
+        <div class="mastery-text" id="masteryText">🏆 測驗熟練度：0% <br> 🎖️ 證書進度：🔒 🔒 🔒</div>
         <div class="quiz-question" id="quizQuestion">
-            <span style="font-size:13px; color:#486581;" id="quizHint">請選出對應答案：</span><br><br>
-            <span id="quizDesc" style="font-size:18px;">...</span>
+            <span style="font-size:13.5px; color:#8A4A4A;" id="quizHint">請選出對應答案：</span><br><br>
+            <span id="quizDesc" style="font-size:20px; color: #800000;">...</span>
         </div>
         <div class="quiz-options" id="quizOptions"></div>
         <div class="feedback" id="quizFeedback"></div>
@@ -108,10 +134,10 @@
 
     <div id="spell-view" class="view-section">
         <div style="width: 100%;">
-            <div class="mastery-text" id="spellProgressText" style="margin-bottom: 5px;">⌨️ 詞彙收集：0 / 25 (0%)</div>
+            <div class="mastery-text" id="spellProgressText" style="margin-bottom: 8px;">⌨️ 詞彙收集：0% (0/0)</div>
             <div class="progress-container"><div class="progress-fill" id="spellProgressBar"></div></div>
         </div>
-        <div class="quiz-question" style="font-size:14px; margin-bottom: 10px;" id="spellPrompt">解釋與例句</div>
+        <div class="quiz-question" style="font-size:14.5px; margin-bottom: 12px; color: #4A1515;" id="spellPrompt">解釋與例句</div>
         <div class="spell-answer-box" id="spellAnswerBox"></div>
         <div class="letter-pool" id="letterPool"></div>
         <button class="action-btn" id="submitSpellBtn" onclick="checkSpell()">送出答案</button>
@@ -120,84 +146,147 @@
     </div>
 
     <div id="cloze-view" class="view-section">
-        <div class="mastery-text">📖 單元主題實戰演練</div>
+        <div class="mastery-text" id="clozeCounter">📖 單元主題實戰演練 (1/4)</div>
         <div class="cloze-container" id="clozeContainer"></div>
         <div class="feedback" id="clozeFeedback"></div>
-        <button class="action-btn" style="margin-top: 15px;" onclick="checkCloze()">提交驗證</button>
+        
+        <div id="clozeControls" class="controls" style="margin-top: 20px; width: 100%; display: flex; justify-content: center; gap: 12px;">
+            <button class="action-btn" onclick="changeCloze(-1)">⬅️ 上一篇</button>
+            <button class="action-btn" id="submitClozeBtn" style="background-color: #B22222;" onclick="checkCloze()">✅ 提交驗證</button>
+            <button class="action-btn" onclick="changeCloze(1)">下一篇 ➡️</button>
+        </div>
+
+        <div id="clozeSuccessActions" style="display: none; gap: 12px; justify-content: center; margin-top: 20px; flex-wrap: wrap; width: 100%;">
+        </div>
     </div>
 
     <div class="grad-modal" id="gradModal">
         <h2 class="grad-title" id="gradTitle">🛡️ 結業！</h2>
         <p class="grad-desc" id="gradDesc">說明文字</p>
-        <button class="grad-btn" onclick="window.location.href='index.html'">🎓 榮耀結業 (返回大廳)</button>
+        <button class="grad-btn" id="exitBtn" onclick="window.location.href='index.html'">🎓 榮耀結業 (返回大廳)</button>
         <button class="grad-btn stay-btn" id="stayBtn" onclick="">📚 留下來繼續複習</button>
     </div>
 
     <script>
-        
+        window.speechSynthesis.onvoiceschanged = function() {
+            window.speechSynthesis.getVoices();
+        };
 
-        // ==========================================
-        // ⚠️ 修改區：存檔鍵名、生字資料、克漏字資料
-        // ==========================================
-        const STORAGE_KEY = 'spartan_toefl_u2';
+        const STORAGE_KEY = 'spartan_toefl_u2_v7_2';
         
+        // 絕對零重複 TOEFL Unit 2 詞彙庫
         let vocabData = [
-    { word: "Biodiversity", engDef: "The variety of life in a particular habitat or ecosystem.", translation: "N. 生物多樣性", synAnt: "同: Variety", usage: "Global biodiversity", example: "Deforestation poses a severe threat to global biodiversity." },
-    { word: "Sustainable", engDef: "Able to be maintained at a certain rate or level.", translation: "Adj. 可持續的", synAnt: "同: Maintainable", usage: "Sustainable energy", example: "Wind energy is a sustainable alternative to fossil fuels." },
-    { word: "Habitat", engDef: "The natural home or environment of an organism.", translation: "N. 棲息地", synAnt: "同: Environment", usage: "Natural habitat", example: "The loss of its natural habitat led to the decline of the tiger." },
-    { word: "Ecosystem", engDef: "A biological community of interacting organisms and their environment.", translation: "N. 生態系統", synAnt: "同: Network", usage: "Fragile ecosystem", example: "Pollution can disrupt the delicate balance of an ecosystem." },
-    { word: "Adaptation", engDef: "The process by which a species becomes fitted to its environment.", translation: "N. 適應", synAnt: "同: Adjustment", usage: "Evolutionary adaptation", example: "The camel's hump is an adaptation for surviving in the desert." },
-    { word: "Conservation", engDef: "Prevention of wasteful use of a resource or protecting nature.", translation: "N. 保護", synAnt: "同: Preservation", usage: "Wildlife conservation", example: "Wildlife conservation efforts have helped save the bald eagle." },
-    { word: "Deforestation", engDef: "The action of clearing a wide area of trees.", translation: "N. 濫伐森林", synAnt: "同: Logging", usage: "Rapid deforestation", example: "Deforestation has led to significant soil erosion in the tropics." },
-    { word: "Pollution", engDef: "Presence of harmful substances in the environment.", translation: "N. 污染", synAnt: "同: Contamination", usage: "Water pollution", example: "Industrial waste is a major source of water pollution." },
-    { word: "Resource", engDef: "A supply of materials or assets that can be used.", translation: "N. 資源", synAnt: "同: Supply, Asset", usage: "Renewable resource", example: "Freshwater is a vital resource that must be protected." },
-    { word: "Climate", engDef: "The long-term weather conditions in an area.", translation: "N. 氣候", synAnt: "同: Weather pattern", usage: "Arid climate", example: "The region's arid climate makes farming extremely difficult." },
-    { word: "Erosion", engDef: "The gradual destruction of land by wind or water.", translation: "N. 侵蝕", synAnt: "同: Abrasion", usage: "Soil erosion", example: "Roots of trees help prevent soil erosion during heavy rains." },
-    { word: "Extinction", engDef: "The state of a species being no longer in existence.", translation: "N. 滅絕", synAnt: "同: Annihilation", usage: "Face extinction", example: "Many species are facing extinction due to climate change." },
-    { word: "Interaction", engDef: "Reciprocal action or influence between two or more things.", translation: "N. 相互作用", synAnt: "同: Cooperation", usage: "Complex interaction", example: "The interaction between bees and flowers is a form of mutualism." },
-    { word: "Niche", engDef: "The specific role of a species within its environment.", translation: "N. 生態位", synAnt: "同: Place, Role", usage: "Ecological niche", example: "Every organism occupies a unique niche in the forest." },
-    { word: "Organism", engDef: "An individual animal, plant, or single-celled life form.", translation: "N. 生物", synAnt: "同: Living thing", usage: "Microscopic organism", example: "Microscopic organisms in the soil are vital for plant growth." },
-    { word: "Preservation", engDef: "The act of keeping something in its original state.", translation: "N. 保存", synAnt: "同: Conservation", usage: "Preservation of wetlands", example: "The preservation of wetlands is crucial for flood control." },
-    { word: "Resilience", engDef: "The capacity of an ecosystem to recover from difficulties.", translation: "N. 韌性", synAnt: "同: Adaptability", usage: "Show resilience", example: "Mangrove forests show great resilience against storm surges." },
-    { word: "Restoration", engDef: "The action of returning something to its former condition.", translation: "N. 恢復 / 修復", synAnt: "同: Renewal", usage: "Ecological restoration", example: "The restoration of the damaged reef took over a decade." },
-    { word: "Species", engDef: "A group of organisms consisting of similar individuals.", translation: "N. 物種", synAnt: "同: Kind, Type", usage: "Endangered species", example: "Several new species of fish were found in the deep ocean." },
-    { word: "Symbiosis", engDef: "Interaction between two different organisms living in close association.", translation: "N. 共生", synAnt: "同: Partnership", usage: "Live in symbiosis", example: "Some fungi live in symbiosis with the roots of tall trees." },
-    { word: "Terrestrial", engDef: "Relating to the earth or its inhabitants; living on land.", translation: "Adj. 陸地的", synAnt: "同: Land-based; 反: Aquatic", usage: "Terrestrial animals", example: "Elephants are the largest terrestrial animals on Earth." },
-    { word: "Toxic", engDef: "Poisonous; relating to or caused by poison.", translation: "Adj. 有毒的", synAnt: "同: Lethal, Harmful", usage: "Toxic waste", example: "The local river was contaminated with toxic heavy metals." },
-    { word: "Vegetation", engDef: "Plants considered collectively in a particular area.", translation: "N. 植被", synAnt: "同: Flora, Plants", usage: "Lush vegetation", example: "The lush vegetation of the rainforest supports many animals." },
-    { word: "Vulnerable", engDef: "Susceptible to physical or emotional harm.", translation: "Adj. 易受傷害的", synAnt: "同: Exposed, Weak", usage: "Vulnerable species", example: "Young seedlings are vulnerable to extreme frost in winter." },
-    { word: "Watershed", engDef: "An area of land that separates waters flowing to different rivers.", translation: "N. 分水嶺", synAnt: "同: Divide", usage: "Protect the watershed", example: "The protection of the watershed is essential for city water." }
-];
+            { word: "Biodiversity", engDef: "The variety of life in a particular habitat or ecosystem.", translation: "N. 生物多樣性", synAnt: "同: Variety", usage: "Global biodiversity", example: "Deforestation poses a severe threat to global biodiversity." },
+            { word: "Sustainable", engDef: "Able to be maintained at a certain rate or level.", translation: "Adj. 永續的 ; 可持續的", synAnt: "同: Maintainable", usage: "Sustainable energy", example: "Wind energy is a sustainable alternative to fossil fuels." },
+            { word: "Habitat", engDef: "The natural home or environment of an organism.", translation: "N. 棲息地", synAnt: "同: Environment", usage: "Natural habitat", example: "The loss of its natural habitat led to the decline of the tiger." },
+            { word: "Ecosystem", engDef: "A biological community of interacting organisms and their environment.", translation: "N. 生態系統", synAnt: "同: Network", usage: "Fragile ecosystem", example: "Pollution can disrupt the delicate balance of an ecosystem." },
+            { word: "Adaptation", engDef: "The process by which a species becomes fitted to its environment.", translation: "N. 適應", synAnt: "同: Adjustment", usage: "Evolutionary adaptation", example: "The camel's hump is an adaptation for surviving in the desert." },
+            { word: "Conservation", engDef: "Prevention of wasteful use of a resource or protecting nature.", translation: "N. 保育 ; 保護", synAnt: "同: Preservation", usage: "Wildlife conservation", example: "Wildlife conservation efforts have helped save the bald eagle." },
+            { word: "Deforestation", engDef: "The action of clearing a wide area of trees.", translation: "N. 砍伐森林", synAnt: "同: Logging", usage: "Rapid deforestation", example: "Deforestation has led to significant soil erosion in the tropics." },
+            { word: "Pollution", engDef: "Presence of harmful substances in the environment.", translation: "N. 污染", synAnt: "同: Contamination", usage: "Water pollution", example: "Industrial waste is a major source of water pollution." },
+            { word: "Resource", engDef: "A supply of materials or assets that can be used.", translation: "N. 資源", synAnt: "同: Supply, Asset", usage: "Renewable resource", example: "Freshwater is a vital resource that must be protected." },
+            { word: "Climate", engDef: "The long-term weather conditions in an area.", translation: "N. 氣候", synAnt: "同: Weather pattern", usage: "Arid climate", example: "The region's arid climate makes farming extremely difficult." },
+            { word: "Erosion", engDef: "The gradual destruction of land by wind or water.", translation: "N. 侵蝕", synAnt: "同: Abrasion", usage: "Soil erosion", example: "Roots of trees help prevent soil erosion during heavy rains." },
+            { word: "Extinction", engDef: "The state of a species being no longer in existence.", translation: "N. 滅絕", synAnt: "同: Annihilation", usage: "Face extinction", example: "Many species are facing extinction due to climate change." },
+            { word: "Interaction", engDef: "Reciprocal action or influence between two or more things.", translation: "N. 互動 ; 相互作用", synAnt: "同: Cooperation", usage: "Complex interaction", example: "The interaction between bees and flowers is a form of mutualism." },
+            { word: "Niche", engDef: "The specific role of a species within its environment.", translation: "N. 生態位 ; 利基", synAnt: "同: Place, Role", usage: "Ecological niche", example: "Every organism occupies a unique niche in the forest." },
+            { word: "Organism", engDef: "An individual animal, plant, or single-celled life form.", translation: "N. 生物 ; 有機體", synAnt: "同: Living thing", usage: "Microscopic organism", example: "Microscopic organisms in the soil are vital for plant growth." },
+            { word: "Preservation", engDef: "The act of keeping something in its original state.", translation: "N. 保存 ; 維護", synAnt: "同: Conservation", usage: "Preservation of wetlands", example: "The preservation of wetlands is crucial for flood control." },
+            { word: "Resilience", engDef: "The capacity of an ecosystem to recover from difficulties.", translation: "N. 恢復力 ; 韌性", synAnt: "同: Adaptability", usage: "Show resilience", example: "Mangrove forests show great resilience against storm surges." },
+            { word: "Restoration", engDef: "The action of returning something to its former condition.", translation: "N. 恢復 ; 修復", synAnt: "同: Renewal", usage: "Ecological restoration", example: "The restoration of the damaged reef took over a decade." },
+            { word: "Species", engDef: "A group of organisms consisting of similar individuals.", translation: "N. 物種", synAnt: "同: Kind, Type", usage: "Endangered species", example: "Several new species of fish were found in the deep ocean." },
+            { word: "Symbiosis", engDef: "Interaction between two different organisms living in close association.", translation: "N. 共生(關係)", synAnt: "同: Partnership", usage: "Live in symbiosis", example: "Some fungi live in symbiosis with the roots of tall trees." },
+            { word: "Terrestrial", engDef: "Relating to the earth or its inhabitants; living on land.", translation: "Adj. 陸地的", synAnt: "同: Land-based; 反: Aquatic", usage: "Terrestrial animals", example: "Elephants are the largest terrestrial animals on Earth." },
+            { word: "Toxic", engDef: "Poisonous; relating to or caused by poison.", translation: "Adj. 有毒的", synAnt: "同: Lethal, Harmful", usage: "Toxic waste", example: "The local river was contaminated with toxic heavy metals." },
+            { word: "Vegetation", engDef: "Plants considered collectively in a particular area.", translation: "N. 植被 ; 植物", synAnt: "同: Flora, Plants", usage: "Lush vegetation", example: "The lush vegetation of the rainforest supports many animals." },
+            { word: "Vulnerable", engDef: "Susceptible to physical or emotional harm.", translation: "Adj. 脆弱的 ; 易受傷的", synAnt: "同: Exposed, Weak", usage: "Vulnerable species", example: "Young seedlings are vulnerable to extreme frost in winter." },
+            { word: "Watershed", engDef: "An area of land that separates waters flowing to different rivers.", translation: "N. 集水區 ; 分水嶺", synAnt: "同: Divide", usage: "Protect the watershed", example: "The protection of the watershed is essential for city water." }
+        ];
 
-let clozeData = {
-    passage: "Protecting the Earth's [1] is essential for maintaining a healthy [2]. When a natural [3] is destroyed by human activities, such as urban expansion, many [4] species face the imminent threat of [5].",
-    blanks: ["biodiversity", "ecosystem", "habitat", "vulnerable", "extinction"], 
-    options: ["biodiversity", "ecosystem", "habitat", "vulnerable", "extinction", "sustainable", "erosion"]
-};
+        // 動態擴展為 4 篇克漏字
+        let clozeData = [
+            {
+                passage: "Protecting the Earth's [1] is essential for maintaining a healthy [2]. When a natural [3] is destroyed by human activities, such as urban expansion, many [4] species face the imminent threat of [5].",
+                blanks: ["Biodiversity", "Ecosystem", "Habitat", "Vulnerable", "Extinction"], 
+                options: ["Biodiversity", "Ecosystem", "Habitat", "Vulnerable", "Extinction", "Sustainable", "Erosion"]
+            },
+            {
+                passage: "To combat the adverse effects of global [1] change, governments must adopt [2] energy policies. Strict [3] efforts are required to protect every natural [4] we rely on. Furthermore, putting an end to rapid [5] in the Amazon is critical to reducing carbon emissions.",
+                blanks: ["Climate", "Sustainable", "Conservation", "Resource", "Deforestation"], 
+                options: ["Climate", "Sustainable", "Conservation", "Resource", "Deforestation", "Pollution", "Watershed"]
+            },
+            {
+                passage: "Industrial [1] often introduces dangerous heavy metals into a local river system. These [2] chemicals can severely harm every aquatic [3] living in the area. In addition, severe soil [4] along the riverbanks can compromise the integrity of the entire [5].",
+                blanks: ["Pollution", "Toxic", "Organism", "Erosion", "Watershed"], 
+                options: ["Pollution", "Toxic", "Organism", "Erosion", "Watershed", "Resilience", "Species"]
+            },
+            {
+                passage: "After a forest fire, the [1] of the damaged environment requires time and careful management. The remaining [2] animals must rely on the surviving [3] for food and shelter. Over time, certain fungi form a [4] with tree roots, demonstrating the remarkable [5] of nature to bounce back.",
+                blanks: ["Restoration", "Terrestrial", "Vegetation", "Symbiosis", "Resilience"], 
+                options: ["Restoration", "Terrestrial", "Vegetation", "Symbiosis", "Resilience", "Interaction", "Adaptation"]
+            }
+        ];
 
-
-        // ==========================================
-        // V6.0 核心引擎
-        // ==========================================
         let currentIndex = 0; let currentQuizAnswer = null; let isEngToChnQuiz = true;
         let currentSpellAnswer = null; let spellScrambledLetters = []; let spellCurrentAnswer = [];
+        let currentClozeIndex = 0; 
         
         let localData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || { 
-            starred: [], attempts: 0, correct: 0, certs: { c1: false, c2: false, c3: false },
-            spelledWords: [], spellCerts: { c1: false, c2: false, c3: false }
+            starred: [], 
+            quizProgress: {}, certs: { c1: false, c2: false, c3: false },
+            spellProgress: {}, spellCerts: { c1: false, c2: false, c3: false }
         };
+        if (!localData.quizProgress) localData.quizProgress = {};
         if (!localData.certs) localData.certs = { c1: false, c2: false, c3: false };
-        if (!localData.spelledWords) localData.spelledWords = [];
+        if (!localData.spellProgress) localData.spellProgress = {};
         if (!localData.spellCerts) localData.spellCerts = { c1: false, c2: false, c3: false };
 
+        function getNaturalVoice() {
+            let gender = document.getElementById('voiceGender').value;
+            let voices = window.speechSynthesis.getVoices();
+            
+            let preferredVoices = [];
+            if (gender === 'female') {
+                preferredVoices = voices.filter(v => 
+                    (v.lang.includes('en-US') || v.lang.includes('en-GB')) &&
+                    (v.name.includes('Samantha') || v.name.includes('Siri Female') || v.name.includes('Ava') || v.name.includes('Google US English') || v.name.includes('Zira') || v.name.includes('Victoria'))
+                );
+            } else {
+                preferredVoices = voices.filter(v => 
+                    (v.lang.includes('en-US') || v.lang.includes('en-GB')) &&
+                    (v.name.includes('Alex') || v.name.includes('Siri Male') || v.name.includes('David') || v.name.includes('Mark') || v.name.includes('Tom') || v.name.includes('Daniel'))
+                );
+            }
+            if (preferredVoices.length > 0) return preferredVoices[0];
+            return voices.find(v => v.lang === 'en-US') || voices[0];
+        }
+
         function speakText(type, event) {
-            event.stopPropagation(); 
+            event.stopPropagation();
+            window.speechSynthesis.cancel(); 
             let text = type === 'word' ? vocabData[currentIndex].word : vocabData[currentIndex].example;
-            const u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; u.rate = 0.9; window.speechSynthesis.speak(u);
+            const u = new SpeechSynthesisUtterance(text); 
+            u.lang = 'en-US';
+            u.rate = 0.8; 
+            let voice = getNaturalVoice();
+            if (voice) u.voice = voice; 
+            window.speechSynthesis.speak(u);
+        }
+
+        function speakFullCloze() {
+            window.speechSynthesis.cancel();
+            let textToSpeak = document.getElementById('clozeContainer').innerText; 
+            const u = new SpeechSynthesisUtterance(textToSpeak); 
+            u.lang = 'en-US'; 
+            u.rate = 0.75; 
+            let voice = getNaturalVoice();
+            if (voice) u.voice = voice; 
+            window.speechSynthesis.speak(u);
         }
 
         function toggleStar(e) {
-            e.stopPropagation(); let w = vocabData[currentIndex].word;
+            e.stopPropagation();
+            let w = vocabData[currentIndex].word;
             if(localData.starred.includes(w)) localData.starred = localData.starred.filter(x => x !== w); else localData.starred.push(w);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateStarUI();
         }
@@ -210,14 +299,14 @@ let clozeData = {
             if(t==='quiz') generateQuiz(); if(t==='spell') generateSpell(); if(t==='cloze') renderCloze();
         }
 
-        // 單詞卡
         function renderCard() {
-            if(!vocabData.length) return; document.getElementById('flashcard').classList.remove('flipped');
+            if(!vocabData.length) return;
+            document.getElementById('flashcard').classList.remove('flipped');
             setTimeout(() => {
                 let d = vocabData[currentIndex];
                 document.getElementById('wordText').innerHTML = d.word; document.getElementById('engDefText').innerHTML = d.engDef || '';
                 document.getElementById('translationText').innerHTML = d.translation; document.getElementById('synAntText').innerHTML = `<strong>同/反義：</strong> ${d.synAnt}`;
-                document.getElementById('usageText').innerHTML = `<strong>用法：</strong> ${d.usage || ''}`; document.getElementById('exampleText').innerHTML = d.example;
+                document.getElementById('usageText').innerHTML = `<strong>常見搭配：</strong> ${d.usage || ''}`; document.getElementById('exampleText').innerHTML = d.example;
                 document.getElementById('counterText').innerHTML = `${currentIndex + 1} / ${vocabData.length}`; updateStarUI(); 
             }, 150);
         }
@@ -226,59 +315,136 @@ let clozeData = {
         function prevCard() { if(currentIndex > 0){ currentIndex--; renderCard(); } }
         function shuffleCards() { vocabData.sort(()=>Math.random()-0.5); currentIndex=0; renderCard(); }
 
-        // 隨機測驗 (修改為 10 / 20 / 25 門檻)
         function updateMasteryUI() {
-            let rate = localData.attempts===0 ? 0 : Math.round((localData.correct/localData.attempts)*100);
-            let certs = (localData.certs.c1?1:0) + (localData.certs.c2?1:0) + (localData.certs.c3?1:0);
-            document.getElementById('masteryText').innerHTML = `🏆 熟練度：${rate}% (${localData.correct}/${localData.attempts}) <br> 🎖️ 證書進度：${certs} / 3`;
-            if(localData.attempts>=10 && rate>=90 && !localData.certs.c1) showModal('quiz', 1);
-            else if(localData.attempts>=20 && rate>=90 && !localData.certs.c2) showModal('quiz', 2);
-            else if(localData.attempts>=25 && rate>=95 && !localData.certs.c3) showModal('quiz', 3);
+            let totalTarget = vocabData.length * 3;
+            let currentTotal = 0;
+            vocabData.forEach(v => { 
+                currentTotal += Math.min(localData.quizProgress[v.word] || 0, 3); 
+            });
+            let rate = totalTarget === 0 ? 0 : Math.round((currentTotal / totalTarget) * 100);
+
+            let certIcons = "";
+            certIcons += localData.certs.c1 ? "🥉" : "🔒";
+            certIcons += localData.certs.c2 ? "🥈" : "🔒";
+            certIcons += localData.certs.c3 ? "🏆" : "🔒";
+
+            document.getElementById('masteryText').innerHTML = `🏆 測驗熟練度：${rate}% <br> 🎖️ 證書進度： ${certIcons}`;
+            if(rate >= 33 && !localData.certs.c1) showModal('quiz', 1);
+            else if(rate >= 66 && !localData.certs.c2) showModal('quiz', 2);
+            else if(rate >= 100 && !localData.certs.c3) showModal('quiz', 3);
         }
+        
         function generateQuiz() {
-            if(vocabData.length<4) return; document.getElementById('quizFeedback').innerHTML = ""; 
+            document.getElementById('quizFeedback').innerHTML = "";
+            let pool = vocabData.filter(v => (localData.quizProgress[v.word] || 0) < 3);
+            let nextBtn = document.querySelector('#quiz-view .action-btn');
+            if (pool.length === 0 && vocabData.length > 0) {
+                document.getElementById('quizHint').innerHTML = "🎉 恭喜完成！本單元測驗已全數熟練達標！";
+                document.getElementById('quizDesc').innerHTML = "";
+                document.getElementById('quizOptions').innerHTML = "";
+                nextBtn.innerText = "🔄 重新挑戰測驗";
+                nextBtn.onclick = resetQuiz;
+                return;
+            }
+
+            nextBtn.innerText = "下一題";
+            nextBtn.onclick = generateQuiz;
             isEngToChnQuiz = Math.random() > 0.5;
-            currentQuizAnswer = vocabData[Math.floor(Math.random() * vocabData.length)];
-            document.getElementById('quizHint').innerHTML = isEngToChnQuiz ? "👀 請選出中文：" : "🧠 請選出英文：";
+            currentQuizAnswer = pool[Math.floor(Math.random() * pool.length)]; 
+            
+            document.getElementById('quizHint').innerHTML = isEngToChnQuiz ? "👀 請選出對應的中文：" : "🧠 請選出對應的英文：";
             document.getElementById('quizDesc').innerHTML = isEngToChnQuiz ? currentQuizAnswer.word : currentQuizAnswer.translation;
-            let ops = [currentQuizAnswer], others = vocabData.filter(v=>v.word!==currentQuizAnswer.word).sort(()=>Math.random()-0.5);
-            ops.push(others[0], others[1], others[2]); ops.sort(()=>Math.random()-0.5);
+            
+            let ops = [currentQuizAnswer];
+            let others = vocabData.filter(v => v.word !== currentQuizAnswer.word).sort(()=>Math.random()-0.5);
+            ops.push(others[0], others[1], others[2]); 
+            ops.sort(()=>Math.random()-0.5);
+            
             document.getElementById('quizOptions').innerHTML = ops.map(opt => `<button class="quiz-option" onclick="checkQuiz('${opt.word}')">${isEngToChnQuiz ? opt.translation : opt.word}</button>`).join('');
             updateMasteryUI();
         }
+
         function checkQuiz(w) {
-            let fb = document.getElementById('quizFeedback'); localData.attempts++;
-            if(w === currentQuizAnswer.word){ fb.innerHTML = "✅ 正確！"; fb.style.color = "green"; localData.correct++; }
-            else{ fb.innerHTML = `❌ 錯誤！正解是：${isEngToChnQuiz ? currentQuizAnswer.translation : currentQuizAnswer.word}`; fb.style.color = "red"; }
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateMasteryUI();
+            let fb = document.getElementById('quizFeedback');
+            if(w === currentQuizAnswer.word){ 
+                fb.innerHTML = "✅ 正確！太棒了！";
+                fb.style.color = "#2E7D32"; 
+                if (!localData.quizProgress[currentQuizAnswer.word]) localData.quizProgress[currentQuizAnswer.word] = 0;
+                localData.quizProgress[currentQuizAnswer.word]++;
+            } else { 
+                fb.innerHTML = `❌ 錯誤！正確答案是：${isEngToChnQuiz ? currentQuizAnswer.translation : currentQuizAnswer.word}`; 
+                fb.style.color = "#D32F2F"; 
+            }
+            document.querySelectorAll('.quiz-option').forEach(btn => btn.disabled = true);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); 
+            updateMasteryUI();
         }
 
-        // 拼圖 (修改為 10 / 20 / 25 門檻)
-        function updateSpellUI() {
-            let uc = localData.spelledWords.length, total = vocabData.length;
-            document.getElementById('spellProgressText').innerHTML = `⌨️ 詞彙收集：${uc} / ${total}`;
-            document.getElementById('spellProgressBar').style.width = Math.round((uc/total)*100) + '%';
-            if(uc>=10 && !localData.spellCerts.c1) showModal('spell', 1);
-            else if(uc>=20 && !localData.spellCerts.c2) showModal('spell', 2);
-            else if(uc>=25 && !localData.spellCerts.c3) showModal('spell', 3);
+        function resetQuiz() {
+            localData.quizProgress = {};
+            localData.certs = { c1: false, c2: false, c3: false };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(localData));
+            updateMasteryUI(); generateQuiz();
         }
+
+        function updateSpellUI() {
+            let totalTarget = vocabData.length * 3;
+            let currentTotal = 0;
+            let fullyMasteredCount = 0; 
+
+            vocabData.forEach(v => { 
+                let progress = localData.spellProgress[v.word] || 0;
+                currentTotal += Math.min(progress, 3); 
+                if (progress >= 3) fullyMasteredCount++;
+            });
+            let rate = totalTarget === 0 ? 0 : Math.round((currentTotal / totalTarget) * 100);
+
+            document.getElementById('spellProgressText').innerHTML = `⌨️ 拼寫熟練度：${rate}% (${fullyMasteredCount}/${vocabData.length})`;
+            document.getElementById('spellProgressBar').style.width = rate + '%';
+
+            if(rate >= 33 && !localData.spellCerts.c1) showModal('spell', 1);
+            else if(rate >= 66 && !localData.spellCerts.c2) showModal('spell', 2);
+            else if(rate >= 100 && !localData.spellCerts.c3) showModal('spell', 3);
+        }
+
         function generateSpell() {
-            document.getElementById('spellFeedback').innerHTML = ""; document.getElementById('nextSpellBtn').style.display = "none";
-            document.getElementById('submitSpellBtn').style.display = "inline-block"; document.getElementById('spellAnswerBox').style.display = "flex";
-            document.getElementById('letterPool').style.display = "flex"; updateSpellUI();
-            if(localData.spelledWords.length >= vocabData.length){
-                document.getElementById('spellPrompt').innerHTML = "🎉 挑戰成功！全部生字收集完畢！";
-                document.getElementById('spellAnswerBox').style.display = "none"; document.getElementById('letterPool').style.display = "none"; document.getElementById('submitSpellBtn').style.display = "none"; return;
+            document.getElementById('spellFeedback').innerHTML = "";
+            document.getElementById('nextSpellBtn').style.display = "none";
+            
+            let pool = vocabData.filter(v => (localData.spellProgress[v.word] || 0) < 3);
+            let nextBtn = document.getElementById('nextSpellBtn');
+            let submitBtn = document.getElementById('submitSpellBtn');
+
+            if(pool.length === 0 && vocabData.length > 0) {
+                document.getElementById('spellPrompt').innerHTML = "🎉 挑戰成功！所有單字皆已拼寫滿 3 次！";
+                document.getElementById('spellAnswerBox').style.display = "none"; 
+                document.getElementById('letterPool').style.display = "none"; 
+                submitBtn.style.display = "none"; 
+                
+                nextBtn.innerText = "🔄 重置拼圖紀錄";
+                nextBtn.onclick = resetSpell;
+                nextBtn.style.display = "inline-block";
+                return;
             }
-            currentSpellAnswer = vocabData[Math.floor(Math.random() * vocabData.length)];
+
+            submitBtn.style.display = "inline-block"; 
+            document.getElementById('spellAnswerBox').style.display = "flex";
+            document.getElementById('letterPool').style.display = "flex"; 
+            nextBtn.innerText = "下一題";
+            nextBtn.onclick = generateSpell;
+            updateSpellUI();
+
+            currentSpellAnswer = pool[Math.floor(Math.random() * pool.length)];
             let chars = currentSpellAnswer.word.toLowerCase().split('').sort(()=>Math.random()-0.5);
             spellScrambledLetters = chars.map((c, i) => ({ id: i, char: c, used: false })); spellCurrentAnswer = [];
             let blanks = currentSpellAnswer.word.replace(/[a-zA-Z]/g, "_ ");
             document.getElementById('spellPrompt').innerHTML = `<strong>${currentSpellAnswer.translation}</strong><br><em>${currentSpellAnswer.example.replace(new RegExp(currentSpellAnswer.word,"gi"), blanks.trim())}</em>`;
             renderSpellGame();
         }
+
         function renderSpellGame() {
-            let ab = document.getElementById('spellAnswerBox'), lp = document.getElementById('letterPool'); ab.innerHTML = ''; lp.innerHTML = '';
+            let ab = document.getElementById('spellAnswerBox'), lp = document.getElementById('letterPool');
+            ab.innerHTML = ''; lp.innerHTML = '';
             spellCurrentAnswer.forEach((item, i) => {
                 let btn = document.createElement('button'); btn.className = 'letter-tile in-answer'; btn.innerText = item.char;
                 btn.onclick = () => { spellCurrentAnswer.splice(i, 1); item.used = false; renderSpellGame(); }; ab.appendChild(btn);
@@ -290,51 +456,149 @@ let clozeData = {
                 }
             });
         }
+
         function checkSpell() {
             let ans = spellCurrentAnswer.map(i=>i.char).join(''), corr = currentSpellAnswer.word.toLowerCase(), fb = document.getElementById('spellFeedback');
             if(ans === corr){
-                fb.innerHTML = "✅ 拼字正確！"; fb.style.color = "green"; 
-                if(!localData.spelledWords.includes(currentSpellAnswer.word)){ localData.spelledWords.push(currentSpellAnswer.word); localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); updateSpellUI(); }
-            } else { fb.innerHTML = `❌ 錯誤！正解：${currentSpellAnswer.word}`; fb.style.color = "red"; }
-            document.getElementById('nextSpellBtn').style.display = "inline-block"; document.getElementById('submitSpellBtn').style.display = "none";
-        }
-
-        // 克漏字
-        function renderCloze() {
-            let c = document.getElementById('clozeContainer'), h = clozeData.passage; document.getElementById('clozeFeedback').innerHTML = "";
-            let opts = `<option value="">-- 選擇 --</option>` + clozeData.options.map(o=>`<option value="${o}">${o}</option>`).join('');
-            for(let i=0; i<clozeData.blanks.length; i++) h = h.replace(`[${i+1}]`, `<select id="clz${i}" class="cloze-select">${opts}</select>`);
-            c.innerHTML = h;
-        }
-        function checkCloze() {
-            let cor = 0;
-            for(let i=0; i<clozeData.blanks.length; i++){
-                let sel = document.getElementById(`clz${i}`);
-                if(sel.value === clozeData.blanks[i]){ cor++; sel.style.borderColor="green"; sel.style.backgroundColor="#e8f5e9"; }
-                else{ sel.style.borderColor="red"; sel.style.backgroundColor="#ffebee"; }
+                fb.innerHTML = "✅ 拼字完全正確！";
+                fb.style.color = "#2E7D32"; 
+                if (!localData.spellProgress[currentSpellAnswer.word]) localData.spellProgress[currentSpellAnswer.word] = 0;
+                localData.spellProgress[currentSpellAnswer.word]++;
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); 
+                updateSpellUI();
+            } else { 
+                fb.innerHTML = `❌ 錯誤！正確拼法：${currentSpellAnswer.word}`;
+                fb.style.color = "#D32F2F"; 
             }
-            let fb = document.getElementById('clozeFeedback');
-            if(cor === clozeData.blanks.length){ fb.innerHTML="🎉 太棒了！段落完全正確！"; fb.style.color="green"; }
-            else{ fb.innerHTML=`💪 答對了 ${cor}/${clozeData.blanks.length} 個！`; fb.style.color="red"; }
+            document.getElementById('nextSpellBtn').style.display = "inline-block";
+            document.getElementById('submitSpellBtn').style.display = "none";
         }
 
-        // 彈窗
+        function resetSpell() {
+            localData.spellProgress = {};
+            localData.spellCerts = { c1: false, c2: false, c3: false };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(localData));
+            updateSpellUI(); generateSpell();
+        }
+
+        function renderCloze() {
+            window.speechSynthesis.cancel();
+            
+            let d = clozeData[currentClozeIndex];
+            let c = document.getElementById('clozeContainer'); 
+            let h = d.passage; 
+            
+            document.getElementById('clozeFeedback').innerHTML = "";
+            document.getElementById('clozeCounter').innerHTML = `📖 單元主題實戰演練 (${currentClozeIndex + 1}/4)`;
+            let opts = `<option value="">-- 選擇單字 --</option>` + d.options.map(o=>`<option value="${o}">${o}</option>`).join('');
+            for(let i=0; i<d.blanks.length; i++) {
+                h = h.replace(`[${i+1}]`, `<select id="clz${i}" class="cloze-select">${opts}</select>`);
+            }
+            c.innerHTML = h;
+
+            document.getElementById('submitClozeBtn').style.display = "inline-block";
+            document.getElementById('clozeSuccessActions').style.display = "none";
+            document.getElementById('clozeSuccessActions').innerHTML = "";
+        }
+
+        function changeCloze(direction) {
+            currentClozeIndex += direction;
+            if (currentClozeIndex < 0) currentClozeIndex = clozeData.length - 1;
+            if (currentClozeIndex >= clozeData.length) currentClozeIndex = 0;
+            renderCloze();
+        }
+
+        function checkCloze() {
+            let d = clozeData[currentClozeIndex];
+            let cor = 0;
+            for(let i=0; i<d.blanks.length; i++){
+                let sel = document.getElementById(`clz${i}`);
+                if(!sel) continue;
+                if(sel.value.toLowerCase() === d.blanks[i].toLowerCase()){ 
+                    cor++;
+                    sel.style.borderColor="#2E7D32"; sel.style.backgroundColor="#e8f5e9"; sel.disabled = true;
+                } else { 
+                    sel.style.borderColor="#D32F2F";
+                    sel.style.backgroundColor="#ffebee"; 
+                }
+            }
+            
+            let fb = document.getElementById('clozeFeedback');
+            if(cor === d.blanks.length){ 
+                fb.innerHTML="🎉 太棒了！邏輯完全正確！";
+                fb.style.color="#2E7D32"; 
+                
+                document.getElementById('submitClozeBtn').style.display = "none";
+                let actionsDiv = document.getElementById('clozeSuccessActions');
+                actionsDiv.style.display = "flex";
+                actionsDiv.innerHTML = `
+                    <button class="action-btn" onclick="renderCloze()">🔄 重新練習此篇</button>
+                    <button class="action-btn green-btn" onclick="readFullTextCloze()">👁️ 顯示完整短文</button>
+                `;
+            } else { 
+                fb.innerHTML=`💪 繼續努力！答對了 ${cor}/${d.blanks.length} 個！`;
+                fb.style.color="#D32F2F"; 
+            }
+        }
+
+        function readFullTextCloze() {
+            let d = clozeData[currentClozeIndex];
+            let c = document.getElementById('clozeContainer');
+            let h = d.passage;
+            
+            for(let i=0; i<d.blanks.length; i++) {
+                h = h.replace(`[${i+1}]`, `<span class="cloze-fulltext-word">${d.blanks[i]}</span>`);
+            }
+            c.innerHTML = h;
+            
+            document.getElementById('clozeFeedback').innerHTML = "🧠 請細細品味學術單字在語境中的運用。";
+            document.getElementById('clozeFeedback').style.color = "#4A1515";
+            
+            let actionsDiv = document.getElementById('clozeSuccessActions');
+            actionsDiv.innerHTML = `
+                <button class="action-btn" style="background-color: #F5A623; color: white;"
+                onclick="speakFullCloze()">🔊 聆聽短文朗讀</button>
+                <button class="action-btn" onclick="renderCloze()">🔄 收起並重新練習</button>
+            `;
+        }
+
         function showModal(type, level) {
             let t = document.getElementById('gradTitle'), d = document.getElementById('gradDesc');
+            let stayBtn = document.getElementById('stayBtn');
+            let exitBtn = document.getElementById('exitBtn');
+
             if(type==='quiz'){
-                if(level===1) { t.innerHTML="🥉 青銅證書"; d.innerHTML="選擇題完成 10 題且維持高正確率！"; }
-                if(level===2) { t.innerHTML="🥈 白銀證書"; d.innerHTML="選擇題完成 20 題，太神了！"; }
-                if(level===3) { t.innerHTML="🏆 黃金結業！"; d.innerHTML="選擇題刷滿 25 題且正確率 95%！"; }
+                if(level===1) { t.innerHTML="🥉 青銅學者"; d.innerHTML="選擇題整體熟練度已突破 33%！"; }
+                if(level===2) { t.innerHTML="🥈 白銀智者"; d.innerHTML="選擇題整體熟練度已突破 66%！再接再厲！"; }
+                if(level===3) { 
+                    t.innerHTML="🏆 黃金大師！"; d.innerHTML="太神啦！你已刷滿所有選擇題熟練度！"; 
+                    exitBtn.innerText = "🎓 榮耀結業 (返回大廳)";
+                    stayBtn.innerText = "🔄 重置熟練度";
+                    stayBtn.onclick = () => { resetQuiz(); closeModal(type, level); };
+                }
             } else {
-                if(level===1) { t.innerHTML="🧩 初級拼圖學者"; d.innerHTML="成功拼出 10 個生字！"; }
-                if(level===2) { t.innerHTML="🧩 進階拼圖達人"; d.innerHTML="征服 20 個生字，只差一點了！"; }
-                if(level===3) { t.innerHTML="👑 拼圖大師！"; d.innerHTML="滿分全制霸！肌肉記憶完美！"; }
+                if(level===1) { t.innerHTML="🧩 拼寫新星"; d.innerHTML="拼寫肌肉記憶已開發 33%！"; }
+                if(level===2) { t.innerHTML="🧩 拼寫達人"; d.innerHTML="超過 66% 的單字已經成為你的直覺！"; }
+                if(level===3) { 
+                    t.innerHTML="👑 拼圖王者！"; d.innerHTML="滿分全制霸！單字刻印在你的靈魂裡了！"; 
+                    exitBtn.innerText = "🎓 榮耀結業 (返回大廳)";
+                    stayBtn.innerText = "🔄 重置拼寫紀錄";
+                    stayBtn.onclick = () => { resetSpell(); closeModal(type, level); };
+                }
             }
-            document.getElementById('stayBtn').onclick = () => { closeModal(type, level); };
+
+            if (level !== 3) {
+                stayBtn.innerText = "📚 留下來繼續複習";
+                stayBtn.onclick = () => { closeModal(type, level); };
+                exitBtn.innerText = "🎓 先去休息 (返回大廳)";
+            }
+
             document.getElementById('gradModal').style.display = 'flex';
         }
+
         function closeModal(type, level) {
-            if(type==='quiz') localData.certs[`c${level}`] = true; else localData.spellCerts[`c${level}`] = true;
+            if(type==='quiz') localData.certs[`c${level}`] = true;
+            else localData.spellCerts[`c${level}`] = true;
             localStorage.setItem(STORAGE_KEY, JSON.stringify(localData)); document.getElementById('gradModal').style.display = 'none';
             if(type==='quiz') updateMasteryUI(); else updateSpellUI();
         }
