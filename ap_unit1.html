@@ -36,7 +36,6 @@
         .tool-btn { background: none; border: none; font-size: 24px; cursor: pointer; padding: 0; transition: 0.2s;}
         .star-btn { color: #DDDDDD; text-shadow: 0 1px 2px rgba(0,0,0,0.1);}
         .star-btn.active { color: #F5A623; transform: scale(1.2); text-shadow: 0 2px 4px rgba(245,166,35,0.3);}
-        .voice-toggle-btn { background-color: #ffffff; color: #1565C0; border: 2px solid #1565C0; padding: 6px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
 
         .controls { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
         button.action-btn { padding: 10px 16px; font-size: 14px; border: none; border-radius: 10px; background-color: #1565C0; color: white; cursor: pointer; transition: 0.2s; font-weight: bold; box-shadow: 0 4px 6px rgba(21, 101, 192, 0.15);}
@@ -95,9 +94,7 @@
                     <div class="front-tools">
                         <button class="tool-btn" onclick="speakText('word', event)">🔊</button>
                         <button class="tool-btn star-btn" id="starBtn" onclick="toggleStar(event)">★</button>
-                        <select id="voiceGender" class="voice-toggle-btn" title="選擇語音">
-                            <option value="__loading__">⏳ 載入中...</option>
-                        </select>
+
                     </div>
                 </div>
                 <div class="card-back">
@@ -162,68 +159,25 @@
     </div>
 
     <script>
-        // 🎙️ 語音快取系統：解決手機首次 getVoices() 回傳空陣列的問題
-        let _cachedVoices = [];
-
-        function _loadVoices() {
-            return new Promise((resolve) => {
-                // 嘗試同步取得（桌機通常可立即取得）
-                let v = window.speechSynthesis.getVoices();
-                if (v && v.length > 0) {
-                    _cachedVoices = v;
-                    return resolve(v);
-                }
-                // 手機需等待 onvoiceschanged 事件
-                window.speechSynthesis.onvoiceschanged = () => {
-                    _cachedVoices = window.speechSynthesis.getVoices();
-                    resolve(_cachedVoices);
-                };
-                // 超時保護：3 秒後若仍無聲音，強制繼續（使用系統預設）
-                setTimeout(() => resolve(_cachedVoices), 3000);
-            });
+        // 🔊 語音朗讀：直接使用系統內建預設語音，無需任何選擇
+        function speakText(type, event) {
+            if (event) event.stopPropagation();
+            window.speechSynthesis.cancel();
+            let text = type === 'word' ? vocabData[currentIndex].word : vocabData[currentIndex].example;
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'en-US';
+            u.rate = 0.8;
+            window.speechSynthesis.speak(u);
         }
 
-        // 頁面載入後立即預熱語音清單，並動態填充選單
-        function _populateVoiceSelect(voices) {
-            let sel = document.getElementById('voiceGender');
-            // 篩選英文聲音；若無英文聲音則顯示全部
-            let enVoices = voices.filter(v => v.lang.startsWith('en'));
-            let pool = enVoices.length > 0 ? enVoices : voices;
-
-            // 儲存至快取
-            _cachedVoices = voices;
-
-            if (pool.length === 0) {
-                sel.innerHTML = '<option value="">⚠️ 無可用聲音</option>';
-                return;
-            }
-
-            // 猜測性別標籤，方便使用者辨識
-            const maleHint  = /Male|David|Mark|Alex|Tom|Daniel|James|Arthur|Fred|Aaron|Rishi|Gordon|Reed|Rocko|Eddy|Grandpa/i;
-            const femaleHint = /Female|Samantha|Ava|Zira|Victoria|Karen|Tessa|Fiona|Sandy|Shelley|Grandma|Nora/i;
-            const androidMale  = /[-_][bdij]\b/i;
-            const androidFemale = /[-_][acefgh]\b/i;
-
-            sel.innerHTML = pool.map((v, i) => {
-                let genderTag = '';
-                if (maleHint.test(v.name) || androidMale.test(v.name) || androidMale.test(v.voiceURI)) {
-                    genderTag = ' 👨';
-                } else if (femaleHint.test(v.name) || androidFemale.test(v.name) || androidFemale.test(v.voiceURI)) {
-                    genderTag = ' 👩';
-                }
-                // 縮短顯示名稱（手機螢幕較窄）
-                let label = v.name.replace('Google ', '').replace(' (', ' (').substring(0, 28);
-                return `<option value="${i}">${label}${genderTag}</option>`;
-            }).join('');
-
-            // 嘗試預設選女聲
-            let defaultFemale = pool.findIndex(v =>
-                femaleHint.test(v.name) || androidFemale.test(v.name) || androidFemale.test(v.voiceURI)
-            );
-            if (defaultFemale >= 0) sel.selectedIndex = defaultFemale;
+        function speakFullCloze() {
+            window.speechSynthesis.cancel();
+            let text = document.getElementById('clozeContainer').innerText;
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'en-US';
+            u.rate = 0.75;
+            window.speechSynthesis.speak(u);
         }
-
-        _loadVoices().then(voices => _populateVoiceSelect(voices));
         const STORAGE_KEY = 'spartan_ap_u1_v7_2';
         
         let vocabData = [
@@ -301,86 +255,7 @@
             document.getElementById('flashcard').classList.toggle('flipped');
         }
 
-        // 🎙️ 跨平台語音選擇引擎（相容 iOS / Android / 桌機）
-        function _pickVoice(voices, targetGender) {
-            // 優先 en-US，其次任何 en-*
-            let pool = voices.filter(v => v.lang === 'en-US' || v.lang === 'en_US');
-            if (pool.length === 0) pool = voices.filter(v => v.lang.startsWith('en'));
-            if (pool.length === 0) pool = voices; // 最終降級：使用所有可用聲音
-            if (pool.length === 0) return null;
 
-            // ── 已知男聲關鍵字（iOS / macOS / Windows / Android）
-            const maleKeywords  = /Male|David|Mark|Alex|Tom|Daniel|James|Arthur|Fred|Aaron|Rishi|Gordon|Reed|Rocko|Eddy|Grandpa/i;
-            // ── 已知女聲關鍵字
-            const femaleKeywords = /Female|Samantha|Ava|Zira|Victoria|Karen|Tessa|Fiona|Sandy|Shelley|Grandma|Nora|Siri|Google UK English Female/i;
-            // ── Android Google TTS 男聲後綴（-b, -d, -i, -j 等奇數系列）
-            const androidMaleSuffix  = /[-_][bdij]\b/i;
-            // ── Android Google TTS 女聲後綴（-a, -c, -e, -f 等偶數系列）
-            const androidFemaleSuffix = /[-_][acefgh]\b/i;
-
-            if (targetGender === 'male') {
-                // 1. 名字比對
-                let v = pool.find(v => maleKeywords.test(v.name));
-                if (v) return v;
-                // 2. Android URI / name 後綴比對
-                v = pool.find(v => androidMaleSuffix.test(v.name) || androidMaleSuffix.test(v.voiceURI));
-                if (v) return v;
-                // 3. 排除已知女聲，取第一個剩餘聲音
-                v = pool.find(v => !femaleKeywords.test(v.name) && !androidFemaleSuffix.test(v.name) && !androidFemaleSuffix.test(v.voiceURI));
-                if (v) return v;
-                // 4. 最終降級：清單中第二個（若有）
-                return pool.length > 1 ? pool[1] : pool[0];
-            } else {
-                // 1. 名字比對
-                let v = pool.find(v => femaleKeywords.test(v.name));
-                if (v) return v;
-                // 2. Android URI / name 後綴比對
-                v = pool.find(v => androidFemaleSuffix.test(v.name) || androidFemaleSuffix.test(v.voiceURI));
-                if (v) return v;
-                // 3. 直接取第一個（通常為系統預設女聲）
-                return pool[0];
-            }
-        }
-
-        async function _getSelectedVoice() {
-            let voices = _cachedVoices.length > 0 ? _cachedVoices : await _loadVoices();
-            let sel = document.getElementById('voiceGender');
-            let idx = parseInt(sel.value);
-            // 如果選單是以 index 模式（數字），直接取對應聲音
-            let enVoices = voices.filter(v => v.lang.startsWith('en'));
-            let pool = enVoices.length > 0 ? enVoices : voices;
-            if (!isNaN(idx) && pool[idx]) return pool[idx];
-            // 降級：舊版 gender 字串模式
-            return _pickVoice(voices, sel.value);
-        }
-
-        async function speakText(type, event) {
-            if (event) event.stopPropagation();
-            window.speechSynthesis.cancel();
-
-            let text = type === 'word' ? vocabData[currentIndex].word : vocabData[currentIndex].example;
-            const u = new SpeechSynthesisUtterance(text);
-            u.lang = 'en-US';
-            u.rate = 0.8;
-
-            let voice = await _getSelectedVoice();
-            if (voice) u.voice = voice;
-
-            window.speechSynthesis.speak(u);
-        }
-
-        async function speakFullCloze() {
-            window.speechSynthesis.cancel();
-            let textToSpeak = document.getElementById('clozeContainer').innerText;
-            const u = new SpeechSynthesisUtterance(textToSpeak);
-            u.lang = 'en-US';
-            u.rate = 0.75;
-
-            let voice = await _getSelectedVoice();
-            if (voice) u.voice = voice;
-
-            window.speechSynthesis.speak(u);
-        }
 
         function toggleStar(e) {
             if(e) e.stopPropagation();
