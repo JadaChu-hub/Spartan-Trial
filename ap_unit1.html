@@ -147,15 +147,12 @@
         <div class="mastery-text" id="clozeCounter">📖 單元主題實戰演練 (1/4)</div>
         <div class="cloze-container" id="clozeContainer"></div>
         <div class="feedback" id="clozeFeedback"></div>
-        
         <div id="clozeControls" class="controls" style="margin-top: 20px; width: 100%; display: flex; justify-content: center; gap: 12px;">
             <button class="action-btn" onclick="changeCloze(-1)">⬅️ 上一篇</button>
             <button class="action-btn" id="submitClozeBtn" style="background-color: #D32F2F;" onclick="checkCloze()">✅ 提交驗證</button>
             <button class="action-btn" onclick="changeCloze(1)">下一篇 ➡️</button>
         </div>
-
-        <div id="clozeSuccessActions" style="display: none; gap: 12px; justify-content: center; margin-top: 20px; flex-wrap: wrap; width: 100%;">
-        </div>
+        <div id="clozeSuccessActions" style="display: none; gap: 12px; justify-content: center; margin-top: 20px; flex-wrap: wrap; width: 100%;"></div>
     </div>
 
     <div class="grad-modal" id="gradModal">
@@ -228,7 +225,6 @@
         if (!localData.spellProgress) localData.spellProgress = {};
         if (!localData.spellCerts) localData.spellCerts = { c1: false, c2: false, c3: false };
 
-        // 💡 防呆機制：判斷點擊目標，若是 select 或 button 則攔截翻面動作
         function handleCardFlip(e, forceFlip = false) {
             if (forceFlip) {
                 document.getElementById('flashcard').classList.toggle('flipped');
@@ -245,24 +241,40 @@
             document.getElementById('flashcard').classList.toggle('flipped');
         }
 
-        // 🎙️ 終極版語音引擎：加入 Pitch (音高) 控制以突破手機單一語音庫限制
-        function getNaturalVoice(gender) {
+        // 🎙️ 終極無 Pitch 語音引擎：全面掃描 Android TTS 的深層代碼與陣列順位
+        function getNaturalVoice(targetGender) {
             let voices = window.speechSynthesis.getVoices();
-            let preferredVoices = [];
-            let langFilter = v => v.lang.includes('en-US') || v.lang.includes('en-GB') || v.lang.includes('en-AU');
-            
-            if (gender === 'female') {
-                preferredVoices = voices.filter(v => langFilter(v) && /Female|Samantha|Ava|Zira|Victoria|Karen|Tessa/i.test(v.name));
+            let enVoices = voices.filter(v => v.lang.startsWith('en-'));
+            let usVoices = enVoices.filter(v => v.lang === 'en-US' || v.lang === 'en_US');
+            let pool = usVoices.length > 0 ? usVoices : enVoices;
+
+            if (pool.length === 0) return voices[0];
+
+            if (targetGender === 'male') {
+                // 1. 尋找常見男聲名字 (iOS / 桌機)
+                let maleVoice = pool.find(v => /Male|David|Mark|Alex|Tom|Daniel|James|Arthur|Fred|Aaron/i.test(v.name));
+                if (maleVoice) return maleVoice;
+
+                // 2. 深度掃描 Android Google TTS 隱藏男聲代號 (-b, -d, -i, -j) 包含 voiceURI
+                let androidMale = pool.find(v => /\-b|\-d|\-i|\-j/i.test(v.name) || /\-b|\-d|\-i|\-j/i.test(v.voiceURI));
+                if (androidMale) return androidMale;
+
+                // 3. 陣列盲抓：若系統未標示名稱，嘗試抓取非預設女聲的選項
+                if (pool.length > 1) {
+                    let nonFemale = pool.find(v => !/Female|Samantha|Ava|Victoria|Zira|Karen|Tessa|\-a|\-c|\-e|\-f|\-g|\-h/i.test(v.name));
+                    if (nonFemale) return nonFemale;
+                    return pool[1]; // 若無法分辨，直接抓清單中第二個聲音盲測
+                }
             } else {
-                preferredVoices = voices.filter(v => langFilter(v) && /Male|David|Mark|Alex|Tom|Daniel|James|Arthur|Fred|Aaron/i.test(v.name));
+                let femaleVoice = pool.find(v => /Female|Samantha|Ava|Zira|Victoria|Karen|Tessa/i.test(v.name));
+                if (femaleVoice) return femaleVoice;
+
+                let androidFemale = pool.find(v => /\-a|\-c|\-e|\-f|\-g|\-h/i.test(v.name) || /\-a|\-c|\-e|\-f|\-g|\-h/i.test(v.voiceURI));
+                if (androidFemale) return androidFemale;
+
+                return pool[0];
             }
-            
-            if (preferredVoices.length === 0) {
-                preferredVoices = voices.filter(langFilter);
-            }
-            
-            let usVoice = preferredVoices.find(v => v.lang.includes('en-US'));
-            return usVoice || preferredVoices[0] || voices[0];
+            return pool[0];
         }
 
         function speakText(type, event) {
@@ -276,13 +288,8 @@
             let gender = document.getElementById('voiceGender').value;
             let voice = getNaturalVoice(gender); 
             if (voice) u.voice = voice; 
-            
-            // 🔥 核心修復：透過音高強制區分男女聲
-            if (gender === 'male') {
-                u.pitch = 0.6; // 壓低音高，強制變男聲
-            } else {
-                u.pitch = 1.1; // 稍微調高，保持女聲清脆
-            }
+
+            // ⚠️ 完全移除 u.pitch 屬性，回歸最自然的原聲
 
             window.speechSynthesis.speak(u);
         }
@@ -297,12 +304,8 @@
             let gender = document.getElementById('voiceGender').value;
             let voice = getNaturalVoice(gender); 
             if (voice) u.voice = voice; 
-            
-            if (gender === 'male') {
-                u.pitch = 0.6; 
-            } else {
-                u.pitch = 1.1; 
-            }
+
+            // ⚠️ 完全移除 u.pitch 屬性，回歸最自然的原聲
 
             window.speechSynthesis.speak(u);
         }
