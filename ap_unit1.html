@@ -95,9 +95,8 @@
                     <div class="front-tools">
                         <button class="tool-btn" onclick="speakText('word', event)">🔊</button>
                         <button class="tool-btn star-btn" id="starBtn" onclick="toggleStar(event)">★</button>
-                        <select id="voiceGender" class="voice-toggle-btn">
-                            <option value="female">👩 女聲 (Female)</option>
-                            <option value="male">👨 男聲 (Male)</option>
+                        <select id="voiceGender" class="voice-toggle-btn" title="選擇語音">
+                            <option value="__loading__">⏳ 載入中...</option>
                         </select>
                     </div>
                 </div>
@@ -184,8 +183,47 @@
             });
         }
 
-        // 頁面載入後立即預熱語音清單
-        _loadVoices();
+        // 頁面載入後立即預熱語音清單，並動態填充選單
+        function _populateVoiceSelect(voices) {
+            let sel = document.getElementById('voiceGender');
+            // 篩選英文聲音；若無英文聲音則顯示全部
+            let enVoices = voices.filter(v => v.lang.startsWith('en'));
+            let pool = enVoices.length > 0 ? enVoices : voices;
+
+            // 儲存至快取
+            _cachedVoices = voices;
+
+            if (pool.length === 0) {
+                sel.innerHTML = '<option value="">⚠️ 無可用聲音</option>';
+                return;
+            }
+
+            // 猜測性別標籤，方便使用者辨識
+            const maleHint  = /Male|David|Mark|Alex|Tom|Daniel|James|Arthur|Fred|Aaron|Rishi|Gordon|Reed|Rocko|Eddy|Grandpa/i;
+            const femaleHint = /Female|Samantha|Ava|Zira|Victoria|Karen|Tessa|Fiona|Sandy|Shelley|Grandma|Nora/i;
+            const androidMale  = /[-_][bdij]\b/i;
+            const androidFemale = /[-_][acefgh]\b/i;
+
+            sel.innerHTML = pool.map((v, i) => {
+                let genderTag = '';
+                if (maleHint.test(v.name) || androidMale.test(v.name) || androidMale.test(v.voiceURI)) {
+                    genderTag = ' 👨';
+                } else if (femaleHint.test(v.name) || androidFemale.test(v.name) || androidFemale.test(v.voiceURI)) {
+                    genderTag = ' 👩';
+                }
+                // 縮短顯示名稱（手機螢幕較窄）
+                let label = v.name.replace('Google ', '').replace(' (', ' (').substring(0, 28);
+                return `<option value="${i}">${label}${genderTag}</option>`;
+            }).join('');
+
+            // 嘗試預設選女聲
+            let defaultFemale = pool.findIndex(v =>
+                femaleHint.test(v.name) || androidFemale.test(v.name) || androidFemale.test(v.voiceURI)
+            );
+            if (defaultFemale >= 0) sel.selectedIndex = defaultFemale;
+        }
+
+        _loadVoices().then(voices => _populateVoiceSelect(voices));
         const STORAGE_KEY = 'spartan_ap_u1_v7_2';
         
         let vocabData = [
@@ -304,6 +342,18 @@
             }
         }
 
+        async function _getSelectedVoice() {
+            let voices = _cachedVoices.length > 0 ? _cachedVoices : await _loadVoices();
+            let sel = document.getElementById('voiceGender');
+            let idx = parseInt(sel.value);
+            // 如果選單是以 index 模式（數字），直接取對應聲音
+            let enVoices = voices.filter(v => v.lang.startsWith('en'));
+            let pool = enVoices.length > 0 ? enVoices : voices;
+            if (!isNaN(idx) && pool[idx]) return pool[idx];
+            // 降級：舊版 gender 字串模式
+            return _pickVoice(voices, sel.value);
+        }
+
         async function speakText(type, event) {
             if (event) event.stopPropagation();
             window.speechSynthesis.cancel();
@@ -313,10 +363,7 @@
             u.lang = 'en-US';
             u.rate = 0.8;
 
-            // 確保語音清單已載入（手機關鍵修正）
-            let voices = _cachedVoices.length > 0 ? _cachedVoices : await _loadVoices();
-            let gender = document.getElementById('voiceGender').value;
-            let voice = _pickVoice(voices, gender);
+            let voice = await _getSelectedVoice();
             if (voice) u.voice = voice;
 
             window.speechSynthesis.speak(u);
@@ -329,9 +376,7 @@
             u.lang = 'en-US';
             u.rate = 0.75;
 
-            let voices = _cachedVoices.length > 0 ? _cachedVoices : await _loadVoices();
-            let gender = document.getElementById('voiceGender').value;
-            let voice = _pickVoice(voices, gender);
+            let voice = await _getSelectedVoice();
             if (voice) u.voice = voice;
 
             window.speechSynthesis.speak(u);
